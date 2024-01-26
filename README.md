@@ -17,4 +17,7 @@ The Ghost of Sadness has suppressed joyous laughter in this colorful world, and 
 ```bash
 npm install
 npm run build
+
+# or
+npm run start
 ```
