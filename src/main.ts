@@ -1,3 +1,7 @@
+import { DemoScene } from "./DemoScene";
+import { Scene } from "./IScene";
+import { InputManager } from "./Input";
+
 class DrawingApp {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
@@ -10,9 +14,15 @@ class DrawingApp {
   private clickY: number[] = [];
   private clickDrag: boolean[] = [];
 
+  private scene: Scene;
+
+  private inputManager:InputManager;
+
   constructor() {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const context = canvas.getContext("2d");
+
+    this.scene = new DemoScene();
 
     if (!context) {
       throw new Error("Canvas context is not defined");
@@ -32,6 +42,7 @@ class DrawingApp {
     image.onload = () => {
       context.drawImage(image, 0, 0);
     };
+    this.inputManager = new InputManager(canvas);
     // load points of interest
     const pointofinterest = fetch("scene/scene1.json").then((response) => {
       response.json().then((data) => {
@@ -40,8 +51,8 @@ class DrawingApp {
     });
     
 
+
     this.redraw();
-    this.createUserEvents();
   }
   private createUserEvents() {
     const canvas = this.canvas;
@@ -103,6 +114,24 @@ class DrawingApp {
 
     this.redraw();
   };
+
+  update() {
+    this.scene.update(this.inputManager.input);
+    this.inputManager.update();
+  }
+
+  render() {
+    this.scene.render(this.context)
+  }
 }
 
-new DrawingApp();
+const app = new DrawingApp();
+
+const loop = () => {
+  app.update();
+  app.render();
+  
+  window.requestAnimationFrame(loop);
+}
+
+loop();
