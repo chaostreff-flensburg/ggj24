@@ -15,7 +15,7 @@ export function createBuildSettings(options) {
         // if not specified, this plugin uses ESBuild.build outdir/outfile options as base path.
         resolveFrom: 'cwd',
         assets: {
-          from: ['./src/assets/*'],
+          from: ['./src/assets/**/*'],
           to: ['./dist'],
         },
         watch: true,
