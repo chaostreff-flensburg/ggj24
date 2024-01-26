@@ -1,5 +1,5 @@
-import { HTMLCanvasElement } from "canvas";
-import { CanvasRenderingContext2D } from "canvas";
+import { HTMLCanvasElement, CanvasRenderingContext2D } from "canvas";
+import { MouseEvent, TouchEvent } from "dom";
 class DrawingApp {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
@@ -11,8 +11,8 @@ class DrawingApp {
 
   /// <reference lib="dom" />
   constructor() {
-    let canvas = document.getElementById("canvas") as HTMLCanvasElement;
-    let context = canvas.getContext("2d");
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const context = canvas.getContext("2d");
     context.lineCap = "round";
     context.lineJoin = "round";
     context.strokeStyle = "black";
@@ -25,6 +25,8 @@ class DrawingApp {
     this.createUserEvents();
   }
   private createUserEvents() {
+    /// <reference lib="dom" />
+
     let canvas = this.canvas;
 
     canvas.addEventListener("mousedown", this.pressEventHandler);
@@ -42,10 +44,10 @@ class DrawingApp {
   }
 
   private redraw() {
-    let clickX = this.clickX;
-    let context = this.context;
-    let clickDrag = this.clickDrag;
-    let clickY = this.clickY;
+    const clickX = this.clickX;
+    const context = this.context;
+    const clickDrag = this.clickDrag;
+    const clickY = this.clickY;
     for (let i = 0; i < clickX.length; ++i) {
       context.beginPath();
       if (clickDrag[i] && i) {
