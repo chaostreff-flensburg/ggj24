@@ -1,34 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "allowJs": true,
-    "checkJs": true,
+    "target": "es2016", 
+    "module": "commonjs",  
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "noLib": false,
-    "pretty": true,
-    "resolveJsonModule": true,
-    "plugins": [
-      {
-        "name": "deno_ls_plugin"
-      }
-    ],
-    "target": "esnext",
-    "paths": {
-      "deno": [
-        "C:/Users/PC1/.deno/deno.d.ts"
-      ],
-      "https://*": [
-        "C:/Users/PC1/.deno/deps/https/*"
-      ],
-      "http://*": [
-        "C:/Users/PC1/.deno/deps/http/*"
-      ]
-    }
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,                   
+    "skipLibCheck": true
   },
   "include": [
     "./**/*.ts"
-  ]
+  ],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

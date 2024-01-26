@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 import { CanvasRenderingContext2D, HTMLCanvasElement } from "canvas";
 import { MouseEvent, TouchEvent } from "dom";
 class DrawingApp {
