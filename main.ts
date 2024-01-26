@@ -25,8 +25,6 @@ class DrawingApp {
     this.createUserEvents();
   }
   private createUserEvents() {
-    /// <reference lib="dom" />
-
     const canvas = this.canvas;
 
     canvas.addEventListener("mousedown", this.pressEventHandler);
@@ -122,5 +120,4 @@ class DrawingApp {
   };
 }
 
-// Learn more at https://deno.land/manual/examples/module_metadata#concepts
 new DrawingApp();
