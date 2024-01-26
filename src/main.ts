@@ -1,5 +1,5 @@
-import { DemoScene } from "./DemoScene";
-import { Scene } from "./IScene";
+import { DemoScene } from "./Scenes/DemoScene";
+import { Scene } from "./Scenes/IScene";
 import { InputManager } from "./Input";
 
 class DrawingApp {

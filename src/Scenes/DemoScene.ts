@@ -1,5 +1,5 @@
 import { Scene } from "./IScene";
-import { Input } from "./Input";
+import { Input } from "../Input";
 
 export class DemoScene implements Scene {
     private image: HTMLImageElement | null = null;
