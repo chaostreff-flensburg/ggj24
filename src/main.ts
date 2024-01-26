@@ -11,6 +11,11 @@ class DrawingApp {
   constructor() {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const context = canvas.getContext("2d");
+
+    if (!context) {
+      throw new Error("Canvas context is not defined");
+    }
+
     context.lineCap = "round";
     context.lineJoin = "round";
     context.strokeStyle = "black";
