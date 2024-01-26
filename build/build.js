@@ -1,19 +1,5 @@
-import esbuildPluginTsc from 'esbuild-plugin-tsc';
 import * as esbuild from 'esbuild';
-
-function createBuildSettings(options) {
-  return {
-    entryPoints: ['src/main.ts'],
-    outfile: 'dist/bundle.js',
-    bundle: true,
-    plugins: [
-      esbuildPluginTsc({
-        force: true
-      }),
-    ],
-    ...options
-  };
-}
+import { createBuildSettings } from './settings.js';
 
 const settings = createBuildSettings({ minify: true });
 
