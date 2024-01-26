@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.19.12",
+    "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-tsc": "^0.4.0"
   }
 }
