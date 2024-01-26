@@ -9,8 +9,8 @@
     "start": "node ./build/serve.js"
   },
   "lib": [
-      "es2016",
-      "dom"
+    "es2016",
+    "dom"
   ],
   "author": "",
   "license": "ISC",
