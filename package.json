@@ -8,6 +8,10 @@
     "build": "node ./build/build.js",
     "start": "node ./build/serve.js"
   },
+  "lib": [
+      "es2016",
+      "dom"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

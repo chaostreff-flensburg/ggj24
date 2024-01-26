@@ -1,5 +1,3 @@
-import { CanvasRenderingContext2D, HTMLCanvasElement } from "canvas";
-import { MouseEvent, TouchEvent } from "dom";
 class DrawingApp {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
