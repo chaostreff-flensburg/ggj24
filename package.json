@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "node ./build/build.js",
-    "start": "node ./build/serve.js"
+    "start": "node ./build/serve.js",
+    "serve": "node ./build/serve.js"
   },
   "lib": [
     "es2016",
