@@ -18,10 +18,6 @@ class DrawingApp {
 
     this.scene = new DemoScene();
     this.scene.load();
-
-    if (!this.context) {
-      throw new Error("Canvas context is not defined");
-    }
   }
 
   update() {
