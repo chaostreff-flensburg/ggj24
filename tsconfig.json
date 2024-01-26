@@ -7,17 +7,13 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "noLib": true,
+    "noLib": false,
     "pretty": true,
     "resolveJsonModule": true,
     "plugins": [
       {
         "name": "deno_ls_plugin"
       }
-    ],
-    "lib": [
-      "es5",
-      "dom",
     ],
     "target": "esnext",
     "paths": {
