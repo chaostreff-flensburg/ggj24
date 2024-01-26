@@ -15,6 +15,10 @@
         "name": "deno_ls_plugin"
       }
     ],
+    "lib": [
+      "es5",
+      "dom",
+    ],
     "target": "esnext",
     "paths": {
       "deno": [
