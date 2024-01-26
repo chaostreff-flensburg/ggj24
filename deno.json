@@ -1,6 +1,6 @@
 {
   "tasks": {
     "dev": "deno run --watch main.ts",
-	"bundle": "deno_bundle main.ts > main.bundle.js"
+	"bundle": "deno_bundle main.ts > dist/main.bundle.js"
   }
 }

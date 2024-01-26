@@ -17,6 +17,16 @@
     ],
     "target": "esnext",
     "paths": {
+      "deno": [
+        "C:/Users/PC1/.deno/deno.d.ts"
+      ],
+      "https://*": [
+        "C:/Users/PC1/.deno/deps/https/*"
+      ],
+      "http://*": [
+        "C:/Users/PC1/.deno/deps/http/*"
+      ]
+    }
   },
   "include": [
     "./**/*.ts"
