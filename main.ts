@@ -1,4 +1,5 @@
-import { HTMLCanvasElement, CanvasRenderingContext2D } from "canvas";
+/// <reference lib="dom" />
+import { CanvasRenderingContext2D, HTMLCanvasElement } from "canvas";
 import { MouseEvent, TouchEvent } from "dom";
 class DrawingApp {
   private canvas: HTMLCanvasElement;
@@ -9,7 +10,6 @@ class DrawingApp {
   private clickY: number[] = [];
   private clickDrag: boolean[] = [];
 
-  /// <reference lib="dom" />
   constructor() {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const context = canvas.getContext("2d");
@@ -27,7 +27,7 @@ class DrawingApp {
   private createUserEvents() {
     /// <reference lib="dom" />
 
-    let canvas = this.canvas;
+    const canvas = this.canvas;
 
     canvas.addEventListener("mousedown", this.pressEventHandler);
     canvas.addEventListener("mousemove", this.dragEventHandler);
@@ -39,8 +39,10 @@ class DrawingApp {
     canvas.addEventListener("touchend", this.releaseEventHandler);
     canvas.addEventListener("touchcancel", this.cancelEventHandler);
 
-    document.getElementById("clear")
-      .addEventListener("click", this.clearEventHandler);
+    document.getElementById("clear")?.addEventListener(
+      "click",
+      this.clearEventHandler,
+    );
   }
 
   private redraw() {
