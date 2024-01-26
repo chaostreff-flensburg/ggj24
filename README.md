@@ -2,6 +2,8 @@
 
 GlobalGameJam 2024
 
+![sketch](https://github.com/chaostreff-flensburg/ggj24/blob/master/sketch.png?raw=true)
+
 ## Description
 
 Immerse yourself in the captivating world of "Ghost of Sadness Attacks" – the unique point-and-click adventure that touches the heart and soul! Step into the shoes of the Sad Clown, who must rediscover lost laughter in a world full of melancholic characters.
