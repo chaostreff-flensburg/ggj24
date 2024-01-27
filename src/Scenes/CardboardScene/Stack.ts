@@ -1,6 +1,7 @@
 import { Input } from "../../Input";
 import { CardInstance } from "./CardInstance";
 import { Hand } from "./Hand";
+import { Point } from "./Point";
 
 const CARD_IMAGE_WIDTH = 520;
 const CARD_IMAGE_HEIGHT = 680;
@@ -13,13 +14,13 @@ const CANVAS_WIDTH = 1280;
 
 export class Stack {
   private isOpponent: Boolean;
-  deck: Array<CardInstance> = [];
+  private deck: Array<CardInstance> = [];
 
   cardBack: HTMLImageElement | undefined;
 
   hand: Hand;
 
-  position: { x: number, y: number } = {
+  position: Point = {
     x: (CANVAS_WIDTH - CARD_WIDTH - 30),
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
   };
@@ -52,6 +53,10 @@ export class Stack {
     }
 
     return card;
+  }
+
+  putCardBackToTop(card:CardInstance):void {
+    this.deck.push(card);
   }
 
   update(input: Input): void {

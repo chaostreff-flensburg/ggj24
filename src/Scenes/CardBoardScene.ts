@@ -72,8 +72,8 @@ export class CardBoardScene implements Scene {
   private prepareDeck() {
     this.cards.forEach((card) => {
       for (let i = 0; i < 2; i++) {
-        this.playerStack.deck.push(new CardInstance(card));
-        this.opponentStack.deck.push(new CardInstance(card));
+        this.playerStack.putCardBackToTop(new CardInstance(card));
+        this.opponentStack.putCardBackToTop(new CardInstance(card));
       }
     });
 
@@ -91,7 +91,7 @@ export class CardBoardScene implements Scene {
       if (card) {
         const res = this.playerHand.addCard(card);
         if (!res) {
-          this.playerStack.deck.push(card);
+          this.playerStack.putCardBackToTop(card);
         }
       }
     }
