@@ -26,12 +26,11 @@ class DrawingApp {
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
     this.audioManager = new AudioManager()
-    this.audioManager.init();
+    this.audioManager.init()
 
   }
 
   update() {
-    //this.scene.update(this.inputManager.input);
     this.sceneManager.update(this.inputManager.input)
     this.inputManager.update();
   }
