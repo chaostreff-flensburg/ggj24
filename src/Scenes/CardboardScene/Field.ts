@@ -78,10 +78,7 @@ export class Field {
         return;
       }
 
-      const x = instance.position.x;
-      const y = instance.position.y;
-
-      if (input.x > x - CARD_WIDTH / 2 && input.x < x + CARD_WIDTH / 2 && input.y > y - CARD_HEIGHT / 2 && input.y < y + CARD_HEIGHT / 2) {
+      if (instance.isHover(input)) {
         if (!instance.isHovered) {
           // new hover
           instance.target.y -= CARD_HEIGHT / 4;

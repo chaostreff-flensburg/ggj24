@@ -1,4 +1,5 @@
 import { Card } from "./Card";
+import { CARD_HEIGHT, CARD_WIDTH } from "./Constants";
 import { Point } from "./Point";
 
 let CURRENT_ID = 0;
@@ -30,5 +31,9 @@ export class CardInstance {
     const speed = 10;
     this.position.x += distanceX / speed;
     this.position.y += distanceY / speed;
+  }
+
+  isHover(cursor: Point): boolean {
+    return (cursor.x > this.position.x - CARD_WIDTH / 2 && cursor.x < this.position.x + CARD_WIDTH / 2 && cursor.y > this.position.y - CARD_HEIGHT / 2 && cursor.y < this.position.y + CARD_HEIGHT / 2)
   }
 }

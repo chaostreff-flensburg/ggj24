@@ -89,10 +89,7 @@ export class Hand {
         return;
       }
 
-      const x = instance.position.x;
-      const y = instance.position.y;
-
-      if (!cursorOnCard && input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
+      if (!cursorOnCard && instance.isHover(input)) {
         if (!instance.isHovered) {
           // new hover
           instance.target.y -= CARD_HEIGHT / 2;
