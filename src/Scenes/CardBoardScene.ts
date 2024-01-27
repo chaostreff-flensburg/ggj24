@@ -84,7 +84,7 @@ export class CardBoardScene implements Scene {
   }
 
   // render scene
-  render(context: CanvasRenderingContext2D): void {
+  render(context: CanvasRenderingContext2D, input: Input): void {
     if (!this.cardLoadComplete && !this.cardBackgroundLoadComplete) {
       return;
     }
