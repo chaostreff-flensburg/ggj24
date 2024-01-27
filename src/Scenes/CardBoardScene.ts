@@ -196,7 +196,7 @@ export class CardBoardScene implements Scene {
     if (field.isOpponent && card != null && this.playerSelectedCard != null) {
       // attack ...!
 
-    this.audioManager.playSound("click5")
+      this.audioManager.playSound("click5")
 
       this.playerField.attack(this.playerSelectedCard!, card);
       this.playerSelectedCard = null;
