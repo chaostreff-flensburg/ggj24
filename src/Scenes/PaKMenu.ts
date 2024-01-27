@@ -9,7 +9,7 @@ type PointOfInterest = {
   action: string;
 };
 
-export class PuKMenu implements Scene {
+export class PaKMenu implements Scene {
   private image: HTMLImageElement | null = null;
   private imageLoadcomplete = false;
 
@@ -99,21 +99,21 @@ export class PuKMenu implements Scene {
   // update scene
   update(input: Input): void {
     if (this.imageLoadcomplete) {
-      this.pointofinterest.forEach((poi) => {
-        if (
-          input.clicked == true &&
-          input.x >= poi.x1 &&
-          input.x <= poi.x2 &&
-          input.y >= poi.y1 &&
-          input.y <= poi.y2
-        ) {
-          this.action = poi.action;
-          console.log("action", this.action);
+      if (input.clicked == true) {
+        this.pointofinterest.forEach((poi) => {
+          if (
+            input.x >= poi.x1 &&
+            input.x <= poi.x2 &&
+            input.y >= poi.y1 &&
+            input.y <= poi.y2
+          ) {
+            this.action = poi.action;
+          }
+        });
+        if (this.action !== "") {
+          this.actionimage = new Image();
+          this.actionimage.src = "scene/" + this.action + ".png";
         }
-      });
-      if (this.action !== "") {
-        this.actionimage = new Image();
-        this.actionimage.src = "scene/" + this.action + ".png";
       }
     }
   }
@@ -122,7 +122,10 @@ export class PuKMenu implements Scene {
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       context.drawImage(this.image, 0, 650);
-      if(this.action !== "" && this.actionimage != null && this.actionimage.src !== "") {
+      if (
+        this.action !== "" && this.actionimage != null &&
+        this.actionimage.src !== ""
+      ) {
         context.drawImage(this.actionimage!, input.x, input.y);
       }
       if (this.debug) { // for debugging

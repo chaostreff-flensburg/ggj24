@@ -1,6 +1,6 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
-import { PuKMenu } from "./PuKMenu";
+import { PaKMenu } from "./PaKMenu";
 
 type PointOfInterest = {
   x1: number;
@@ -10,10 +10,10 @@ type PointOfInterest = {
   action: string;
 };
 
-export class DemoScene implements Scene {
+export class PAKScene1 implements Scene {
   private image: HTMLImageElement | null = null;
   private imageLoadcomplete = false;
-  private menu: PuKMenu = new PuKMenu();
+  private menu: PaKMenu = new PaKMenu();
 
   private pointofinterest: Array<PointOfInterest> = [];
   private action: string | undefined;
@@ -23,7 +23,7 @@ export class DemoScene implements Scene {
   load(): void {
     // load scene image
     this.image = new Image();
-    this.image.src = "scene/sketch.png";
+    this.image.src = "scene/scene1.png";
     this.image.onload = () => {
       this.imageLoadcomplete = true;
     };
@@ -34,21 +34,21 @@ export class DemoScene implements Scene {
         x2: 100,
         y1: 0,
         y2: 100,
-        action: "action1",
+        action: "open",
       },
       {
         x1: 100,
         x2: 200,
         y1: 0,
         y2: 100,
-        action: "action2",
+        action: "use",
       },
       {
         x1: 0,
         x2: 100,
         y1: 100,
         y2: 200,
-        action: "action3",
+        action: "talk",
       },
       {
         x1: 100,
@@ -58,7 +58,7 @@ export class DemoScene implements Scene {
         action: "action4",
       },
     ];
-	this.menu.load();
+    this.menu.load();
   }
   // update scene
   update(input: Input): void {
@@ -67,33 +67,33 @@ export class DemoScene implements Scene {
       (
         point: PointOfInterest,
       ) => {
-        if (input.clicked === true &&
+        if (
+          input.clicked === true &&
           input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
           input.y < point.y2
         ) {
-          if(this.menu.action !== "") {
-            if(this.menu.action === point.action) {
+          if (this.menu.action !== "") {
+            if (this.menu.action === point.action) {
               // do something
               console.log("do something");
-            }
-            else
-            {
+              this.menu.action = ""; // reset action
+            } else {
               // cant do that
               console.log("cant do that");
-              this.menu.action = "";
+              this.menu.action = ""; // reset action
             }
           }
         }
       },
     );
-	this.menu.update(input);
+    this.menu.update(input);
   }
 
   // render scene
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       context.drawImage(this.image!, 0, 0);
-	    this.menu.render(context, input);
+      this.menu.render(context, input);
       if (this.debug) { // for debugging
         this.pointofinterest.forEach((poi) => {
           context.strokeStyle = "black";
