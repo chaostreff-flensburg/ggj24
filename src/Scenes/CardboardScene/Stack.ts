@@ -1,3 +1,4 @@
+import { Input } from "../../Input";
 import { CardInstance } from "./CardInstance";
 import { Hand } from "./Hand";
 
@@ -17,6 +18,11 @@ export class Stack {
 
   hand: Hand;
 
+  position: { x: number, y: number } = {
+    x: (CANVAS_WIDTH - CARD_WIDTH - 70),
+    y: (CANVAS_HEIGHT - CARD_HEIGHT - 30)
+  };
+
   constructor(hand: Hand) {
     this.hand = hand;
   }
@@ -32,10 +38,23 @@ export class Stack {
 
     const card = this.deck.pop();
     if (card) {
+      card.position.x = this.position.x;
+      card.position.y = this.position.y;
+
       this.hand.addCard(card);
     }
 
     return card;
+  }
+
+  update(input: Input): void {
+    // is mouse over a card?
+    if (input.x > this.position.x && input.x < this.position.x + CARD_WIDTH && input.y > this.position.y && input.y < this.position.y + CARD_HEIGHT) {
+      if (input.clicked) {
+        console.log("draw card")
+        this.draw();
+      }
+    }
   }
 
   render(context: CanvasRenderingContext2D) {
@@ -44,7 +63,7 @@ export class Stack {
     }
 
     this.deck.forEach((_, index) => {
-      context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, (CANVAS_WIDTH - CARD_WIDTH - 70) + index / 2, (CANVAS_HEIGHT - CARD_HEIGHT - 30) - index / 2, CARD_WIDTH, CARD_HEIGHT);
+      context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, this.position.x + index / 2, this.position.y - index / 2, CARD_WIDTH, CARD_HEIGHT);
     })
   }
 }

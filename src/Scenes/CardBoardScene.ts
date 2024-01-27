@@ -111,6 +111,7 @@ export class CardBoardScene implements Scene {
     });
     */
 
+    this.stack.update(input);
     this.hand.update(input);
     this.field.update(input);
   }

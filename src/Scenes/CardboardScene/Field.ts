@@ -11,8 +11,6 @@ const CARD_HEIGHT = CARD_IMAGE_HEIGHT / 2;
 const INTER_CARD_PADDING = 20;
 const CANVAS_HEIGHT = 800;
 
-const ZOOM = 1.2;
-
 export class Field {
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
@@ -25,7 +23,6 @@ export class Field {
     let result = false;
 
     card.isHovered = false;
-    card.targetScale = 1;
 
     this.cards.every((item, index, list) => {
       if (item == null) {
@@ -74,12 +71,6 @@ export class Field {
         return;
       }
 
-      if (instance.scale != instance.targetScale) {
-        const distance = instance.targetScale - instance.scale;
-        const speed = 10;
-        instance.scale += distance / speed;
-      }
-
       if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
         return
       }
@@ -100,7 +91,7 @@ export class Field {
       const x = instance.position.x;
       const y = instance.position.y;
 
-      if (input.x > x - CARD_WIDTH/2 && input.x < x + CARD_WIDTH/2 && input.y > y - CARD_HEIGHT/2 && input.y < y + CARD_HEIGHT/2) {
+      if (input.x > x - CARD_WIDTH / 2 && input.x < x + CARD_WIDTH / 2 && input.y > y - CARD_HEIGHT / 2 && input.y < y + CARD_HEIGHT / 2) {
         if (!instance.isHovered) {
           // new hover
           instance.target.y -= CARD_HEIGHT / 4;
@@ -109,11 +100,11 @@ export class Field {
         instance.isHovered = true;
 
         if (input.clicked) {
-          if (this.selectedCard != null) {
-            this.selectedCard.targetScale = 1;
+          if (this.selectedCard === instance) {
+            this.selectedCard = null;
+          } else {
+            this.selectedCard = instance;
           }
-          this.selectedCard = instance;
-          instance.targetScale = ZOOM;
         }
       } else {
         if (instance.isHovered) {
@@ -140,19 +131,7 @@ export class Field {
 
       context.save();
       context.translate(instance.position.x, instance.position.y);
-      if (instance == this.selectedCard) {
-        // rotate to mouse position
-        const x = instance.position.x;
-        const y = instance.position.y;
-
-        const distanceX = input.x - x;
-        const distanceY = input.y - y;
-
-        const angle = Math.atan2(distanceY, distanceX);
-        context.rotate(angle+Math.PI/2);
-      }
-      context.translate(-CARD_WIDTH/2, -CARD_HEIGHT/2);
-      context.scale(instance.scale, instance.scale);
+      context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
       if (instance == this.selectedCard) {
         context.fillStyle = "red";
