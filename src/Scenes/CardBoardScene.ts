@@ -3,123 +3,13 @@ import { Input } from "../Input";
 import { Card } from "./CardboardScene/Card";
 import { CardInstance } from "./CardboardScene/CardInstance";
 import { Field } from "./CardboardScene/Field";
-
-// CardDeck is a class that represents a deck of cards
-export class CardDeck {
-  cards: Array<Card> = [];
-  deck: Array<CardInstance> = [];
-  hand: Array<CardInstance> = [];
-  graveyard: Array<CardInstance> = [];
-  field: Array<CardInstance> = [];
-
-  async load(): Promise<void> {
-    const self = this;
-
-    return fetch("cards.json")
-      .then(response => response.json())
-      .then((cards: Array<Card>) => {
-        self.cards = cards
-
-        // create deck instances
-        let id = 0;
-        self.cards.forEach((card, index) => {
-          for (let i = 0; i < 10; i++) {
-            let instance: CardInstance = {
-              id: id,
-              card: card,
-              position: {
-                x: 0,
-                y: 0,
-              },
-              target: {
-                x: 0,
-                y: 0,
-              },
-
-              // set base defense and attack
-              defense: card.defense,
-              attack: card.attack,
-              isHovered: false
-            }
-
-            self.deck.push(instance);
-            id += 1;
-          }
-        });
-
-        // shuffle deck
-        self.deck.sort(() => Math.random() - 0.5);
-
-        // todo: remove
-        for (let i = 0; i < 10; i++) {
-          self.draw();
-        }
-
-        // todo: remove
-        let playNum = 5
-        if (self.hand.length < 5) {
-          playNum = self.hand.length;
-        }
-        for (let i = 0; i < playNum; i++) {
-          self.play(self.hand[i]);
-        }
-      });
-  }
-
-  draw(): CardInstance | undefined {
-    if (this.deck.length === 0) {
-      return;
-    }
-
-    const card = this.deck.pop();
-    if (card) {
-      this.hand.push(card);
-    }
-
-    return card;
-  }
-
-  discard(instance: CardInstance): void {
-    this.hand = this.hand.filter((c) => c.id !== instance.id);
-    this.graveyard.push(instance);
-  }
-
-  play(instance: CardInstance): void {
-    if (instance === undefined) {
-      console.error("CARD IS UNDEFINED!")
-      return;
-    }
-
-    this.hand = this.hand.filter((c) => c.id !== instance.id);
-    this.field.push(instance);
-  }
-
-  attack(instance: CardInstance, target: CardInstance): void {
-    target.defense -= instance.attack;
-    instance.defense -= target.attack;
-
-    if (target.defense <= 0) {
-      this.defeat(target);
-    }
-
-    if (instance.defense <= 0) {
-      this.defeat(instance);
-    }
-  }
-
-  defeat(instance: CardInstance): void {
-    this.field = this.field.filter((c) => c.id !== instance.id);
-    this.graveyard.push(instance);
-  }
-
-  visibleCardInstances(): Array<CardInstance> {
-    return this.hand.concat(this.field);
-  }
-}
+import { Hand } from "./CardboardScene/Hand";
+import { Stack } from "./CardboardScene/Stack";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
-  private playerCardDeck: CardDeck = new CardDeck();
+  private stack: Stack;
+  private hand: Hand;
   private field: Field = new Field();
   private cardLoadComplete: boolean = false;
 
@@ -127,6 +17,11 @@ export class CardBoardScene implements Scene {
   private cardBackgroundLoadComplete = false;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
+
+  constructor() {
+    this.hand = new Hand(this.field);
+    this.stack = new Stack(this.hand);
+  }
 
   // load scene image and points of interest
   load(): void {
@@ -136,9 +31,14 @@ export class CardBoardScene implements Scene {
       this.cardBackgroundLoadComplete = true;
     };
 
-    this.playerCardDeck.load().then(() => {
+    this.stack.load().then(() => {
       this.cardLoadComplete = true;
       this.field.cardBackground = this.cardBackground!;
+      this.hand.cardBackground = this.cardBackground!;
+
+      for (let i = 0; i < 5; i++) {
+        this.stack.draw();
+      }
     });
   }
 
@@ -148,6 +48,7 @@ export class CardBoardScene implements Scene {
       return;
     }
 
+    /*
     const cardWidth = 300 / 2;
     const cardHeight = 380 / 2;
 
@@ -162,7 +63,6 @@ export class CardBoardScene implements Scene {
         instance.isHovered = false;
       }
     });
-
     this.playerCardDeck.hand.forEach((instance, index) => {
       const x = instance.position.x;
       const y = instance.position.y;
@@ -178,6 +78,9 @@ export class CardBoardScene implements Scene {
         instance.isHovered = false;
       }
     });
+    */
+
+    this.hand.update(input);
   }
 
   // render scene
@@ -196,6 +99,7 @@ export class CardBoardScene implements Scene {
     // render this.playerCardDeck.graveyard
     // render this.playerCardDeck.hand
 
+    /*
     const cardBackgroundWidth = this.cardBackground!.width;
     const cardBackgroundHeight = this.cardBackground!.height;
 
@@ -233,7 +137,10 @@ export class CardBoardScene implements Scene {
       // defense
       context.fillText(instance.defense.toString(), x + cardWidth / 1.3, y + cardHeight / 1.28);
     });
+    */
 
+    this.stack.render(context);
     this.field.render(context);
+    this.hand.render(context);
   }
 }
