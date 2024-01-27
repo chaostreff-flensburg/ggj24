@@ -19,8 +19,9 @@ export class CardBoardScene implements Scene {
 
   private loadComplete:Boolean = false;
 
-  private cardBackground: HTMLImageElement | null = null;
-  private goodCardBack: HTMLImageElement | null = null;
+  private cardBackground: HTMLImageElement | undefined;
+  private goodCardBack: HTMLImageElement | undefined;
+  private sadCardBack: HTMLImageElement | undefined;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -38,6 +39,8 @@ export class CardBoardScene implements Scene {
         .then(image => this.cardBackground = image),
       loadImage("good_card_back.png")
         .then(image => this.goodCardBack = image),
+      loadImage("sad_card_back.png")
+        .then(image => this.sadCardBack = image),
       fetch("cards.json")
         .then(response => response.json())
         .then((cards: Array<Card>) => {
@@ -54,7 +57,7 @@ export class CardBoardScene implements Scene {
 
         this.opponentField.cardBackground = this.cardBackground!;
         this.opponentHand.cardBackground = this.cardBackground!;
-        this.opponentStack.cardBack = this.goodCardBack!;
+        this.opponentStack.cardBack = this.sadCardBack!;
 
         this.prepareDeck();
       })
