@@ -24,6 +24,9 @@ export class Stack {
     x: (CANVAS_WIDTH - CARD_WIDTH - 30),
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
   };
+  topCardPosition: Point;
+  target: Point;
+  isHovered: boolean = false;
 
   public onClick: (() => void) | undefined;
 
@@ -34,6 +37,9 @@ export class Stack {
     if (isOpponent) {
       this.position.y = CARD_HEIGHT - 10;
     }
+
+    this.target = { x: this.position.x, y: this.position.y };
+    this.topCardPosition = { x: this.position.x, y: this.position.y };
   }
 
   shuffle(): void {
@@ -60,12 +66,35 @@ export class Stack {
   }
 
   update(input: Input): void {
+    // animate
+    if (this.target.x != this.topCardPosition.x || this.target.y != this.topCardPosition.y) {
+      const distanceX = this.target.x - this.topCardPosition.x;
+      const distanceY = this.target.y - this.topCardPosition.y;
+
+      const speed = 5;
+      this.topCardPosition.x += distanceX / speed;
+      this.topCardPosition.y += distanceY / speed;
+    }
+
     // is mouse over a card?
-    if (input.x > this.position.x - CARD_WIDTH/2 && input.x < this.position.x + CARD_WIDTH/2 && input.y > this.position.y - CARD_WIDTH/2 && input.y < this.position.y + CARD_WIDTH/2) {
+    if (input.x > this.position.x - CARD_WIDTH / 2 && input.x < this.position.x + CARD_WIDTH / 2 && input.y > this.position.y - CARD_WIDTH / 2 && input.y < this.position.y + CARD_WIDTH / 2) {
+      if (!this.isHovered) {
+        // new hover
+        this.target.x -= 20;
+      }
+
+      this.isHovered = true;
+
       if (input.clicked && this.onClick) {
         this.onClick()
         input.clicked = false;
       }
+    } else {
+      if (this.isHovered) {
+        // new end hover
+        this.target.x += 20;
+      }
+      this.isHovered = false;
     }
   }
 
@@ -76,7 +105,11 @@ export class Stack {
 
     this.deck.forEach((_, index) => {
       context.save();
-      context.translate(this.position.x + index / 2, this.position.y + index / 2);
+      if (index === this.deck.length - 1) {
+        context.translate(this.topCardPosition.x + index / 2, this.topCardPosition.y + index / 2);
+      } else {
+        context.translate(this.position.x + index / 2, this.position.y + index / 2);
+      }
 
       // rotate by 180 degrees if opponent
       if (this.isOpponent) {
