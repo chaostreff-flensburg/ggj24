@@ -1,15 +1,7 @@
 import { Input } from '../../Input';
 import { CardInstance } from './CardInstance';
+import { CARD_WIDTH, CARD_HEIGHT, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, INTER_CARD_PADDING, CANVAS_HEIGHT } from './Constants';
 import { Point } from './Point';
-
-const CARD_IMAGE_WIDTH = 300;
-const CARD_IMAGE_HEIGHT = 380;
-
-const CARD_WIDTH = CARD_IMAGE_WIDTH / 2;
-const CARD_HEIGHT = CARD_IMAGE_HEIGHT / 2;
-
-const INTER_CARD_PADDING = 20;
-const CANVAS_HEIGHT = 800;
 
 export class Field {
   private isOpponent: Boolean;
