@@ -1,6 +1,7 @@
 import { DemoScene } from "./Scenes/DemoScene";
 import { Scene } from "./Scenes/IScene";
 import { InputManager } from "./Input";
+import { CardBoardScene } from "./Scenes/CardBoardScene";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;

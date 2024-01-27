@@ -5,59 +5,121 @@ type Card = {
     title: string;
     description: string;
     slug: string;
-    def: number;
-    atk: number;
+    defense: number;
+    attack: number;
+}
+
+type CardInstance = {
+    id: number;
+    card: Card;
+    x: number;
+    y: number;
+    defense: number;
+    attack: number;
+    isHovered: boolean;
 }
 
 // CardDeck is a class that represents a deck of cards
 export class CardDeck {
     cards: Array<Card> = [];
-    hand: Array<Card> = [];
-    graveyard: Array<Card> = [];
-    field: Array<Card> = [];
+    deck: Array<CardInstance> = [];
+    hand: Array<CardInstance> = [];
+    graveyard: Array<CardInstance> = [];
+    field: Array<CardInstance> = [];
 
     async load(): Promise<void> {
-        return fetch("cards.json").then((response) => {
-            response.json().then((data) => {
-                this.cards = data.cards as Array<Card>;
+        const self = this;
+        return fetch("cards.json").then(async (response) => {
+            const cards: Array<Card> = await response.json()
+            self.cards = cards
+
+            // create deck instances
+            let id = 0;
+            self.cards.forEach((card, index) => {
+                for (let i = 0; i < 10; i++) {
+                    let instance: CardInstance = {
+                        id: id,
+                        card: card,
+                        x: 0,
+                        y: 0,
+                        // set base defense and attack
+                        defense: card.defense,
+                        attack: card.attack,
+                        isHovered: false
+                    }
+
+                    self.deck.push(instance);
+                    id += 1;
+                }
             });
+
+            // shuffle deck
+            self.deck.sort(() => Math.random() - 0.5);
+
+            // todo: remove
+            for (let i = 0; i < 10; i++) {
+                self.draw();
+            }
+
+            // todo: remove
+            let playNum = 5
+            if (self.hand.length < 5) {
+                playNum = self.hand.length;
+            }
+            for (let i = 0; i < playNum; i++) {
+                self.play(self.hand[i]);
+            }
         });
     }
 
-    draw(): Card {
-        const card = this.cards.pop();
+    draw(): CardInstance|undefined {
+        if (this.deck.length === 0) {
+            return;
+        }
+
+        const card = this.deck.pop();
         if (card) {
             this.hand.push(card);
         }
-        return card!;
+
+        return card;
     }
 
-    discard(card: Card): void {
-        this.hand = this.hand.filter((c) => c.slug !== card.slug);
-        this.graveyard.push(card);
+    discard(instance: CardInstance): void {
+        this.hand = this.hand.filter((c) => c.id !== instance.id);
+        this.graveyard.push(instance);
     }
 
-    play(card: Card): void {
-        this.hand = this.hand.filter((c) => c.slug !== card.slug);
-        this.field.push(card);
+    play(instance: CardInstance): void {
+        if (instance === undefined) {
+            console.error("CARD IS UNDEFINED!")
+            return;
+        }
+
+        this.hand = this.hand.filter((c) => c.id !== instance.id);
+        this.field.push(instance);
     }
 
-    attack(card: Card, target: Card): void {
-        target.def -= card.atk;
-        card.def -= target.atk;
+    attack(instance: CardInstance, target: CardInstance): void {
+        target.defense -= instance.attack;
+        instance.defense -= target.attack;
 
-        if (target.def <= 0) {
+        if (target.defense <= 0) {
             this.defeat(target);
         }
 
-        if (card.def <= 0) {
-            this.defeat(card);
+        if (instance.defense <= 0) {
+            this.defeat(instance);
         }
     }
 
-    defeat(card: Card): void {
-        this.field = this.field.filter((c) => c.slug !== card.slug);
-        this.graveyard.push(card);
+    defeat(instance: CardInstance): void {
+        this.field = this.field.filter((c) => c.id !== instance.id);
+        this.graveyard.push(instance);
+    }
+
+    visibleCardInstances(): Array<CardInstance> {
+        return this.hand.concat(this.field);
     }
 }
 
@@ -65,6 +127,8 @@ export class CardDeck {
 export class CardBoardScene implements Scene {
     private playerCardDeck: CardDeck = new CardDeck();
     private cardLoadComplete: boolean = false;
+
+    private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
     // load scene image and points of interest
     load(): void {
@@ -79,8 +143,17 @@ export class CardBoardScene implements Scene {
             return;
         }
 
-        // on click at
-        // round (draw, play, discard, attack, defeat)
+        // is mouse over a card?
+        this.playerCardDeck.visibleCardInstances().forEach((instance, index) => {
+            const x = instance.x;
+            const y = instance.y;
+
+            if (input.x > x && input.x < x + 100 && input.y > y && input.y < y + 150) {
+                instance.isHovered = true;
+            } else {
+                instance.isHovered = false;
+            }
+        });
     }
 
     // render scene
@@ -89,9 +162,56 @@ export class CardBoardScene implements Scene {
             return;
         }
 
+        this.screenSize.width = context.canvas.width;
+        this.screenSize.height = context.canvas.height;
+
         // render background
         // render this.playerCardDeck.field
         // render this.playerCardDeck.graveyard
         // render this.playerCardDeck.hand
+
+        const handPositionY = context.canvas.height - 100;
+        const handPositionX = context.canvas.width/2 - this.playerCardDeck.hand.length * 100 / 2;
+        const paddingCardsField = 20;
+        this.playerCardDeck.field.forEach((instance, index) => {
+            const x = 100 + index * (100+paddingCardsField);
+            const y = 100;
+
+            // todo: move for animation or ...
+            instance.x = x;
+            instance.y = y;
+
+            if (instance.isHovered) {
+                context.fillStyle = "yellow";
+            } else {
+                context.fillStyle = "gray";
+            }
+            context.fillRect(x, y, 100, 150);
+
+            // text
+            context.fillStyle = "black";
+            context.fillText(instance.card.title, x + 10, y + 20);
+        });
+
+        const paddingCardsHand = 20;
+        this.playerCardDeck.hand.forEach((instance, index) => {
+            const x = handPositionX + index * (100+paddingCardsHand);
+            const y = handPositionY;
+
+            // todo: move for animation or ...
+            instance.x = x;
+            instance.y = y;
+
+            if (instance.isHovered) {
+                context.fillStyle = "yellow";
+            } else {
+                context.fillStyle = "gray";
+            }
+            context.fillRect(x, y, 100, 150);
+
+            // text
+            context.fillStyle = "black";
+            context.fillText(instance.card.title, x + 10, y + 20);
+        });
     }
 }

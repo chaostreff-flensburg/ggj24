@@ -1,9 +1,142 @@
 [
-    {
-        "atk": 4,
-        "def": 2,
-        "title": "Drachenmeister",
-        "description": "Ein mächtiger Drachenmeister, der die Lüfte beherrscht.",
-        "slug": "drachenmeister"
-    }
+  {
+    "title": "Dragon Knight",
+    "description": "A fierce dragon warrior ready for battle.",
+    "slug": "dragon-knight",
+    "attack": 85,
+    "defense": 70
+  },
+  {
+    "title": "Mystic Sorceress",
+    "description": "A powerful sorceress skilled in mystical arts.",
+    "slug": "mystic-sorceress",
+    "attack": 70,
+    "defense": 75
+  },
+  {
+    "title": "Thunder Beast",
+    "description": "A mythical beast with the power of thunder.",
+    "slug": "thunder-beast",
+    "attack": 90,
+    "defense": 65
+  },
+  {
+    "title": "Swift Archer",
+    "description": "An agile archer with unparalleled accuracy.",
+    "slug": "swift-archer",
+    "attack": 80,
+    "defense": 60
+  },
+  {
+    "title": "Ice Guardian",
+    "description": "A guardian with the ability to control ice and frost.",
+    "slug": "ice-guardian",
+    "attack": 75,
+    "defense": 80
+  },
+  {
+    "title": "Fiery Phoenix",
+    "description": "A majestic phoenix with the power of fire.",
+    "slug": "fiery-phoenix",
+    "attack": 95,
+    "defense": 55
+  },
+  {
+    "title": "Shadow Assassin",
+    "description": "A stealthy assassin skilled in the art of shadows.",
+    "slug": "shadow-assassin",
+    "attack": 85,
+    "defense": 65
+  },
+  {
+    "title": "Earth Golem",
+    "description": "A massive golem with control over earth elements.",
+    "slug": "earth-golem",
+    "attack": 80,
+    "defense": 90
+  },
+  {
+    "title": "Aquatic Serpent",
+    "description": "A serpentine creature with control over water.",
+    "slug": "aquatic-serpent",
+    "attack": 70,
+    "defense": 75
+  },
+  {
+    "title": "Wind Spirit",
+    "description": "A spirit with the power to control the winds.",
+    "slug": "wind-spirit",
+    "attack": 75,
+    "defense": 70
+  },
+  {
+    "title": "Golden Paladin",
+    "description": "A noble paladin adorned in golden armor.",
+    "slug": "golden-paladin",
+    "attack": 90,
+    "defense": 80
+  },
+  {
+    "title": "Lunar Priestess",
+    "description": "A priestess with the ability to harness the power of the moon.",
+    "slug": "lunar-priestess",
+    "attack": 75,
+    "defense": 85
+  },
+  {
+    "title": "Crimson Warlock",
+    "description": "A warlock with dark powers and a crimson aura.",
+    "slug": "crimson-warlock",
+    "attack": 85,
+    "defense": 60
+  },
+  {
+    "title": "Steel Samurai",
+    "description": "A skilled samurai with a blade of steel.",
+    "slug": "steel-samurai",
+    "attack": 95,
+    "defense": 75
+  },
+  {
+    "title": "Celestial Fairy",
+    "description": "A fairy with celestial powers and a kind heart.",
+    "slug": "celestial-fairy",
+    "attack": 70,
+    "defense": 80
+  },
+  {
+    "title": "Demonic Imp",
+    "description": "A mischievous imp with dark and demonic abilities.",
+    "slug": "demonic-imp",
+    "attack": 80,
+    "defense": 55
+  },
+  {
+    "title": "Solar Knight",
+    "description": "A knight empowered by the radiant energy of the sun.",
+    "slug": "solar-knight",
+    "attack": 90,
+    "defense": 85
+  },
+  {
+    "title": "Jade Enchantress",
+    "description": "An enchantress with powers linked to the jade gem.",
+    "slug": "jade-enchantress",
+    "attack": 75,
+    "defense": 70
+  },
+  {
+    "title": "Inferno Dragon",
+    "description": "A dragon with the uncontrollable power of inferno.",
+    "slug": "inferno-dragon",
+    "attack": 100,
+    "defense": 50
+  },
+  {
+    "title": "Nature Guardian",
+    "description": "A guardian of nature with control over flora and fauna.",
+    "slug": "nature-guardian",
+    "attack": 85,
+    "defense": 80
+  }
 ]
