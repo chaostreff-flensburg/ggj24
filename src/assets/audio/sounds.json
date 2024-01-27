@@ -1,0 +1,26 @@
+[
+  {
+    "fileName": "click5.ogg",
+    "slug": "click5"
+  },
+  {
+    "fileName": "error_005.ogg",
+    "slug": "error"
+  },
+  {
+    "fileName": "ghost.ogg",
+    "slug": "ghost"
+  },
+  {
+    "fileName": "play-card.ogg",
+    "slug": "play-card"
+  },
+  {
+    "fileName": "timer.ogg",
+    "slug": "timer"
+  },
+  {
+    "fileName": "win.ogg",
+    "slug": "win"
+  }
+]
