@@ -11,7 +11,7 @@ export class SceneManager {
   private lastScene: Scene | null = null
   private width: number = 0
   private height: number = 0
-  // removes the scene automatically after it was hidden
+  // removes the scene automatically after it is not the active scene anymore
   private autoDispose: boolean = false
 
   constructor(initialScene: Scene | null = null) {
@@ -19,7 +19,7 @@ export class SceneManager {
   }
 
   /**
-   * Pushes a scene to the scene list - it also becomes the active scene 
+   * adds a scene to the activeScene variable
    * @param 
    */
   pushScreen(s: Scene) {
