@@ -179,6 +179,8 @@ export class CardBoardScene implements Scene {
             return;
         }
 
+        context.font = "bold 8px serif";
+
         this.screenSize.width = context.canvas.width;
         this.screenSize.height = context.canvas.height;
 
@@ -196,6 +198,7 @@ export class CardBoardScene implements Scene {
         const handPositionY = context.canvas.height - 100;
         const handPositionX = context.canvas.width/2 - this.playerCardDeck.hand.length * 100 / 2;
         const paddingCardsField = 20;
+
         this.playerCardDeck.field.forEach((instance, index) => {
             const x = 100 + index * (cardWidth+paddingCardsField);
             const y = 100;
@@ -215,7 +218,12 @@ export class CardBoardScene implements Scene {
             // text
             context.fillStyle = "black";
             context.textAlign = "center";
-            context.fillText(instance.card.title, x + cardWidth/2, y + 20);
+            context.fillText(instance.card.title, x + cardWidth/2, y+cardHeight/10);
+
+            // attack
+            context.fillText(instance.attack.toString(), x + cardWidth/4.5, y + cardHeight/1.28);
+            // defense
+            context.fillText(instance.defense.toString(), x + cardWidth/1.3, y + cardHeight/1.28);
         });
 
         const paddingCardsHand = 20;
@@ -238,7 +246,12 @@ export class CardBoardScene implements Scene {
             // text
             context.fillStyle = "black";
             context.textAlign = "center";
-            context.fillText(instance.card.title, x + cardWidth/2, y+20);
+            context.fillText(instance.card.title, x + cardWidth/2, y+cardHeight/10);
+
+            // attack
+            context.fillText(instance.attack.toString(), x + cardWidth/4.5, y + cardHeight/1.28);
+            // defense
+            context.fillText(instance.defense.toString(), x + cardWidth/1.3, y + cardHeight/1.28);
         });
     }
 }
