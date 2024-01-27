@@ -29,6 +29,7 @@ export class CardDeck {
 
     async load(): Promise<void> {
         const self = this;
+
         return fetch("cards.json").then(async (response) => {
             const cards: Array<Card> = await response.json()
             self.cards = cards
@@ -128,10 +129,19 @@ export class CardBoardScene implements Scene {
     private playerCardDeck: CardDeck = new CardDeck();
     private cardLoadComplete: boolean = false;
 
+    private cardBackground: HTMLImageElement | null = null;
+    private cardBackgroundLoadComplete = false;
+
     private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
     // load scene image and points of interest
     load(): void {
+        this.cardBackground = new Image();
+        this.cardBackground.src = "card_background.png";
+        this.cardBackground.onload = () => {
+            this.cardBackgroundLoadComplete = true;
+        };
+
         this.playerCardDeck.load().then(() => {
             this.cardLoadComplete = true;
         });
@@ -139,17 +149,24 @@ export class CardBoardScene implements Scene {
 
     // update scene
     update(input: Input): void {
-        if (!this.cardLoadComplete) {
+        if (!this.cardLoadComplete && !this.cardBackgroundLoadComplete) {
             return;
         }
+
+        const cardWidth = 300/2;
+        const cardHeight = 380/2;
 
         // is mouse over a card?
         this.playerCardDeck.visibleCardInstances().forEach((instance, index) => {
             const x = instance.x;
             const y = instance.y;
 
-            if (input.x > x && input.x < x + 100 && input.y > y && input.y < y + 150) {
+            if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
                 instance.isHovered = true;
+
+                if (input.clicked) {
+                    this.playerCardDeck.play(instance);
+                }
             } else {
                 instance.isHovered = false;
             }
@@ -158,7 +175,7 @@ export class CardBoardScene implements Scene {
 
     // render scene
     render(context: CanvasRenderingContext2D): void {
-        if (!this.cardLoadComplete) {
+        if (!this.cardLoadComplete && !this.cardBackgroundLoadComplete) {
             return;
         }
 
@@ -170,11 +187,17 @@ export class CardBoardScene implements Scene {
         // render this.playerCardDeck.graveyard
         // render this.playerCardDeck.hand
 
+        const cardBackgroundWidth = this.cardBackground!.width;
+        const cardBackgroundHeight = this.cardBackground!.height;
+
+        const cardWidth = 300/2;
+        const cardHeight = 380/2;
+
         const handPositionY = context.canvas.height - 100;
         const handPositionX = context.canvas.width/2 - this.playerCardDeck.hand.length * 100 / 2;
         const paddingCardsField = 20;
         this.playerCardDeck.field.forEach((instance, index) => {
-            const x = 100 + index * (100+paddingCardsField);
+            const x = 100 + index * (cardWidth+paddingCardsField);
             const y = 100;
 
             // todo: move for animation or ...
@@ -186,11 +209,13 @@ export class CardBoardScene implements Scene {
             } else {
                 context.fillStyle = "gray";
             }
-            context.fillRect(x, y, 100, 150);
+            context.fillRect(x, y, cardWidth, cardHeight);
+            context.drawImage(this.cardBackground!, 0, 0, cardBackgroundWidth, cardBackgroundHeight, x, y, cardWidth, cardHeight);
 
             // text
             context.fillStyle = "black";
-            context.fillText(instance.card.title, x + 10, y + 20);
+            context.textAlign = "center";
+            context.fillText(instance.card.title, x + cardWidth/2, y + 20);
         });
 
         const paddingCardsHand = 20;
@@ -207,11 +232,13 @@ export class CardBoardScene implements Scene {
             } else {
                 context.fillStyle = "gray";
             }
-            context.fillRect(x, y, 100, 150);
+            context.fillRect(x, y, cardWidth, cardHeight);
+            context.drawImage(this.cardBackground!, 0, 0, cardBackgroundWidth, cardBackgroundHeight, x, y, cardWidth, cardHeight);
 
             // text
             context.fillStyle = "black";
-            context.fillText(instance.card.title, x + 10, y + 20);
+            context.textAlign = "center";
+            context.fillText(instance.card.title, x + cardWidth/2, y+20);
         });
     }
 }

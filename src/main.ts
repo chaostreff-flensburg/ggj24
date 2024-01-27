@@ -17,7 +17,7 @@ class DrawingApp {
 
     this.inputManager = new InputManager(this.canvas);
 
-    this.scene = new DemoScene();
+    this.scene = new CardBoardScene();
     this.scene.load();
   }
 
