@@ -17,7 +17,7 @@ export class Hand {
   constructor(field: Field, isOpponent: Boolean = false) {
     this.field = field;
     this.isOpponent = isOpponent;
-    this.hoverYOffset = ((this.isOpponent)?(-CARD_HEIGHT / 4):(CARD_HEIGHT / 4))
+    this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
   }
 
   addCard(card: CardInstance): Boolean {
@@ -56,15 +56,15 @@ export class Hand {
   private updateCardTargetPosition(): void {
     let padding = INTER_CARD_PADDING;
     if (this.cards.length > 8) {
-      padding -= (this.cards.length - 1)*8;
+      padding -= (this.cards.length - 1) * 8;
     } else if (this.cards.length > 5) {
-      padding -= (this.cards.length - 1)*5;
+      padding -= (this.cards.length - 1) * 5;
     }
 
     this.cards.forEach((instance, index) => {
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + padding);
-      const nextPositionY = (this.isOpponent)?(0 - CARD_HEIGHT/10):(this.screenSize.height - CARD_HEIGHT/6);
+      const nextPositionY = (this.isOpponent) ? (0 - CARD_HEIGHT / 10) : (this.screenSize.height - CARD_HEIGHT / 6);
       if (instance.isHovered) {
         instance.target.y = nextPositionY + this.hoverYOffset;
       }
@@ -129,6 +129,10 @@ export class Hand {
 
       context.save();
       context.translate(instance.position.x, instance.position.y);
+      // rotate by 180 degrees if opponent
+      if (this.isOpponent) {
+        context.rotate(Math.PI);
+      }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
       if (instance.isHovered) {

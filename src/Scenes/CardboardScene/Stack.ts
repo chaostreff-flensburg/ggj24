@@ -20,8 +20,8 @@ export class Stack {
   hand: Hand;
 
   position: { x: number, y: number } = {
-    x: (CANVAS_WIDTH - CARD_WIDTH - 70),
-    y: (CANVAS_HEIGHT - CARD_HEIGHT - 30)
+    x: (CANVAS_WIDTH - CARD_WIDTH - 30),
+    y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
   };
 
   constructor(hand: Hand, isOpponent: Boolean = false) {
@@ -29,7 +29,7 @@ export class Stack {
     this.isOpponent = isOpponent;
 
     if (isOpponent) {
-      this.position.y = 30;
+      this.position.y = CARD_HEIGHT - 10;
     }
   }
 
@@ -70,7 +70,16 @@ export class Stack {
     }
 
     this.deck.forEach((_, index) => {
-      context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, this.position.x + index / 2, this.position.y - index / 2, CARD_WIDTH, CARD_HEIGHT);
+      context.save();
+      context.translate(this.position.x + index / 2, this.position.y+ index / 2);
+      // rotate by 180 degrees if opponent
+      if (this.isOpponent) {
+        context.rotate(Math.PI);
+      }
+      context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
+
+      context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      context.restore();
     })
   }
 }

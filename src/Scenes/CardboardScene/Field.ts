@@ -120,6 +120,10 @@ export class Field {
 
       context.save();
       context.translate(instance.position.x, instance.position.y);
+      // rotate by 180 degrees if opponent
+      if (this.isOpponent) {
+        context.rotate(Math.PI);
+      }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
       if (instance == this.selectedCard) {
