@@ -12,6 +12,7 @@ const CANVAS_HEIGHT = 800;
 const CANVAS_WIDTH = 1280;
 
 export class Stack {
+  private isOpponent: Boolean;
   deck: Array<CardInstance> = [];
 
   cardBack: HTMLImageElement | undefined;
@@ -23,8 +24,9 @@ export class Stack {
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 30)
   };
 
-  constructor(hand: Hand) {
+  constructor(hand: Hand, isOpponent: Boolean = false) {
     this.hand = hand;
+    this.isOpponent = isOpponent;
   }
 
   shuffle(): void {

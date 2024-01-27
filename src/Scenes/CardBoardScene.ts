@@ -9,9 +9,12 @@ import { Stack } from "./CardboardScene/Stack";
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
   private cards: Array<Card> = [];
-  private stack: Stack;
-  private hand: Hand;
-  private field: Field = new Field();
+  private playerStack: Stack;
+  private opponentStack: Stack;
+  private playerHand: Hand;
+  private opponentHand: Hand;
+  private playerField: Field = new Field(false);
+  private opponentField: Field = new Field(true);
 
   private loadComplete:Boolean = false;
 
@@ -21,8 +24,11 @@ export class CardBoardScene implements Scene {
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
   constructor() {
-    this.hand = new Hand(this.field);
-    this.stack = new Stack(this.hand);
+    this.playerHand = new Hand(this.playerField);
+    this.playerStack = new Stack(this.playerHand);
+
+    this.opponentHand = new Hand(this.opponentField);
+    this.opponentStack = new Stack(this.opponentHand);
   }
 
   loadImage(src:string): Promise<HTMLImageElement> {
@@ -51,9 +57,13 @@ export class CardBoardScene implements Scene {
     Promise.all(assetLoad)
       .then(() => {
         this.loadComplete = true;
-        this.field.cardBackground = this.cardBackground!;
-        this.hand.cardBackground = this.cardBackground!;
-        this.stack.cardBack = this.goodCardBack!;
+        this.playerField.cardBackground = this.cardBackground!;
+        this.playerHand.cardBackground = this.cardBackground!;
+        this.playerStack.cardBack = this.goodCardBack!;
+
+        this.opponentField.cardBackground = this.cardBackground!;
+        this.opponentHand.cardBackground = this.cardBackground!;
+        this.opponentStack.cardBack = this.goodCardBack!;
 
         this.prepareDeck();
       })
@@ -62,14 +72,17 @@ export class CardBoardScene implements Scene {
   private prepareDeck() {
     this.cards.forEach((card) => {
       for (let i = 0; i < 2; i++) {
-        this.stack.deck.push(new CardInstance(card));
+        this.playerStack.deck.push(new CardInstance(card));
+        this.opponentStack.deck.push(new CardInstance(card));
       }
     });
 
-    this.stack.shuffle();
+    this.playerStack.shuffle();
+    this.opponentStack.shuffle();
 
     for (let i = 0; i < 5; i++) {
-      this.stack.draw();
+      this.playerStack.draw();
+      this.opponentStack.draw();
     }
   }
 
@@ -79,41 +92,13 @@ export class CardBoardScene implements Scene {
       return;
     }
 
-    /*
-    const cardWidth = 300 / 2;
-    const cardHeight = 380 / 2;
+    this.playerStack.update(input);
+    this.playerHand.update(input);
+    this.playerField.update(input);
 
-    // is mouse over a card?
-    this.playerCardDeck.field.forEach((instance, index) => {
-      const x = instance.position.x;
-      const y = instance.position.y;
-
-      if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
-        instance.isHovered = true;
-      } else {
-        instance.isHovered = false;
-      }
-    });
-    this.playerCardDeck.hand.forEach((instance, index) => {
-      const x = instance.position.x;
-      const y = instance.position.y;
-
-      if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
-        instance.isHovered = true;
-
-        if (input.clicked) {
-          this.field.addCard(instance)
-          //this.playerCardDeck.play(instance);
-        }
-      } else {
-        instance.isHovered = false;
-      }
-    });
-    */
-
-    this.stack.update(input);
-    this.hand.update(input);
-    this.field.update(input);
+    this.opponentStack.update(input);
+    this.opponentHand.update(input);
+    this.opponentField.update(input);
   }
 
   // render scene
@@ -127,53 +112,12 @@ export class CardBoardScene implements Scene {
     this.screenSize.width = context.canvas.width;
     this.screenSize.height = context.canvas.height;
 
-    // render background
-    // render this.playerCardDeck.field
-    // render this.playerCardDeck.graveyard
-    // render this.playerCardDeck.hand
+    this.playerStack.render(context);
+    this.playerField.render(context, input);
+    this.playerHand.render(context);
 
-    /*
-    const cardBackgroundWidth = this.cardBackground!.width;
-    const cardBackgroundHeight = this.cardBackground!.height;
-
-    const cardWidth = 300 / 2;
-    const cardHeight = 380 / 2;
-
-    const handPositionY = context.canvas.height - 100;
-    const handPositionX = context.canvas.width / 2 - this.playerCardDeck.hand.length * 100 / 2;
-    const paddingCardsField = 20;
-
-    const paddingCardsHand = 20;
-    this.playerCardDeck.hand.forEach((instance, index) => {
-      const x = handPositionX + index * (100 + paddingCardsHand);
-      const y = handPositionY;
-
-      // todo: move for animation or ...
-      instance.position.x = x;
-      instance.position.y = y;
-
-      if (instance.isHovered) {
-        context.fillStyle = "yellow";
-      } else {
-        context.fillStyle = "gray";
-      }
-      context.fillRect(x, y, cardWidth, cardHeight);
-      context.drawImage(this.cardBackground!, 0, 0, cardBackgroundWidth, cardBackgroundHeight, x, y, cardWidth, cardHeight);
-
-      // text
-      context.fillStyle = "black";
-      context.textAlign = "center";
-      context.fillText(instance.card.title, x + cardWidth / 2, y + cardHeight / 10);
-
-      // attack
-      context.fillText(instance.attack.toString(), x + cardWidth / 4.5, y + cardHeight / 1.28);
-      // defense
-      context.fillText(instance.defense.toString(), x + cardWidth / 1.3, y + cardHeight / 1.28);
-    });
-    */
-
-    this.stack.render(context);
-    this.field.render(context, input);
-    this.hand.render(context);
+    this.opponentStack.render(context);
+    this.opponentField.render(context, input);
+    this.opponentHand.render(context);
   }
 }

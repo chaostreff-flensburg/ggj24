@@ -13,6 +13,7 @@ const INTER_CARD_PADDING = 20;
 const CANVAS_HEIGHT = 800;
 
 export class Hand {
+  private isOpponent: Boolean;
   private cards: Array<CardInstance> = [];
   private field: Field;
 
@@ -20,8 +21,9 @@ export class Hand {
 
   cardBackground: HTMLImageElement | undefined;
 
-  constructor(field: Field) {
+  constructor(field: Field, isOpponent: Boolean = false) {
     this.field = field;
+    this.isOpponent = isOpponent;
   }
 
   addCard(card: CardInstance): Boolean {

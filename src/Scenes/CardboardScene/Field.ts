@@ -12,12 +12,18 @@ const INTER_CARD_PADDING = 20;
 const CANVAS_HEIGHT = 800;
 
 export class Field {
+  private isOpponent: Boolean;
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
   private selectedCard: CardInstance | null = null;
 
   cardBackground: HTMLImageElement | undefined;
+
+  constructor(isOpponent: Boolean = false) {
+    this.isOpponent = isOpponent;
+    console.log("isOpponent", isOpponent);
+  }
 
   addCard(card: CardInstance): Boolean {
     let result = false;
