@@ -34,7 +34,7 @@ export class CardBoardScene implements Scene {
 
   constructor(audioManager: AudioManager) {
     this.audioManager = audioManager
-    
+
     this.playerField = new Field(this, false);
     this.playerHand = new Hand();
     this.playerStack = new Stack();
@@ -183,8 +183,12 @@ export class CardBoardScene implements Scene {
   }
 
   onCardClicked(field: Field, card: CardInstance | null = null) {
+
+
     if (field.isOpponent && card != null && this.playerSelectedCard != null) {
       // attack ...!
+
+    this.audioManager.playSound("click5")
 
       this.playerField.attack(this.playerSelectedCard!, card);
       this.playerSelectedCard = null;

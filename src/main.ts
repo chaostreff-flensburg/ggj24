@@ -22,11 +22,13 @@ class DrawingApp {
 
     this.inputManager = new InputManager(this.canvas);
 
-    this.scene = new CardBoardScene();
-    this.scene.load();
-    this.sceneManager = new SceneManager(this.scene)
     this.audioManager = new AudioManager()
     this.audioManager.init()
+
+    this.scene = new CardBoardScene(this.audioManager);
+    this.scene.load();
+    this.sceneManager = new SceneManager(this.scene)
+
 
   }
 

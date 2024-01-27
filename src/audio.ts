@@ -43,10 +43,20 @@ export class AudioManager {
   }
 
   playSound(slug: string) {
+
     if (this.isReady()) {
       let sound = this.getSoundObject(slug)
       if (sound && sound.source) {
-        sound.source.start(0);
+        try {
+          const tmpSource = new AudioBufferSourceNode(this.context);
+          tmpSource.buffer = sound.source.buffer;
+          tmpSource.connect(this.context.destination);
+          sound.source = tmpSource
+          this.context.resume()
+          sound.source.start(0)
+        } catch (e) {
+          console.error(e)
+        }
       }
     } else {
       console.error("Can't play sound. Audiomanager is not ready.")
