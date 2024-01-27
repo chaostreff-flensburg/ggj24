@@ -8,16 +8,16 @@ export class Field {
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
-  private selectedCard: CardInstance | null = null;
+  selectedCard: CardInstance | null = null;
 
   private hoverYOffset: number = 0;
 
   cardBackground: HTMLImageElement | undefined;
   opponentField: Field | undefined;
-  private scene: CardBoardScene;
 
-  constructor(scene: CardBoardScene, isOpponent: Boolean = false) {
-    this.scene = scene;
+  onClick: ((card: CardInstance) => Boolean) | undefined;
+
+  constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
 
     this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
@@ -48,40 +48,7 @@ export class Field {
     return result;
   }
 
-  attack(source: CardInstance, target: CardInstance): boolean {
-    console.log("attack", source, target)
-
-    // is instance on field?
-    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
-      return false;
-    }
-
-    if (this.opponentField?.attacked(source, target)) {
-      return this.attacked(target, source);
-    }
-
-    return false;
-  }
-
-  // attacked called only from OpponentField!!!!
-  attacked(source: CardInstance, target: CardInstance): boolean {
-    console.log("attacked", source, target)
-    // is instance on field?
-    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
-      return false;
-    }
-
-    target.defense -= source.attack;
-
-    // check if dead
-    if (target.defense <= 0) {
-      this.removeCard(target);
-    }
-
-    return true;
-  }
-
-  private removeCard(instance: CardInstance): void {
+  removeCard(instance: CardInstance): void {
     this.cards = this.cards.filter((item) => {
       return item?.id != instance.id;
     });
@@ -93,10 +60,12 @@ export class Field {
     this.updateCardTargetPosition();
   }
 
-  isFreeSlot(): Boolean {
-    return this.cards.some((item) => {
-      return item == null;
-    });
+  hasFreeSlot(): Boolean {
+    return this.cards.some(item => !item);
+  }
+
+  isEmpty(): Boolean {
+    return this.cards.every(item => item);
   }
 
   private updateCardTargetPosition(): void {
@@ -141,13 +110,14 @@ export class Field {
         instance.isHovered = true;
 
         if (input.clicked) {
-          if (this.selectedCard === instance) {
-            this.selectedCard = null;
-          } else {
-            this.selectedCard = instance;
-          }
 
-          this.scene.onCardClicked(this, this.selectedCard);
+          if (this.onClick && this.onClick(instance)) {
+            if (this.selectedCard === instance) {
+              this.selectedCard = null;
+            } else {
+              this.selectedCard = instance;
+            }
+          }
         }
       } else {
         if (instance.isHovered) {

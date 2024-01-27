@@ -9,6 +9,7 @@ import loadImage from "../loadImage";
 import GameStateMachine from "./CardboardScene/GameStateMachine";
 import { AudioManager } from "../audio";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
+import { Point } from "./CardboardScene/Point";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -39,11 +40,11 @@ export class CardBoardScene implements Scene {
   constructor(audioManager: AudioManager) {
     this.audioManager = audioManager
 
-    this.playerField = new Field(this, false);
+    this.playerField = new Field();
     this.playerHand = new Hand();
     this.playerStack = new Stack();
 
-    this.opponentField = new Field(this, true);
+    this.opponentField = new Field(true);
     this.opponentField.opponentField = this.playerField;
     this.opponentHand = new Hand(true);
     this.opponentStack = new Stack(true);
@@ -79,6 +80,7 @@ export class CardBoardScene implements Scene {
 
         this.prepareDeck();
         this.prepareHands();
+        this.prepareFields();
       })
   }
 
@@ -124,7 +126,7 @@ export class CardBoardScene implements Scene {
     }
   }
 
-  prepareHands() {
+  private prepareHands() {
     for (let i = 0; i < 5; i++) {
       this.playerHand.addCard(this.playerStack.draw()!);
       this.opponentHand.addCard(this.opponentStack.draw()!);
@@ -149,6 +151,65 @@ export class CardBoardScene implements Scene {
         this.opponentHand.removeCard(card);
       }
     }
+  }
+
+  private prepareFields() {
+    this.playerField.onClick = (card: CardInstance): Boolean => {
+      if (this.stateMachine.playerCanAct()) {
+        this.audioManager.playSound("click5")
+        return true;
+      }
+
+      if (this.opponentField.selectedCard) {
+        const passOn = this.resolveBattle(this.opponentField.selectedCard, card);
+
+        if (this.opponentField.selectedCard.defense <= 0) {
+          this.opponentField.removeCard(this.opponentField.selectedCard)
+        }
+
+        if (card.defense <= 0) {
+          this.playerField.removeCard(card)
+        }
+
+        this.opponentlifePoints += passOn.x;
+        this.playerLifePoints += passOn.y;
+      }
+
+      return false;
+    }
+
+    this.opponentField.onClick = (card: CardInstance): Boolean => {
+      if (this.stateMachine.opponentCanAct()) {
+        return true;
+      }
+
+      if (this.playerField.selectedCard) {
+        const passOn = this.resolveBattle(this.playerField.selectedCard, card);
+
+        if (this.playerField.selectedCard.defense <= 0) {
+          this.playerField.removeCard(this.playerField.selectedCard)
+        }
+
+        if (card.defense <= 0) {
+          this.opponentField.removeCard(card)
+        }
+
+        this.playerLifePoints += passOn.x;
+        this.opponentlifePoints += passOn.y;
+      }
+
+      return false;
+    }
+  }
+
+  resolveBattle(card1: CardInstance, card2: CardInstance): Point {
+    card2.defense -= card1.attack;
+    card1.defense -= card2.attack;
+
+    return {
+      x: Math.min(card1.defense, 0),
+      y: Math.min(card2.defense, 0),
+    };
   }
 
   // update scene
@@ -188,30 +249,5 @@ export class CardBoardScene implements Scene {
     context.font = "bold 16px serif";
     context.fillText(`LIFEPOINTS: ${this.playerLifePoints}`, CANVAS_WIDTH - 240, CANVAS_HEIGHT - 50);
     context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
-  }
-
-  onCardClicked(field: Field, card: CardInstance | null = null) {
-
-
-    if (field.isOpponent && card != null && this.playerSelectedCard != null) {
-      // attack ...!
-
-      this.audioManager.playSound("click5")
-
-      this.playerField.attack(this.playerSelectedCard!, card);
-      this.playerSelectedCard = null;
-      return;
-    }
-
-    if (field.isOpponent) {
-      return;
-    }
-
-    if (this.playerSelectedCard === card) {
-      this.playerSelectedCard = null;
-      return;
-    }
-
-    this.playerSelectedCard = card;
   }
 }
