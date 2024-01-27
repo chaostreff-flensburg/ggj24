@@ -157,7 +157,18 @@ export class CardBoardScene implements Scene {
         const cardHeight = 380/2;
 
         // is mouse over a card?
-        this.playerCardDeck.visibleCardInstances().forEach((instance, index) => {
+        this.playerCardDeck.field.forEach((instance, index) => {
+            const x = instance.x;
+            const y = instance.y;
+
+            if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
+                instance.isHovered = true;
+            } else {
+                instance.isHovered = false;
+            }
+        });
+
+        this.playerCardDeck.hand.forEach((instance, index) => {
             const x = instance.x;
             const y = instance.y;
 
