@@ -17,6 +17,7 @@ export class Field {
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
+  private selectedCard: CardInstance | null = null;
 
   cardBackground: HTMLImageElement | undefined;
 
@@ -24,6 +25,7 @@ export class Field {
     let result = false;
 
     card.isHovered = false;
+    card.targetScale = 1;
 
     this.cards.every((item, index, list) => {
       if (item == null) {
@@ -54,10 +56,8 @@ export class Field {
       const nextPositionY = CANVAS_HEIGHT / 2;
       if (instance.isHovered) {
         instance.target.y = nextPositionY - CARD_HEIGHT / 4;
-        instance.targetScale = ZOOM;
       } else {
         instance.target.y = nextPositionY;
-        instance.targetScale = 1;
       }
 
       if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
@@ -100,23 +100,25 @@ export class Field {
       const x = instance.position.x;
       const y = instance.position.y;
 
-      if (input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
+      if (input.x > x - CARD_WIDTH/2 && input.x < x + CARD_WIDTH/2 && input.y > y - CARD_HEIGHT/2 && input.y < y + CARD_HEIGHT/2) {
         if (!instance.isHovered) {
           // new hover
           instance.target.y -= CARD_HEIGHT / 4;
-          instance.targetScale = ZOOM;
         }
 
         instance.isHovered = true;
 
         if (input.clicked) {
-          //attack
+          if (this.selectedCard != null) {
+            this.selectedCard.targetScale = 1;
+          }
+          this.selectedCard = instance;
+          instance.targetScale = ZOOM;
         }
       } else {
         if (instance.isHovered) {
           // new end hover
           instance.target.y += CARD_HEIGHT / 4;
-          instance.targetScale = 1;
         }
 
         instance.isHovered = false;
@@ -124,7 +126,7 @@ export class Field {
     });
   }
 
-  render(context: CanvasRenderingContext2D) {
+  render(context: CanvasRenderingContext2D, input: Input) {
     if (this.screenSize.width == 0 || this.screenSize.height == 0) {
       this.screenSize.width = context.canvas.width;
       this.screenSize.height = context.canvas.height;
@@ -138,7 +140,24 @@ export class Field {
 
       context.save();
       context.translate(instance.position.x, instance.position.y);
+      if (instance == this.selectedCard) {
+        // rotate to mouse position
+        const x = instance.position.x;
+        const y = instance.position.y;
+
+        const distanceX = input.x - x;
+        const distanceY = input.y - y;
+
+        const angle = Math.atan2(distanceY, distanceX);
+        context.rotate(angle+Math.PI/2);
+      }
+      context.translate(-CARD_WIDTH/2, -CARD_HEIGHT/2);
       context.scale(instance.scale, instance.scale);
+
+      if (instance == this.selectedCard) {
+        context.fillStyle = "red";
+        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+      }
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";

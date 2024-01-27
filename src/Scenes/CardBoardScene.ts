@@ -172,7 +172,7 @@ export class CardBoardScene implements Scene {
     */
 
     this.stack.render(context);
-    this.field.render(context);
+    this.field.render(context, input);
     this.hand.render(context);
   }
 }

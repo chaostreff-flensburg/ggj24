@@ -27,6 +27,8 @@ export class Hand {
   addCard(card: CardInstance): Boolean {
     let result = false;
 
+    card.isHovered = false;
+
     this.cards.push(card);
     this.updateCardTargetPosition();
 
