@@ -26,8 +26,6 @@ export class Field {
   addCard(card: CardInstance): Boolean {
     let result = false;
 
-    card.isHovered = false;
-
     this.cards.every((item, index, list) => {
       if (item == null) {
         list[index] = card;
@@ -41,7 +39,11 @@ export class Field {
     })
 
     console.log(result);
-    this.updateCardTargetPosition();
+
+    if (result) {
+      card.isHovered = false;
+      this.updateCardTargetPosition()
+    };
 
     return result;
   }

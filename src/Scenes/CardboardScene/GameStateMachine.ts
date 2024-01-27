@@ -20,11 +20,14 @@ export default class GameStateMachine {
 
       case GameState.OPPONENT_TURN_START:
         this.currentState = GameState.OPPONENT_TURN_MAIN;
+        break;
 
       case GameState.OPPONENT_TURN_MAIN:
         this.currentState = GameState.PLAYER_TURN_START;
         break;
     }
+
+    console.log(this.currentState);
 
     return this.currentState;
   }

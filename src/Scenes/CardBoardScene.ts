@@ -69,6 +69,7 @@ export class CardBoardScene implements Scene {
         this.opponentStack.cardBack = this.sadCardBack!;
 
         this.prepareDeck();
+        this.prepareHands();
       })
   }
 
@@ -82,11 +83,6 @@ export class CardBoardScene implements Scene {
 
     this.playerStack.shuffle();
     this.opponentStack.shuffle();
-
-    for (let i = 0; i < 5; i++) {
-      this.playerHand.addCard(this.playerStack.draw()!);
-      this.opponentHand.addCard(this.opponentStack.draw()!);
-    }
 
     this.playerStack.onClick = () => {
       if (this.stateMachine.playerCanDraw()) {
@@ -116,6 +112,33 @@ export class CardBoardScene implements Scene {
       }
 
       if (this.stateMachine.isOpponentTurn()) this.stateMachine.advanceState();
+    }
+  }
+
+  prepareHands() {
+    for (let i = 0; i < 5; i++) {
+      this.playerHand.addCard(this.playerStack.draw()!);
+      this.opponentHand.addCard(this.opponentStack.draw()!);
+    }
+
+    this.playerHand.onClick = (card: CardInstance) => {
+      if (!this.stateMachine.playerCanAct()) {
+        return;
+      }
+
+      if (this.playerField.addCard(card)) {
+        this.playerHand.removeCard(card);
+      }
+    }
+
+    this.opponentHand.onClick = (card: CardInstance) => {
+      if (!this.stateMachine.opponentCanAct()) {
+        return;
+      }
+
+      if (this.opponentField.addCard(card)) {
+        this.opponentHand.removeCard(card);
+      }
     }
   }
 

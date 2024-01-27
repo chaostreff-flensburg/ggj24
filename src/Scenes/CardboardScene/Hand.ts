@@ -16,6 +16,8 @@ export class Hand {
 
   cardBackground: HTMLImageElement | undefined;
 
+  onClick: ((card:CardInstance) => void) | undefined;
+
   constructor(field: Field, isOpponent: Boolean = false) {
     this.field = field;
     this.isOpponent = isOpponent;
@@ -44,19 +46,12 @@ export class Hand {
     // todo: this.graveyard.push(instance);
   }
 
-  play(instance: CardInstance): void {
-    if (this.field.isFreeSlot()) {
-      this.removeCard(instance);
-      this.updateCardTargetPosition();
-      // send card to field
-      this.field.addCard(instance);
-    }
-  }
-
-  private removeCard(instance: CardInstance): void {
+  removeCard(instance: CardInstance): void {
     this.cards = this.cards.filter((item) => {
       return item.id != instance.id;
     });
+
+    this.updateCardTargetPosition();
   }
 
   private updateCardTargetPosition(): void {
@@ -105,9 +100,8 @@ export class Hand {
 
         instance.isHovered = true;
 
-        if (input.clicked) {
-          console.log("play card")
-          this.play(instance)
+        if (input.clicked && this.onClick) {
+          this.onClick(instance);
         }
 
         cursorOnCard = true;
