@@ -16,6 +16,7 @@ export class CardBoardScene implements Scene {
   private loadComplete:Boolean = false;
 
   private cardBackground: HTMLImageElement | null = null;
+  private goodCardBack: HTMLImageElement | null = null;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -24,16 +25,22 @@ export class CardBoardScene implements Scene {
     this.stack = new Stack(this.hand);
   }
 
-  load(): void {
-    this.cardBackground = new Image();
-    this.cardBackground.src = "card_background.png";
+  loadImage(src:string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = src;
 
+      image.onload = () => resolve(image);
+      image.onerror = (event) => reject(event);
+    })
+  }
+
+  load(): void {
     const assetLoad = [
-      new Promise((resolve, reject) => {
-        this.cardBackground!.onload = () => {
-          resolve(true);
-        };
-      }),
+      this.loadImage("card_background.png")
+        .then(image => this.cardBackground = image),
+      this.loadImage("good_card_back.png")
+        .then(image => this.goodCardBack = image),
       fetch("cards.json")
         .then(response => response.json())
         .then((cards: Array<Card>) => {
@@ -46,6 +53,7 @@ export class CardBoardScene implements Scene {
         this.loadComplete = true;
         this.field.cardBackground = this.cardBackground!;
         this.hand.cardBackground = this.cardBackground!;
+        this.stack.cardBack = this.goodCardBack!;
 
         this.prepareDeck();
       })
@@ -53,7 +61,7 @@ export class CardBoardScene implements Scene {
 
   private prepareDeck() {
     this.cards.forEach((card) => {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 2; i++) {
         this.stack.deck.push(new CardInstance(card));
       }
     });
