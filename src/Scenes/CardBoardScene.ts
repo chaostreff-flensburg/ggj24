@@ -5,6 +5,7 @@ import { CardInstance } from "./CardboardScene/CardInstance";
 import { Field } from "./CardboardScene/Field";
 import { Hand } from "./CardboardScene/Hand";
 import { Stack } from "./CardboardScene/Stack";
+import loadImage from "../loadImage";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -31,21 +32,11 @@ export class CardBoardScene implements Scene {
     this.opponentStack = new Stack(this.opponentHand, true);
   }
 
-  loadImage(src:string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.src = src;
-
-      image.onload = () => resolve(image);
-      image.onerror = (event) => reject(event);
-    })
-  }
-
   load(): void {
     const assetLoad = [
-      this.loadImage("card_background.png")
+      loadImage("card_background.png")
         .then(image => this.cardBackground = image),
-      this.loadImage("good_card_back.png")
+      loadImage("good_card_back.png")
         .then(image => this.goodCardBack = image),
       fetch("cards.json")
         .then(response => response.json())
