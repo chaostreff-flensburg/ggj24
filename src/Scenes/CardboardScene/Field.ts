@@ -42,6 +42,12 @@ export class Field {
     return result;
   }
 
+  isFreeSlot(): Boolean {
+    return this.cards.some((item) => {
+      return item == null;
+    });
+  }
+
   private updateCardTargetPosition(): void {
     this.cards.forEach((instance, index) => {
       if (instance == null) {

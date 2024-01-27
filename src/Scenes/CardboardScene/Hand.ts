@@ -43,10 +43,12 @@ export class Hand {
   }
 
   play(instance: CardInstance): void {
-    this.removeCard(instance);
-    this.updateCardTargetPosition();
-    // send card to field
-    this.field.addCard(instance);
+    if (this.field.isFreeSlot()) {
+      this.removeCard(instance);
+      this.updateCardTargetPosition();
+      // send card to field
+      this.field.addCard(instance);
+    }
   }
 
   private removeCard(instance: CardInstance): void {
@@ -56,9 +58,16 @@ export class Hand {
   }
 
   private updateCardTargetPosition(): void {
+    let padding = INTER_CARD_PADDING;
+    if (this.cards.length > 8) {
+      padding -= (this.cards.length - 1)*8;
+    } else if (this.cards.length > 5) {
+      padding -= (this.cards.length - 1)*5;
+    }
+
     this.cards.forEach((instance, index) => {
       // if old position != new position with new index?
-      const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
+      const nextPositionX = 100 + index * (CARD_WIDTH + padding);
       const nextPositionY = this.screenSize.height - CARD_HEIGHT * 0.5;
       if (instance.isHovered) {
         instance.target.y = nextPositionY - CARD_HEIGHT / 2;
@@ -91,7 +100,10 @@ export class Hand {
     });
 
     // hover
-    this.cards.forEach((instance) => {
+    let cursorOnCard = false;
+    // reverse loop
+    for (let i = this.cards.length - 1; i >= 0; i--) {
+      const instance = this.cards[i];
       if (instance == null) {
         return;
       }
@@ -99,7 +111,7 @@ export class Hand {
       const x = instance.position.x;
       const y = instance.position.y;
 
-      if (input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
+      if (!cursorOnCard && input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
         if (!instance.isHovered) {
           // new hover
           instance.target.y -= CARD_HEIGHT / 2;
@@ -108,8 +120,11 @@ export class Hand {
         instance.isHovered = true;
 
         if (input.clicked) {
+          console.log("play card")
           this.play(instance)
         }
+
+        cursorOnCard = true;
       } else {
         if (instance.isHovered) {
           // new end hover
@@ -117,7 +132,7 @@ export class Hand {
         }
         instance.isHovered = false;
       }
-    });
+    }
   }
 
   render(context: CanvasRenderingContext2D) {
