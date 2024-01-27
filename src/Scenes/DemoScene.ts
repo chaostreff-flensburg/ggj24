@@ -17,6 +17,7 @@ export class DemoScene implements Scene {
 
   private pointofinterest: Array<PointOfInterest> = [];
   private action: string | undefined;
+  private debug: boolean = false;
 
   // load scene image and points of interest
   load(): void {
@@ -70,8 +71,18 @@ export class DemoScene implements Scene {
           input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
           input.y < point.y2
         ) {
-          console.log(point.action);
-		  this.action = point.action;
+          if(this.menu.action !== "") {
+            if(this.menu.action === point.action) {
+              // do something
+              console.log("do something");
+            }
+            else
+            {
+              // cant do that
+              console.log("cant do that");
+              this.menu.action = "";
+            }
+          }
         }
       },
     );
@@ -82,7 +93,13 @@ export class DemoScene implements Scene {
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       context.drawImage(this.image!, 0, 0);
-	  this.menu.render(context, input);
+	    this.menu.render(context, input);
+      if (this.debug) { // for debugging
+        this.pointofinterest.forEach((poi) => {
+          context.strokeStyle = "black";
+          context.strokeRect(poi.x1, poi.y1, poi.x2 - poi.x1, poi.y2 - poi.y1);
+        });
+      }
     }
   }
 }

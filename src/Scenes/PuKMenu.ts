@@ -122,7 +122,7 @@ export class PuKMenu implements Scene {
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       context.drawImage(this.image, 0, 650);
-      if(this.actionimage != null && this.actionimage.src !== "") {
+      if(this.action !== "" && this.actionimage != null && this.actionimage.src !== "") {
         context.drawImage(this.actionimage!, input.x, input.y);
       }
       if (this.debug) { // for debugging
