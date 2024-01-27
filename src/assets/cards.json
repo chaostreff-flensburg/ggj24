@@ -1,8 +1,9 @@
 [
     {
-        "title": "Test",
-        "slug": "test",
-        "atk": 0,
-        "def": 0
+        "atk": 4,
+        "def": 2,
+        "title": "Drachenmeister",
+        "description": "Ein mächtiger Drachenmeister, der die Lüfte beherrscht.",
+        "slug": "drachenmeister"
     }
 ]

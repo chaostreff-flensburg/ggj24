@@ -1,55 +1,59 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
 
+type PointOfInterest = {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  action: string;
+};
+
 export class DemoScene implements Scene {
-    private image: HTMLImageElement | null = null;
-    private imageLoadcomplete = false;
+  private image: HTMLImageElement | null = null;
+  private imageLoadcomplete = false;
 
-    private pointofinterest: Array<
-        { x1: number; x2: number; y1: number; y2: number; action: string }
-    > = [];
-    private action: string | undefined;
+  private pointofinterest: Array<PointOfInterest> = [];
+  private action: string | undefined;
 
-    load(): void {
-        // load scene image
-        this.image = new Image();
-        this.image.src = "scene/sketch.png";
-        this.image.onload = () => {
-            this.imageLoadcomplete = true;
-        };
+  // load scene image and points of interest
+  load(): void {
+    // load scene image
+    this.image = new Image();
+    this.image.src = "scene/sketch.png";
+    this.image.onload = () => {
+      this.imageLoadcomplete = true;
+    };
 
-        // load points of interest
-        /* const pointofinterest = fetch("scene/scene1.json").then((response) => {
-        response.json().then((data) => {
-            this.pointofinterest = data.points;
-        });
-        }); */
-    }
+    // load points of interest
+    fetch("scene/scene1.json").then((response) => {
+      response.json().then((data) => {
+        this.pointofinterest = data.points as Array<PointOfInterest>;
+      });
+    });
+  }
 
-    update(input: Input): void {
-        /* console.log('update', input) */
-        /* this.pointofinterest.forEach(
-            (
-              point: {
-                x1: number;
-                x2: number;
-                y1: number;
-                y2: number;
-                action: string;
-              },
-            ) => {
-              if (
-                mouseX > point.x1 && mouseY > point.y1 && mouseX < point.x2 &&
-                mouseY < point.y2
-              ) {
-                console.log(point.action);
-              }
-            },
-          ); */
-    }
-    render(context: CanvasRenderingContext2D): void {
-        if (this.imageLoadcomplete) {
-            context.drawImage(this.image!, 0, 0);
+  // update scene
+  update(input: Input): void {
+    /* console.log('update', input) */
+    this.pointofinterest.forEach(
+      (
+        point: PointOfInterest,
+      ) => {
+        if (
+          input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
+          input.y < point.y2
+        ) {
+          console.log(point.action);
         }
+      },
+    );
+  }
+
+  // render scene
+  render(context: CanvasRenderingContext2D): void {
+    if (this.imageLoadcomplete) {
+      context.drawImage(this.image!, 0, 0);
     }
+  }
 }

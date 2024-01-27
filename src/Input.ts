@@ -1,6 +1,6 @@
 export type Input = {
-    x: Number;
-    y: Number;
+    x: number;
+    y: number;
     clicked: Boolean;
 }
 
