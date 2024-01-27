@@ -1,5 +1,6 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
+import { PuKMenu } from "./PuKMenu";
 
 type PointOfInterest = {
   x1: number;
@@ -12,6 +13,7 @@ type PointOfInterest = {
 export class DemoScene implements Scene {
   private image: HTMLImageElement | null = null;
   private imageLoadcomplete = false;
+  private menu: PuKMenu = new PuKMenu();
 
   private pointofinterest: Array<PointOfInterest> = [];
   private action: string | undefined;
@@ -24,15 +26,39 @@ export class DemoScene implements Scene {
     this.image.onload = () => {
       this.imageLoadcomplete = true;
     };
-
-    // load points of interest
-    fetch("scene/scene1.json").then((response) => {
-      response.json().then((data) => {
-        this.pointofinterest = data.points as Array<PointOfInterest>;
-      });
-    });
+    // 4 points of interest
+    this.pointofinterest = [
+      {
+        x1: 0,
+        x2: 100,
+        y1: 0,
+        y2: 100,
+        action: "action1",
+      },
+      {
+        x1: 100,
+        x2: 200,
+        y1: 0,
+        y2: 100,
+        action: "action2",
+      },
+      {
+        x1: 0,
+        x2: 100,
+        y1: 100,
+        y2: 200,
+        action: "action3",
+      },
+      {
+        x1: 100,
+        x2: 200,
+        y1: 100,
+        y2: 200,
+        action: "action4",
+      },
+    ];
+	this.menu.load();
   }
-
   // update scene
   update(input: Input): void {
     /* console.log('update', input) */
@@ -40,20 +66,23 @@ export class DemoScene implements Scene {
       (
         point: PointOfInterest,
       ) => {
-        if (
+        if (input.clicked === true &&
           input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
           input.y < point.y2
         ) {
           console.log(point.action);
+		  this.action = point.action;
         }
       },
     );
+	this.menu.update(input);
   }
 
   // render scene
-  render(context: CanvasRenderingContext2D): void {
+  render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       context.drawImage(this.image!, 0, 0);
+	  this.menu.render(context, input);
     }
   }
 }

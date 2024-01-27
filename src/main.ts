@@ -19,7 +19,7 @@ class DrawingApp {
 
     this.inputManager = new InputManager(this.canvas);
 
-    this.scene = new CardBoardScene();
+    this.scene = new DemoScene();
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
 
@@ -35,7 +35,7 @@ class DrawingApp {
     this.context
       .clearRect(0, 0, this.canvas.width, this.canvas.height);
     //this.scene.render(this.context)
-    this.sceneManager.render(this.context)
+    this.sceneManager.render(this.context, this.inputManager.input)
   }
 
   start() {

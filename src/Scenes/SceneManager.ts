@@ -20,7 +20,7 @@ export class SceneManager {
 
   /**
    * adds a scene to the activeScene variable
-   * @param 
+   * @param
    */
   pushScreen(s: Scene) {
     if (s) {
@@ -45,9 +45,9 @@ export class SceneManager {
     this.height = h
   }
 
-  render(context: CanvasRenderingContext2D) {
+  render(context: CanvasRenderingContext2D, input: Input) {
     if (this.activeScene) {
-      this.activeScene.render(context)
+      this.activeScene.render(context, input)
     }
   }
 
