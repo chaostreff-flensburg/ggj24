@@ -81,6 +81,7 @@ export class CardBoardScene implements Scene {
     */
 
     this.hand.update(input);
+    this.field.update(input);
   }
 
   // render scene

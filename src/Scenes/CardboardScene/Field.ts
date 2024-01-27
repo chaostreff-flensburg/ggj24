@@ -1,3 +1,4 @@
+import { Input } from '../../Input';
 import {CardInstance} from './CardInstance';
 import { Point } from './Point';
 
@@ -45,6 +46,27 @@ export class Field {
     };
   }
 
+  update(input: Input) {
+    this.cards.forEach((instance, index) => {
+      if (instance == null) {
+        return;
+      }
+
+      const x = instance.position.x;
+      const y = instance.position.y;
+
+      if (input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
+        instance.isHovered = true;
+
+        if (input.clicked) {
+          //attack
+        }
+      } else {
+        instance.isHovered = false;
+      }
+    });
+  }
+
   render(context: CanvasRenderingContext2D) {
     this.cards.forEach((instance, index) => {
       if (this.cardBackground == undefined || instance == null) {
@@ -60,10 +82,8 @@ export class Field {
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-      } else {
-        context.fillStyle = "gray";
+        context.fillRect(x-5, y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
       }
-      context.fillRect(x, y, CARD_WIDTH, CARD_HEIGHT);
       context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, x, y, CARD_WIDTH, CARD_HEIGHT);
 
       // text

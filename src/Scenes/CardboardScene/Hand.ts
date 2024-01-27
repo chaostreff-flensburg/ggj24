@@ -93,10 +93,8 @@ export class Hand {
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-      } else {
-        context.fillStyle = "gray";
+        context.fillRect(x-5, y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
       }
-      context.fillRect(x, y, CARD_WIDTH, CARD_HEIGHT);
       context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, x, y, CARD_WIDTH, CARD_HEIGHT);
 
       // text
