@@ -20,7 +20,6 @@ export class CardBoardScene implements Scene {
   private opponentHand: Hand;
   private playerField: Field;
   private opponentField: Field;
-  private playerSelectedCard: CardInstance | null = null;
 
   private playerLifePoints: number = 1000;
   private opponentlifePoints: number = 1000;
@@ -107,6 +106,14 @@ export class CardBoardScene implements Scene {
         }
       }
 
+      if (
+        this.stateMachine.opponentCanAct()
+          && this.opponentField.selectedCard
+          && this.playerField.isEmpty()
+      ) {
+        this.playerLifePoints -= this.opponentField.selectedCard.attack;
+      }
+
       if (this.stateMachine.isPlayerTurn()) this.stateMachine.advanceState();
     }
 
@@ -120,6 +127,14 @@ export class CardBoardScene implements Scene {
             this.opponentStack.putCardBackToTop(card);
           }
         }
+      }
+
+      if (
+        this.stateMachine.playerCanAct()
+          && this.playerField.selectedCard
+          && this.opponentField.isEmpty()
+      ) {
+        this.opponentlifePoints -= this.playerField.selectedCard.attack;
       }
 
       if (this.stateMachine.isOpponentTurn()) this.stateMachine.advanceState();

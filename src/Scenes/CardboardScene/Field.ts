@@ -49,9 +49,8 @@ export class Field {
   }
 
   removeCard(instance: CardInstance): void {
-    this.cards = this.cards.filter((item) => {
-      return item?.id != instance.id;
-    });
+    const index = this.cards.findIndex(item => item?.id == instance.id);
+    this.cards[index] = null;
 
     if (this.selectedCard?.id == instance.id) {
       this.selectedCard = null;
@@ -65,7 +64,7 @@ export class Field {
   }
 
   isEmpty(): Boolean {
-    return this.cards.every(item => item);
+    return this.cards.every(item => item == null);
   }
 
   private updateCardTargetPosition(): void {
