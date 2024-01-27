@@ -1,23 +1,8 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
-
-type Card = {
-  title: string;
-  description: string;
-  slug: string;
-  defense: number;
-  attack: number;
-}
-
-type CardInstance = {
-  id: number;
-  card: Card;
-  x: number;
-  y: number;
-  defense: number;
-  attack: number;
-  isHovered: boolean;
-}
+import { Card } from "./CardboardScene/Card";
+import { CardInstance } from "./CardboardScene/CardInstance";
+import { Field } from "./CardboardScene/Field";
 
 // CardDeck is a class that represents a deck of cards
 export class CardDeck {
@@ -42,8 +27,15 @@ export class CardDeck {
             let instance: CardInstance = {
               id: id,
               card: card,
-              x: 0,
-              y: 0,
+              position: {
+                x: 0,
+                y: 0,
+              },
+              target: {
+                x: 0,
+                y: 0,
+              },
+
               // set base defense and attack
               defense: card.defense,
               attack: card.attack,
@@ -128,6 +120,7 @@ export class CardDeck {
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
   private playerCardDeck: CardDeck = new CardDeck();
+  private field: Field = new Field();
   private cardLoadComplete: boolean = false;
 
   private cardBackground: HTMLImageElement | null = null;
@@ -145,6 +138,7 @@ export class CardBoardScene implements Scene {
 
     this.playerCardDeck.load().then(() => {
       this.cardLoadComplete = true;
+      this.field.cardBackground = this.cardBackground!;
     });
   }
 
@@ -159,8 +153,8 @@ export class CardBoardScene implements Scene {
 
     // is mouse over a card?
     this.playerCardDeck.field.forEach((instance, index) => {
-      const x = instance.x;
-      const y = instance.y;
+      const x = instance.position.x;
+      const y = instance.position.y;
 
       if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
         instance.isHovered = true;
@@ -170,14 +164,15 @@ export class CardBoardScene implements Scene {
     });
 
     this.playerCardDeck.hand.forEach((instance, index) => {
-      const x = instance.x;
-      const y = instance.y;
+      const x = instance.position.x;
+      const y = instance.position.y;
 
       if (input.x > x && input.x < x + cardWidth && input.y > y && input.y < y + cardHeight) {
         instance.isHovered = true;
 
         if (input.clicked) {
-          this.playerCardDeck.play(instance);
+          this.field.addCard(instance)
+          //this.playerCardDeck.play(instance);
         }
       } else {
         instance.isHovered = false;
@@ -211,41 +206,14 @@ export class CardBoardScene implements Scene {
     const handPositionX = context.canvas.width / 2 - this.playerCardDeck.hand.length * 100 / 2;
     const paddingCardsField = 20;
 
-    this.playerCardDeck.field.forEach((instance, index) => {
-      const x = 100 + index * (cardWidth + paddingCardsField);
-      const y = context.canvas.height / 2;
-
-      // todo: move for animation or ...
-      instance.x = x;
-      instance.y = y;
-
-      if (instance.isHovered) {
-        context.fillStyle = "yellow";
-      } else {
-        context.fillStyle = "gray";
-      }
-      context.fillRect(x, y, cardWidth, cardHeight);
-      context.drawImage(this.cardBackground!, 0, 0, cardBackgroundWidth, cardBackgroundHeight, x, y, cardWidth, cardHeight);
-
-      // text
-      context.fillStyle = "black";
-      context.textAlign = "center";
-      context.fillText(instance.card.title, x + cardWidth / 2, y + cardHeight / 10);
-
-      // attack
-      context.fillText(instance.attack.toString(), x + cardWidth / 4.5, y + cardHeight / 1.28);
-      // defense
-      context.fillText(instance.defense.toString(), x + cardWidth / 1.3, y + cardHeight / 1.28);
-    });
-
     const paddingCardsHand = 20;
     this.playerCardDeck.hand.forEach((instance, index) => {
       const x = handPositionX + index * (100 + paddingCardsHand);
       const y = handPositionY;
 
       // todo: move for animation or ...
-      instance.x = x;
-      instance.y = y;
+      instance.position.x = x;
+      instance.position.y = y;
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";
@@ -265,5 +233,7 @@ export class CardBoardScene implements Scene {
       // defense
       context.fillText(instance.defense.toString(), x + cardWidth / 1.3, y + cardHeight / 1.28);
     });
+
+    this.field.render(context);
   }
 }
