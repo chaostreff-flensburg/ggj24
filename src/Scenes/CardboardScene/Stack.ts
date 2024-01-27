@@ -15,43 +15,23 @@ export class Stack {
   async load(): Promise<void> {
     const self = this;
 
-    return fetch("cards.json")
-      .then(response => response.json())
-      .then((cards: Array<Card>) => {
-        self.cards = cards
+    // create deck instances
+    this.cards.forEach((card, index) => {
+      for (let i = 0; i < 10; i++) {
+        this.deck.push(new CardInstance(card));
+      }
+    });
 
-        // create deck instances
-        let id = 0;
-        self.cards.forEach((card, index) => {
-          for (let i = 0; i < 10; i++) {
-            let instance: CardInstance = {
-              id: id,
-              card: card,
-              position: {
-                x: 0,
-                y: 0,
-              },
-              target: {
-                x: 0,
-                y: 0,
-              },
+    // shuffle deck
+    this.shuffle();
 
-              // set base defense and attack
-              defense: card.defense,
-              attack: card.attack,
-              isHovered: false
-            }
+    console.log("stack loaded", this.deck.length)
 
-            self.deck.push(instance);
-            id += 1;
-          }
-        });
+    return ;
+  }
 
-        // shuffle deck
-        self.deck.sort(() => Math.random() - 0.5);
-
-        console.log("stack loaded", self.deck.length)
-      });
+  shuffle(): void {
+    this.deck.sort(() => Math.random() - 0.5);
   }
 
   draw(): CardInstance | undefined {

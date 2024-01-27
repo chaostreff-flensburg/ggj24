@@ -8,13 +8,14 @@ import { Stack } from "./CardboardScene/Stack";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
+  private cards: Array<Card> = [];
   private stack: Stack;
   private hand: Hand;
   private field: Field = new Field();
-  private cardLoadComplete: boolean = false;
+
+  private loadComplete:Boolean = false;
 
   private cardBackground: HTMLImageElement | null = null;
-  private cardBackgroundLoadComplete = false;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -23,28 +24,50 @@ export class CardBoardScene implements Scene {
     this.stack = new Stack(this.hand);
   }
 
-  // load scene image and points of interest
   load(): void {
     this.cardBackground = new Image();
     this.cardBackground.src = "card_background.png";
-    this.cardBackground.onload = () => {
-      this.cardBackgroundLoadComplete = true;
-    };
 
-    this.stack.load().then(() => {
-      this.cardLoadComplete = true;
-      this.field.cardBackground = this.cardBackground!;
-      this.hand.cardBackground = this.cardBackground!;
+    const assetLoad = [
+      new Promise((resolve, reject) => {
+        this.cardBackground!.onload = () => {
+          resolve(true);
+        };
+      }),
+      fetch("cards.json")
+        .then(response => response.json())
+        .then((cards: Array<Card>) => {
+          this.cards = cards
+        })
+    ];
 
-      for (let i = 0; i < 5; i++) {
-        this.stack.draw();
+    Promise.all(assetLoad)
+      .then(() => {
+        this.loadComplete = true;
+        this.field.cardBackground = this.cardBackground!;
+        this.hand.cardBackground = this.cardBackground!;
+
+        this.prepareDeck();
+      })
+  }
+
+  private prepareDeck() {
+    this.cards.forEach((card) => {
+      for (let i = 0; i < 10; i++) {
+        this.stack.deck.push(new CardInstance(card));
       }
     });
+
+    this.stack.shuffle();
+
+    for (let i = 0; i < 5; i++) {
+      this.stack.draw();
+    }
   }
 
   // update scene
   update(input: Input): void {
-    if (!this.cardLoadComplete && !this.cardBackgroundLoadComplete) {
+    if (!this.loadComplete) {
       return;
     }
 
@@ -86,7 +109,7 @@ export class CardBoardScene implements Scene {
 
   // render scene
   render(context: CanvasRenderingContext2D, input: Input): void {
-    if (!this.cardLoadComplete && !this.cardBackgroundLoadComplete) {
+    if (!this.loadComplete) {
       return;
     }
 
