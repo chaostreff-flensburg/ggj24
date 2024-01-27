@@ -77,20 +77,7 @@ export class Hand {
   update(input: Input) {
     // position
     this.cards.forEach((instance, index) => {
-      if (instance == null) {
-        return;
-      }
-
-      if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
-        return
-      }
-
-      const distanceX = instance.target.x - instance.position.x;
-      const distanceY = instance.target.y - instance.position.y;
-
-      const speed = 2;
-      instance.position.x += distanceX / speed;
-      instance.position.y += distanceY / speed;
+      instance?.animateInstance();
     });
 
     // hover

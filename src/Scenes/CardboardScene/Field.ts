@@ -14,7 +14,6 @@ export class Field {
 
   constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
-    console.log("isOpponent", isOpponent);
   }
 
   addCard(card: CardInstance): Boolean {
@@ -71,20 +70,7 @@ export class Field {
   update(input: Input) {
     // position
     this.cards.forEach((instance, index) => {
-      if (instance == null) {
-        return;
-      }
-
-      if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
-        return
-      }
-
-      const distanceX = instance.target.x - instance.position.x;
-      const distanceY = instance.target.y - instance.position.y;
-
-      const speed = 10;
-      instance.position.x += distanceX / speed;
-      instance.position.y += distanceY / speed;
+      instance?.animateInstance();
     });
 
     this.cards.forEach((instance, index) => {
