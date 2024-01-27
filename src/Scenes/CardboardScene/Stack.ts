@@ -55,6 +55,7 @@ export class Stack {
       if (input.clicked) {
         console.log("draw card")
         this.draw();
+        input.clicked = false;
       }
     }
   }
