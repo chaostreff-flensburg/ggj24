@@ -1,9 +1,10 @@
 import { Input } from '../../Input';
+import { CardBoardScene } from '../CardBoardScene';
 import { CardInstance } from './CardInstance';
 import { CARD_WIDTH, CARD_HEIGHT, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, INTER_CARD_PADDING, CANVAS_HEIGHT } from './Constants';
 
 export class Field {
-  private isOpponent: Boolean;
+  isOpponent: Boolean;
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
@@ -13,8 +14,10 @@ export class Field {
 
   cardBackground: HTMLImageElement | undefined;
   opponentField: Field | undefined;
+  private scene: CardBoardScene;
 
-  constructor(isOpponent: Boolean = false) {
+  constructor(scene: CardBoardScene, isOpponent: Boolean = false) {
+    this.scene = scene;
     this.isOpponent = isOpponent;
 
     this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
@@ -47,12 +50,12 @@ export class Field {
     console.log("attack", source, target)
 
     // is instance on field?
-    if (!this.cards.includes(source)) {
+    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
       return false;
     }
 
     if (this.opponentField?.attacked(source, target)) {
-      return this.attack(target, source);
+      return this.attacked(target, source);
     }
 
     return false;
@@ -62,7 +65,7 @@ export class Field {
   attacked(source: CardInstance, target: CardInstance): boolean {
     console.log("attacked", source, target)
     // is instance on field?
-    if (!this.cards.includes(target)) {
+    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
       return false;
     }
 
@@ -141,6 +144,8 @@ export class Field {
           } else {
             this.selectedCard = instance;
           }
+
+          this.scene.onCardClicked(this, this.selectedCard);
         }
       } else {
         if (instance.isHovered) {
