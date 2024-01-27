@@ -25,7 +25,7 @@ export class Stack {
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
   };
 
-  public onClick: (() => void)|undefined;
+  public onClick: (() => void) | undefined;
 
   constructor(hand: Hand, isOpponent: Boolean = false) {
     this.hand = hand;
@@ -55,13 +55,13 @@ export class Stack {
     return card;
   }
 
-  putCardBackToTop(card:CardInstance):void {
+  putCardBackToTop(card: CardInstance): void {
     this.deck.push(card);
   }
 
   update(input: Input): void {
     // is mouse over a card?
-    if (input.x > this.position.x && input.x < this.position.x + CARD_WIDTH && input.y > this.position.y && input.y < this.position.y + CARD_HEIGHT) {
+    if (input.x > this.position.x - CARD_WIDTH/2 && input.x < this.position.x + CARD_WIDTH/2 && input.y > this.position.y - CARD_WIDTH/2 && input.y < this.position.y + CARD_WIDTH/2) {
       if (input.clicked && this.onClick) {
         this.onClick()
         input.clicked = false;
@@ -76,7 +76,7 @@ export class Stack {
 
     this.deck.forEach((_, index) => {
       context.save();
-      context.translate(this.position.x + index / 2, this.position.y+ index / 2);
+      context.translate(this.position.x + index / 2, this.position.y + index / 2);
 
       // rotate by 180 degrees if opponent
       if (this.isOpponent) {
