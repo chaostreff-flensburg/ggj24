@@ -16,6 +16,8 @@ export class Hand {
   private cards: Array<CardInstance> = [];
   private field: Field;
 
+  private screenSize: { width: number, height: number } = { width: 0, height: 0 };
+
   cardBackground: HTMLImageElement|undefined;
 
   constructor(field: Field) {
@@ -26,7 +28,6 @@ export class Hand {
     let result = false;
 
     card.target = this.calculateCardCoordinates(1);
-    card.position = card.target;
     this.cards.push(card);
 
     return result;
@@ -58,7 +59,36 @@ export class Hand {
   }
 
   update(input: Input) {
+    // position
     this.cards.forEach((instance, index) => {
+      if (instance == null) {
+        return;
+      }
+
+      // if old position != new position with new index?
+      const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
+      const nextPositionY = this.screenSize.height - CARD_HEIGHT*0.5;
+      if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
+        instance.target.x = nextPositionX;
+        instance.target.y = nextPositionY;
+      }
+
+      if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
+        instance.position.x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
+        instance.position.y = this.screenSize.height - CARD_HEIGHT*0.5;
+        return
+      }
+
+      const distanceX = instance.target.x - instance.position.x;
+      const distanceY = instance.target.y - instance.position.y;
+
+      const speed = 2;
+      instance.position.x += distanceX / speed;
+      instance.position.y += distanceY / speed;
+    });
+
+    // hover
+    this.cards.forEach((instance) => {
       if (instance == null) {
         return;
       }
@@ -79,33 +109,29 @@ export class Hand {
   }
 
   render(context: CanvasRenderingContext2D) {
-    this.cards.forEach((instance, index) => {
+    this.screenSize.width = context.canvas.width;
+    this.screenSize.height = context.canvas.height;
+
+    this.cards.forEach((instance) => {
       if (this.cardBackground == undefined || instance == null) {
         return;
       }
 
-      const x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const y = context.canvas.height - CARD_HEIGHT*0.5;
-
-      // todo: move for animation or ...
-      instance.position.x = x;
-      instance.position.y = y;
-
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-        context.fillRect(x-5, y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
+        context.fillRect(instance.position.x-5, instance.position.y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
       }
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, x, y, CARD_WIDTH, CARD_HEIGHT);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, instance.position.x, instance.position.y, CARD_WIDTH, CARD_HEIGHT);
 
       // text
       context.fillStyle = "black";
       context.textAlign = "center";
-      context.fillText(instance.card.title, x + CARD_WIDTH / 2, y + CARD_HEIGHT / 10);
+      context.fillText(instance.card.title, instance.position.x + CARD_WIDTH / 2, instance.position.y + CARD_HEIGHT / 10);
 
       // attack
-      context.fillText(instance.attack.toString(), x + CARD_WIDTH / 4.5, y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.attack.toString(), instance.position.x + CARD_WIDTH / 4.5, instance.position.y + CARD_HEIGHT / 1.28);
       // defense
-      context.fillText(instance.defense.toString(), x + CARD_WIDTH / 1.3, y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.defense.toString(), instance.position.x + CARD_WIDTH / 1.3, instance.position.y + CARD_HEIGHT / 1.28);
     });
   }
 }

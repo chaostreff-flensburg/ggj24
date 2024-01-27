@@ -14,6 +14,8 @@ const CANVAS_HEIGHT = 800;
 export class Field {
   private cards: Array<CardInstance|null> = [null, null, null, null, null];
 
+  private screenSize: { width: number, height: number } = { width: 0, height: 0 };
+
   cardBackground: HTMLImageElement|undefined;
 
   addCard(card: CardInstance): Boolean {
@@ -22,7 +24,6 @@ export class Field {
     this.cards.every((item, index, list) => {
       if (item == null) {
         card.target = this.calculateCardCoordinates(index);
-        card.position = card.target;
         list[index] = card;
 
         result = true
@@ -47,6 +48,27 @@ export class Field {
   }
 
   update(input: Input) {
+    // position
+    this.cards.forEach((instance, index) => {
+      if (instance == null) {
+        return;
+      }
+
+      if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
+        instance.position.x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
+        instance.position.y = this.screenSize.height / 2;
+        return
+      }
+
+
+      const distanceX = instance.target.x - instance.position.x;
+      const distanceY = instance.target.y - instance.position.y;
+
+      const speed = 10;
+      instance.position.x += distanceX / speed;
+      instance.position.y += distanceY / speed;
+    });
+
     this.cards.forEach((instance, index) => {
       if (instance == null) {
         return;
@@ -73,28 +95,21 @@ export class Field {
         return;
       }
 
-      const x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const y = context.canvas.height / 2;
-
-      // todo: move for animation or ...
-      instance.position.x = x;
-      instance.position.y = y;
-
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-        context.fillRect(x-5, y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
+        context.fillRect(instance.position.x-5, instance.position.y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
       }
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, x, y, CARD_WIDTH, CARD_HEIGHT);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, instance.position.x, instance.position.y, CARD_WIDTH, CARD_HEIGHT);
 
       // text
       context.fillStyle = "black";
       context.textAlign = "center";
-      context.fillText(instance.card.title, x + CARD_WIDTH / 2, y + CARD_HEIGHT / 10);
+      context.fillText(instance.card.title, instance.position.x + CARD_WIDTH / 2, instance.position.y + CARD_HEIGHT / 10);
 
       // attack
-      context.fillText(instance.attack.toString(), x + CARD_WIDTH / 4.5, y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.attack.toString(), instance.position.x + CARD_WIDTH / 4.5, instance.position.y + CARD_HEIGHT / 1.28);
       // defense
-      context.fillText(instance.defense.toString(), x + CARD_WIDTH / 1.3, y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.defense.toString(), instance.position.x + CARD_WIDTH / 1.3, instance.position.y + CARD_HEIGHT / 1.28);
     });
   }
 }
