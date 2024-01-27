@@ -6,7 +6,6 @@ import { CARD_WIDTH, CARD_HEIGHT, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, INTER_CAR
 export class Hand {
   private isOpponent: Boolean;
   private cards: Array<CardInstance> = [];
-  private field: Field;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -18,8 +17,7 @@ export class Hand {
 
   onClick: ((card:CardInstance) => void) | undefined;
 
-  constructor(field: Field, isOpponent: Boolean = false) {
-    this.field = field;
+  constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
     this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
   }
