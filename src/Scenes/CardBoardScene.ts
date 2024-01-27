@@ -30,47 +30,48 @@ export class CardDeck {
   async load(): Promise<void> {
     const self = this;
 
-    return fetch("cards.json").then(async (response) => {
-      const cards: Array<Card> = await response.json()
-      self.cards = cards
+    return fetch("cards.json")
+      .then(response => response.json())
+      .then((cards: Array<Card>) => {
+        self.cards = cards
 
-      // create deck instances
-      let id = 0;
-      self.cards.forEach((card, index) => {
-        for (let i = 0; i < 10; i++) {
-          let instance: CardInstance = {
-            id: id,
-            card: card,
-            x: 0,
-            y: 0,
-            // set base defense and attack
-            defense: card.defense,
-            attack: card.attack,
-            isHovered: false
+        // create deck instances
+        let id = 0;
+        self.cards.forEach((card, index) => {
+          for (let i = 0; i < 10; i++) {
+            let instance: CardInstance = {
+              id: id,
+              card: card,
+              x: 0,
+              y: 0,
+              // set base defense and attack
+              defense: card.defense,
+              attack: card.attack,
+              isHovered: false
+            }
+
+            self.deck.push(instance);
+            id += 1;
           }
+        });
 
-          self.deck.push(instance);
-          id += 1;
+        // shuffle deck
+        self.deck.sort(() => Math.random() - 0.5);
+
+        // todo: remove
+        for (let i = 0; i < 10; i++) {
+          self.draw();
+        }
+
+        // todo: remove
+        let playNum = 5
+        if (self.hand.length < 5) {
+          playNum = self.hand.length;
+        }
+        for (let i = 0; i < playNum; i++) {
+          self.play(self.hand[i]);
         }
       });
-
-      // shuffle deck
-      self.deck.sort(() => Math.random() - 0.5);
-
-      // todo: remove
-      for (let i = 0; i < 10; i++) {
-        self.draw();
-      }
-
-      // todo: remove
-      let playNum = 5
-      if (self.hand.length < 5) {
-        playNum = self.hand.length;
-      }
-      for (let i = 0; i < playNum; i++) {
-        self.play(self.hand[i]);
-      }
-    });
   }
 
   draw(): CardInstance | undefined {
