@@ -1,6 +1,7 @@
-import { Input } from '../../Input';
-import {CardInstance} from './CardInstance';
-import { Point } from './Point';
+import { Input } from "../../Input";
+import { CardInstance } from "./CardInstance";
+import { Field } from "./Field";
+import { Point } from "./Point";
 
 const CARD_IMAGE_WIDTH = 300;
 const CARD_IMAGE_HEIGHT = 380;
@@ -11,30 +12,22 @@ const CARD_HEIGHT = CARD_IMAGE_HEIGHT / 2;
 const INTER_CARD_PADDING = 20;
 const CANVAS_HEIGHT = 800;
 
-export class Field {
-  private cards: Array<CardInstance|null> = [null, null, null, null, null];
+export class Hand {
+  private cards: Array<CardInstance> = [];
+  private field: Field;
 
   cardBackground: HTMLImageElement|undefined;
+
+  constructor(field: Field) {
+    this.field = field;
+  }
 
   addCard(card: CardInstance): Boolean {
     let result = false;
 
-    this.cards.every((item, index, list) => {
-      if (item == null) {
-        card.target = this.calculateCardCoordinates(index);
-        card.position = card.target;
-        list[index] = card;
-
-        result = true
-
-        return false;
-      }
-
-      return true;
-    })
-
-    console.log(result);
-
+    card.target = this.calculateCardCoordinates(1);
+    card.position = card.target;
+    this.cards.push(card);
 
     return result;
   }
@@ -44,6 +37,24 @@ export class Field {
       x: 100 + index * (CARD_WIDTH + INTER_CARD_PADDING),
       y: CANVAS_HEIGHT / 2,
     };
+  }
+
+  discard(instance: CardInstance): void {
+    this.removeCard(instance);
+    // send card to graveyard
+    // todo: this.graveyard.push(instance);
+  }
+
+  play(instance: CardInstance): void {
+    this.removeCard(instance);
+    // send card to field
+    this.field.addCard(instance);
+  }
+
+  private removeCard(instance: CardInstance): void {
+    this.cards = this.cards.filter((item) => {
+      return item.id != instance.id;
+    });
   }
 
   update(input: Input) {
@@ -59,7 +70,7 @@ export class Field {
         instance.isHovered = true;
 
         if (input.clicked) {
-          //attack
+          this.play(instance)
         }
       } else {
         instance.isHovered = false;
@@ -74,7 +85,7 @@ export class Field {
       }
 
       const x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const y = context.canvas.height / 2;
+      const y = context.canvas.height - CARD_HEIGHT*0.5;
 
       // todo: move for animation or ...
       instance.position.x = x;
