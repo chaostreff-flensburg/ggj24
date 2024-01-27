@@ -100,6 +100,7 @@ export class Hand {
 
         if (input.clicked && this.onClick) {
           this.onClick(instance);
+          input.clicked = false;
         }
 
         cursorOnCard = true;
