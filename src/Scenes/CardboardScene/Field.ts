@@ -60,7 +60,6 @@ export class Field {
         return
       }
 
-
       const distanceX = instance.target.x - instance.position.x;
       const distanceY = instance.target.y - instance.position.y;
 

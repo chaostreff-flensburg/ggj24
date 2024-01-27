@@ -18,7 +18,7 @@ export class Hand {
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
-  cardBackground: HTMLImageElement|undefined;
+  cardBackground: HTMLImageElement | undefined;
 
   constructor(field: Field) {
     this.field = field;
@@ -27,27 +27,22 @@ export class Hand {
   addCard(card: CardInstance): Boolean {
     let result = false;
 
-    card.target = this.calculateCardCoordinates(1);
     this.cards.push(card);
+    this.updateCardTargetPosition();
 
     return result;
   }
 
-  private calculateCardCoordinates(index: number): Point {
-    return {
-      x: 100 + index * (CARD_WIDTH + INTER_CARD_PADDING),
-      y: CANVAS_HEIGHT / 2,
-    };
-  }
-
   discard(instance: CardInstance): void {
     this.removeCard(instance);
+    this.updateCardTargetPosition();
     // send card to graveyard
     // todo: this.graveyard.push(instance);
   }
 
   play(instance: CardInstance): void {
     this.removeCard(instance);
+    this.updateCardTargetPosition();
     // send card to field
     this.field.addCard(instance);
   }
@@ -58,6 +53,18 @@ export class Hand {
     });
   }
 
+  private updateCardTargetPosition(): void {
+    this.cards.forEach((instance, index) => {
+      // if old position != new position with new index?
+      const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
+      const nextPositionY = this.screenSize.height - CARD_HEIGHT * 0.5;
+      if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
+        instance.target.x = nextPositionX;
+        instance.target.y = nextPositionY;
+      }
+    });
+  }
+
   update(input: Input) {
     // position
     this.cards.forEach((instance, index) => {
@@ -65,17 +72,7 @@ export class Hand {
         return;
       }
 
-      // if old position != new position with new index?
-      const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const nextPositionY = this.screenSize.height - CARD_HEIGHT*0.5;
-      if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
-        instance.target.x = nextPositionX;
-        instance.target.y = nextPositionY;
-      }
-
       if (instance.target.x == instance.position.x && instance.target.y == instance.position.y) {
-        instance.position.x = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-        instance.position.y = this.screenSize.height - CARD_HEIGHT*0.5;
         return
       }
 
@@ -97,20 +94,32 @@ export class Hand {
       const y = instance.position.y;
 
       if (input.x > x && input.x < x + CARD_WIDTH && input.y > y && input.y < y + CARD_HEIGHT) {
+        if (!instance.isHovered) {
+          // new hover
+          instance.target.y -= CARD_HEIGHT / 2;
+        }
+
         instance.isHovered = true;
 
         if (input.clicked) {
           this.play(instance)
         }
       } else {
+        if (instance.isHovered) {
+          // new end hover
+          instance.target.y += CARD_HEIGHT / 2;
+        }
         instance.isHovered = false;
       }
     });
   }
 
   render(context: CanvasRenderingContext2D) {
-    this.screenSize.width = context.canvas.width;
-    this.screenSize.height = context.canvas.height;
+    if (this.screenSize.width == 0 || this.screenSize.height == 0) {
+      this.screenSize.width = context.canvas.width;
+      this.screenSize.height = context.canvas.height;
+      this.updateCardTargetPosition();
+    }
 
     this.cards.forEach((instance) => {
       if (this.cardBackground == undefined || instance == null) {
@@ -119,7 +128,7 @@ export class Hand {
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-        context.fillRect(instance.position.x-5, instance.position.y-5, CARD_WIDTH+10, CARD_HEIGHT+10);
+        context.fillRect(instance.position.x - 5, instance.position.y - 5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
       }
       context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, instance.position.x, instance.position.y, CARD_WIDTH, CARD_HEIGHT);
 
