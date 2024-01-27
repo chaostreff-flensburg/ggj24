@@ -212,7 +212,7 @@ export class CardBoardScene implements Scene {
 
     this.playerCardDeck.field.forEach((instance, index) => {
       const x = 100 + index * (cardWidth + paddingCardsField);
-      const y = context.canvas.height / 2 - cardHeight/2;
+      const y = context.canvas.height / 2;
 
       // todo: move for animation or ...
       instance.x = x;
