@@ -1,5 +1,5 @@
 import { Input } from '../../Input';
-import {CardInstance} from './CardInstance';
+import { CardInstance } from './CardInstance';
 import { Point } from './Point';
 
 const CARD_IMAGE_WIDTH = 300;
@@ -14,11 +14,11 @@ const CANVAS_HEIGHT = 800;
 const ZOOM = 1.2;
 
 export class Field {
-  private cards: Array<CardInstance|null> = [null, null, null, null, null];
+  private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
-  cardBackground: HTMLImageElement|undefined;
+  cardBackground: HTMLImageElement | undefined;
 
   addCard(card: CardInstance): Boolean {
     let result = false;
@@ -142,7 +142,7 @@ export class Field {
 
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-        context.fillRect(-5, -5, CARD_WIDTH+10, CARD_HEIGHT+10);
+        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
       }
       context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
 
