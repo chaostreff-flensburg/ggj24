@@ -27,8 +27,8 @@ export class CardBoardScene implements Scene {
     this.playerHand = new Hand(this.playerField);
     this.playerStack = new Stack(this.playerHand);
 
-    this.opponentHand = new Hand(this.opponentField);
-    this.opponentStack = new Stack(this.opponentHand);
+    this.opponentHand = new Hand(this.opponentField, true);
+    this.opponentStack = new Stack(this.opponentHand, true);
   }
 
   loadImage(src:string): Promise<HTMLImageElement> {
