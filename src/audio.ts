@@ -35,8 +35,6 @@ export class AudioManager {
 
   isReady() {
     let result = this.initialized && this.soundList.length > 0
-    console.log(this.initialized)
-    console.log(this.soundList)
     return result
   }
 
@@ -46,12 +44,13 @@ export class AudioManager {
   }
 
   playSound(slug: string) {
-    console.log("isReady", this.isReady())
     if (this.isReady()) {
       let sound = this.getSoundObject(slug)
       if (sound && sound.source) {
         sound.source.start(0);
       }
+    } else {
+      console.error("Can't play sound. Audiomanager is not ready.")
     }
 
   }
