@@ -58,6 +58,10 @@ export class Hand {
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
       const nextPositionY = this.screenSize.height - CARD_HEIGHT * 0.5;
+      if (instance.isHovered) {
+        instance.target.y = nextPositionY - CARD_HEIGHT / 2;
+      }
+
       if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
         instance.target.x = nextPositionX;
         instance.target.y = nextPositionY;
