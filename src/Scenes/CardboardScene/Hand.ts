@@ -10,11 +10,14 @@ export class Hand {
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
+  private hoverYOffset: number = 0;
+
   cardBackground: HTMLImageElement | undefined;
 
   constructor(field: Field, isOpponent: Boolean = false) {
     this.field = field;
     this.isOpponent = isOpponent;
+    this.hoverYOffset = ((this.isOpponent)?(-CARD_HEIGHT / 4):(CARD_HEIGHT / 4))
   }
 
   addCard(card: CardInstance): Boolean {
@@ -61,9 +64,9 @@ export class Hand {
     this.cards.forEach((instance, index) => {
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + padding);
-      const nextPositionY = this.screenSize.height - CARD_HEIGHT * 0.5;
+      const nextPositionY = (this.isOpponent)?(0 - CARD_HEIGHT/10):(this.screenSize.height - CARD_HEIGHT/6);
       if (instance.isHovered) {
-        instance.target.y = nextPositionY - CARD_HEIGHT / 2;
+        instance.target.y = nextPositionY + this.hoverYOffset;
       }
 
       if (instance.position.x != nextPositionX || instance.position.y != nextPositionY) {
@@ -91,7 +94,7 @@ export class Hand {
       if (!cursorOnCard && instance.isHover(input)) {
         if (!instance.isHovered) {
           // new hover
-          instance.target.y -= CARD_HEIGHT / 2;
+          instance.target.y -= this.hoverYOffset;
         }
 
         instance.isHovered = true;
@@ -105,7 +108,7 @@ export class Hand {
       } else {
         if (instance.isHovered) {
           // new end hover
-          instance.target.y += CARD_HEIGHT / 2;
+          instance.target.y += this.hoverYOffset;
         }
         instance.isHovered = false;
       }

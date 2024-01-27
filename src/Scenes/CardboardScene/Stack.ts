@@ -27,6 +27,10 @@ export class Stack {
   constructor(hand: Hand, isOpponent: Boolean = false) {
     this.hand = hand;
     this.isOpponent = isOpponent;
+
+    if (isOpponent) {
+      this.position.y = 30;
+    }
   }
 
   shuffle(): void {

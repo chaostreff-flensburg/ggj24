@@ -107,8 +107,8 @@ export class CardBoardScene implements Scene {
     this.playerField.render(context, input);
     this.playerHand.render(context);
 
-    //this.opponentStack.render(context);
-    //this.opponentField.render(context, input);
-    //this.opponentHand.render(context);
+    this.opponentStack.render(context);
+    this.opponentField.render(context, input);
+    this.opponentHand.render(context);
   }
 }

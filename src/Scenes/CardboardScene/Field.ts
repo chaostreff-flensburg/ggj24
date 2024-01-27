@@ -9,10 +9,13 @@ export class Field {
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
   private selectedCard: CardInstance | null = null;
 
+  private hoverYOffset: number = 0;
+
   cardBackground: HTMLImageElement | undefined;
 
   constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
+    this.hoverYOffset = ((this.isOpponent)?(-CARD_HEIGHT / 4):(CARD_HEIGHT / 4))
   }
 
   addCard(card: CardInstance): Boolean {
@@ -52,9 +55,9 @@ export class Field {
 
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const nextPositionY = CANVAS_HEIGHT / 2;
+      const nextPositionY = (this.isOpponent)?CANVAS_HEIGHT / 3:CANVAS_HEIGHT / 3*2;
       if (instance.isHovered) {
-        instance.target.y = nextPositionY - CARD_HEIGHT / 4;
+        instance.target.y = nextPositionY + this.hoverYOffset;
       } else {
         instance.target.y = nextPositionY;
       }
@@ -80,7 +83,7 @@ export class Field {
       if (instance.isHover(input)) {
         if (!instance.isHovered) {
           // new hover
-          instance.target.y -= CARD_HEIGHT / 4;
+          instance.target.y -= this.hoverYOffset;
         }
 
         instance.isHovered = true;
@@ -95,7 +98,7 @@ export class Field {
       } else {
         if (instance.isHovered) {
           // new end hover
-          instance.target.y += CARD_HEIGHT / 4;
+          instance.target.y += this.hoverYOffset;
         }
 
         instance.isHovered = false;
