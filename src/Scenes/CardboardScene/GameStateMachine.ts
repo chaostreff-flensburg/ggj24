@@ -34,6 +34,11 @@ export default class GameStateMachine {
       || this.currentState == GameState.PLAYER_TURN_MAIN;
   }
 
+  isOpponentTurn(): Boolean {
+    return this.currentState == GameState.OPPONENT_TURN_START
+      || this.currentState == GameState.OPPONENT_TURN_MAIN;
+  }
+
   playerCanDraw(): Boolean {
     return this.currentState == GameState.PLAYER_TURN_START;
   }

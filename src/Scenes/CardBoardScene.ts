@@ -102,6 +102,21 @@ export class CardBoardScene implements Scene {
 
       if (this.stateMachine.isPlayerTurn()) this.stateMachine.advanceState();
     }
+
+    this.opponentStack.onClick = () => {
+      if (this.stateMachine.opponentCanDraw()) {
+        const card = this.opponentStack.draw();
+
+        if (card) {
+          const res = this.opponentHand.addCard(card);
+          if (!res) {
+            this.opponentStack.putCardBackToTop(card);
+          }
+        }
+      }
+
+      if (this.stateMachine.isOpponentTurn()) this.stateMachine.advanceState();
+    }
   }
 
   // update scene
