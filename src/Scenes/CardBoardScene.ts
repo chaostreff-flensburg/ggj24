@@ -32,12 +32,12 @@ export class CardBoardScene implements Scene {
   constructor() {
     this.playerField = new Field(this, false);
     this.playerHand = new Hand();
-    this.playerStack = new Stack(this.playerHand);
+    this.playerStack = new Stack();
 
     this.opponentField = new Field(this, true);
     this.opponentField.opponentField = this.playerField;
     this.opponentHand = new Hand(true);
-    this.opponentStack = new Stack(this.opponentHand, true);
+    this.opponentStack = new Stack(true);
 
     this.playerField.opponentField = this.opponentField;
   }

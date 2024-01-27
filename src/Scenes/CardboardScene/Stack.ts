@@ -18,8 +18,6 @@ export class Stack {
 
   cardBack: HTMLImageElement | undefined;
 
-  hand: Hand;
-
   position: Point = {
     x: (CANVAS_WIDTH - CARD_WIDTH - 30),
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
@@ -30,8 +28,7 @@ export class Stack {
 
   public onClick: (() => void) | undefined;
 
-  constructor(hand: Hand, isOpponent: Boolean = false) {
-    this.hand = hand;
+  constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
 
     if (isOpponent) {
