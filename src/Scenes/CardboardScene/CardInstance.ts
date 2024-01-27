@@ -11,13 +11,21 @@ export class CardInstance {
   target: Point = {x: 0, y: 0};
   defense: number = 0;
   attack: number = 0;
+
   isHovered: boolean = false;
+  turnsOnField: number = 0;
+  attackedThisRound: Boolean = false;
 
   constructor(card: Card) {
     this.card = card;
 
     this.defense = card.defense;
     this.attack = card.attack;
+  }
+
+  canAttack(): Boolean {
+    return this.turnsOnField >= 1
+      && !this.attackedThisRound;
   }
 
   animateInstance(): void {

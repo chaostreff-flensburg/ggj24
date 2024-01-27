@@ -67,6 +67,15 @@ export class Field {
     return this.cards.every(item => item == null);
   }
 
+  endOfTurnUpdate() {
+    this.cards.forEach((card:CardInstance|null) => {
+      if (card == null) return;
+
+      card.attackedThisRound = false;
+      card.turnsOnField++;
+    });
+  }
+
   private updateCardTargetPosition(): void {
     this.cards.forEach((instance, index) => {
       if (instance == null) {

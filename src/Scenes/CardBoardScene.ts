@@ -108,10 +108,15 @@ export class CardBoardScene implements Scene {
 
       if (
         this.stateMachine.opponentCanAct()
-          && this.opponentField.selectedCard
+          && this.opponentField.selectedCard?.canAttack()
           && this.playerField.isEmpty()
       ) {
+        this.opponentField.selectedCard.attackedThisRound = true;
         this.playerLifePoints -= this.opponentField.selectedCard.attack;
+      }
+
+      if (this.stateMachine.playerCanAct()) {
+        this.playerField.endOfTurnUpdate();
       }
 
       if (this.stateMachine.isPlayerTurn()) this.stateMachine.advanceState();
@@ -131,10 +136,15 @@ export class CardBoardScene implements Scene {
 
       if (
         this.stateMachine.playerCanAct()
-          && this.playerField.selectedCard
+          && this.playerField.selectedCard?.canAttack()
           && this.opponentField.isEmpty()
       ) {
+        this.playerField.selectedCard.attackedThisRound = true;
         this.opponentlifePoints -= this.playerField.selectedCard.attack;
+      }
+
+      if (this.stateMachine.opponentCanAct()) {
+        this.opponentField.endOfTurnUpdate();
       }
 
       if (this.stateMachine.isOpponentTurn()) this.stateMachine.advanceState();
@@ -175,7 +185,7 @@ export class CardBoardScene implements Scene {
         return true;
       }
 
-      if (this.opponentField.selectedCard) {
+      if (this.opponentField.selectedCard?.canAttack()) {
         const passOn = this.resolveBattle(this.opponentField.selectedCard, card);
 
         if (this.opponentField.selectedCard.defense <= 0) {
@@ -198,7 +208,7 @@ export class CardBoardScene implements Scene {
         return true;
       }
 
-      if (this.playerField.selectedCard) {
+      if (this.playerField.selectedCard?.canAttack()) {
         const passOn = this.resolveBattle(this.playerField.selectedCard, card);
 
         if (this.playerField.selectedCard.defense <= 0) {
@@ -220,6 +230,8 @@ export class CardBoardScene implements Scene {
   resolveBattle(card1: CardInstance, card2: CardInstance): Point {
     card2.defense -= card1.attack;
     card1.defense -= card2.attack;
+
+    card1.attackedThisRound = true;
 
     return {
       x: Math.min(card1.defense, 0),
