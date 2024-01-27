@@ -24,6 +24,8 @@ export class Stack {
     y: (CANVAS_HEIGHT - CARD_HEIGHT - 10)
   };
 
+  public onClick: (() => void)|undefined;
+
   constructor(hand: Hand, isOpponent: Boolean = false) {
     this.hand = hand;
     this.isOpponent = isOpponent;
@@ -43,11 +45,10 @@ export class Stack {
     }
 
     const card = this.deck.pop();
+
     if (card) {
       card.position.x = this.position.x;
       card.position.y = this.position.y;
-
-      this.hand.addCard(card);
     }
 
     return card;
@@ -56,9 +57,8 @@ export class Stack {
   update(input: Input): void {
     // is mouse over a card?
     if (input.x > this.position.x && input.x < this.position.x + CARD_WIDTH && input.y > this.position.y && input.y < this.position.y + CARD_HEIGHT) {
-      if (input.clicked) {
-        console.log("draw card")
-        this.draw();
+      if (input.clicked && this.onClick) {
+        this.onClick()
         input.clicked = false;
       }
     }
@@ -72,10 +72,12 @@ export class Stack {
     this.deck.forEach((_, index) => {
       context.save();
       context.translate(this.position.x + index / 2, this.position.y+ index / 2);
+
       // rotate by 180 degrees if opponent
       if (this.isOpponent) {
         context.rotate(Math.PI);
       }
+
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
       context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);

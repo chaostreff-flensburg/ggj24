@@ -12,6 +12,8 @@ export class Hand {
 
   private hoverYOffset: number = 0;
 
+  private maxCards: number = 8;
+
   cardBackground: HTMLImageElement | undefined;
 
   constructor(field: Field, isOpponent: Boolean = false) {
@@ -23,10 +25,14 @@ export class Hand {
   addCard(card: CardInstance): Boolean {
     let result = false;
 
-    card.isHovered = false;
+    if (this.cards.length < this.maxCards) {
+      card.isHovered = false;
 
-    this.cards.push(card);
-    this.updateCardTargetPosition();
+      this.cards.push(card);
+      this.updateCardTargetPosition();
+
+      return true;
+    }
 
     return result;
   }

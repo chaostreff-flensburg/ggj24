@@ -81,8 +81,19 @@ export class CardBoardScene implements Scene {
     this.opponentStack.shuffle();
 
     for (let i = 0; i < 5; i++) {
-      this.playerStack.draw();
-      this.opponentStack.draw();
+      this.playerHand.addCard(this.playerStack.draw()!);
+      this.opponentHand.addCard(this.opponentStack.draw()!);
+    }
+
+    this.playerStack.onClick = () => {
+      const card = this.playerStack.draw();
+
+      if (card) {
+        const res = this.playerHand.addCard(card);
+        if (!res) {
+          this.playerStack.deck.push(card);
+        }
+      }
     }
   }
 
