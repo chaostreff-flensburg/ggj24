@@ -26,9 +26,11 @@ export class CardBoardScene implements Scene {
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
   constructor() {
+    this.playerField.opponentField = this.opponentField;
     this.playerHand = new Hand(this.playerField);
     this.playerStack = new Stack(this.playerHand);
 
+    this.opponentField.opponentField = this.playerField;
     this.opponentHand = new Hand(this.opponentField, true);
     this.opponentStack = new Stack(this.opponentHand, true);
   }

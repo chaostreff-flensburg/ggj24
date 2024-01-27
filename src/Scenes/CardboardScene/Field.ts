@@ -12,10 +12,12 @@ export class Field {
   private hoverYOffset: number = 0;
 
   cardBackground: HTMLImageElement | undefined;
+  opponentField: Field | undefined;
 
   constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
-    this.hoverYOffset = ((this.isOpponent)?(-CARD_HEIGHT / 4):(CARD_HEIGHT / 4))
+
+    this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
   }
 
   addCard(card: CardInstance): Boolean {
@@ -41,6 +43,51 @@ export class Field {
     return result;
   }
 
+  attack(source: CardInstance, target: CardInstance): boolean {
+    console.log("attack", source, target)
+
+    // is instance on field?
+    if (!this.cards.includes(source)) {
+      return false;
+    }
+
+    if (this.opponentField?.attacked(source, target)) {
+      return this.attack(target, source);
+    }
+
+    return false;
+  }
+
+  // attacked called only from OpponentField!!!!
+  attacked(source: CardInstance, target: CardInstance): boolean {
+    console.log("attacked", source, target)
+    // is instance on field?
+    if (!this.cards.includes(target)) {
+      return false;
+    }
+
+    target.defense -= source.attack;
+
+    // check if dead
+    if (target.defense <= 0) {
+      this.removeCard(target);
+    }
+
+    return true;
+  }
+
+  private removeCard(instance: CardInstance): void {
+    this.cards = this.cards.filter((item) => {
+      return item?.id != instance.id;
+    });
+
+    if (this.selectedCard?.id == instance.id) {
+      this.selectedCard = null;
+    }
+
+    this.updateCardTargetPosition();
+  }
+
   isFreeSlot(): Boolean {
     return this.cards.some((item) => {
       return item == null;
@@ -55,7 +102,7 @@ export class Field {
 
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const nextPositionY = (this.isOpponent)?CANVAS_HEIGHT / 3:CANVAS_HEIGHT / 3*2;
+      const nextPositionY = (this.isOpponent) ? CANVAS_HEIGHT / 3 : CANVAS_HEIGHT / 3 * 2;
       if (instance.isHovered) {
         instance.target.y = nextPositionY + this.hoverYOffset;
       } else {
