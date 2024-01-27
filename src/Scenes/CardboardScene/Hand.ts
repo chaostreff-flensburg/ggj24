@@ -125,21 +125,27 @@ export class Hand {
         return;
       }
 
+      context.save();
+      context.translate(instance.position.x, instance.position.y);
+      context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
+
       if (instance.isHovered) {
         context.fillStyle = "yellow";
-        context.fillRect(instance.position.x - 5, instance.position.y - 5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+        context.fillRect(- 5, - 5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
       }
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, instance.position.x, instance.position.y, CARD_WIDTH, CARD_HEIGHT);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
 
       // text
       context.fillStyle = "black";
       context.textAlign = "center";
-      context.fillText(instance.card.title, instance.position.x + CARD_WIDTH / 2, instance.position.y + CARD_HEIGHT / 10);
+      context.fillText(instance.card.title, CARD_WIDTH / 2, CARD_HEIGHT / 10);
 
       // attack
-      context.fillText(instance.attack.toString(), instance.position.x + CARD_WIDTH / 4.5, instance.position.y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.attack.toString(), CARD_WIDTH / 4.5, CARD_HEIGHT / 1.28);
       // defense
-      context.fillText(instance.defense.toString(), instance.position.x + CARD_WIDTH / 1.3, instance.position.y + CARD_HEIGHT / 1.28);
+      context.fillText(instance.defense.toString(), CARD_WIDTH / 1.3, CARD_HEIGHT / 1.28);
+
+      context.restore();
     });
   }
 }
