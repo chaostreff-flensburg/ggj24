@@ -7,6 +7,7 @@ import { Hand } from "./CardboardScene/Hand";
 import { Stack } from "./CardboardScene/Stack";
 import loadImage from "../loadImage";
 import GameStateMachine from "./CardboardScene/GameStateMachine";
+import { AudioManager } from "../audio";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -29,7 +30,11 @@ export class CardBoardScene implements Scene {
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
-  constructor() {
+  private audioManager: AudioManager;
+
+  constructor(audioManager: AudioManager) {
+    this.audioManager = audioManager
+    
     this.playerField = new Field(this, false);
     this.playerHand = new Hand();
     this.playerStack = new Stack();

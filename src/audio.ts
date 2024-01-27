@@ -30,7 +30,6 @@ export class AudioManager {
     if (this.soundList?.length > 0) {
       this.initialized = true
     }
-
   }
 
   isReady() {
