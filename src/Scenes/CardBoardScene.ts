@@ -14,8 +14,9 @@ export class CardBoardScene implements Scene {
   private opponentStack: Stack;
   private playerHand: Hand;
   private opponentHand: Hand;
-  private playerField: Field = new Field(false);
-  private opponentField: Field = new Field(true);
+  private playerField: Field;
+  private opponentField: Field;
+  private playerSelectedCard: CardInstance | null = null;
 
   private loadComplete:Boolean = false;
 
@@ -26,11 +27,16 @@ export class CardBoardScene implements Scene {
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
   constructor() {
+    this.playerField = new Field(this, false);
     this.playerHand = new Hand(this.playerField);
     this.playerStack = new Stack(this.playerHand);
 
+    this.opponentField = new Field(this, true);
+    this.opponentField.opponentField = this.playerField;
     this.opponentHand = new Hand(this.opponentField, true);
     this.opponentStack = new Stack(this.opponentHand, true);
+
+    this.playerField.opponentField = this.opponentField;
   }
 
   load(): void {
@@ -113,5 +119,26 @@ export class CardBoardScene implements Scene {
     this.opponentStack.render(context);
     this.opponentField.render(context, input);
     this.opponentHand.render(context);
+  }
+
+  onCardClicked(field: Field, card: CardInstance|null = null) {
+    if (field.isOpponent && card != null && this.playerSelectedCard != null) {
+      // attack ...!
+
+      this.playerField.attack(this.playerSelectedCard!, card);
+      this.playerSelectedCard = null;
+      return;
+    }
+
+    if (field.isOpponent) {
+      return;
+    }
+
+    if (this.playerSelectedCard === card) {
+      this.playerSelectedCard = null;
+      return;
+    }
+
+    this.playerSelectedCard = card;
   }
 }
