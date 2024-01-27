@@ -6,6 +6,7 @@ import { Field } from "./CardboardScene/Field";
 import { Hand } from "./CardboardScene/Hand";
 import { Stack } from "./CardboardScene/Stack";
 import loadImage from "../loadImage";
+import GameStateMachine from "./CardboardScene/GameStateMachine";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -18,7 +19,9 @@ export class CardBoardScene implements Scene {
   private opponentField: Field;
   private playerSelectedCard: CardInstance | null = null;
 
-  private loadComplete:Boolean = false;
+  private stateMachine: GameStateMachine = new GameStateMachine();
+
+  private loadComplete: Boolean = false;
 
   private cardBackground: HTMLImageElement | undefined;
   private goodCardBack: HTMLImageElement | undefined;
@@ -86,14 +89,18 @@ export class CardBoardScene implements Scene {
     }
 
     this.playerStack.onClick = () => {
-      const card = this.playerStack.draw();
+      if (this.stateMachine.playerCanDraw()) {
+        const card = this.playerStack.draw();
 
-      if (card) {
-        const res = this.playerHand.addCard(card);
-        if (!res) {
-          this.playerStack.putCardBackToTop(card);
+        if (card) {
+          const res = this.playerHand.addCard(card);
+          if (!res) {
+            this.playerStack.putCardBackToTop(card);
+          }
         }
       }
+
+      if (this.stateMachine.isPlayerTurn()) this.stateMachine.advanceState();
     }
   }
 
@@ -132,7 +139,7 @@ export class CardBoardScene implements Scene {
     this.opponentHand.render(context);
   }
 
-  onCardClicked(field: Field, card: CardInstance|null = null) {
+  onCardClicked(field: Field, card: CardInstance | null = null) {
     if (field.isOpponent && card != null && this.playerSelectedCard != null) {
       // attack ...!
 
