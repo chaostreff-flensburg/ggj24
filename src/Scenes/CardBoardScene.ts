@@ -8,6 +8,7 @@ import { Stack } from "./CardboardScene/Stack";
 import loadImage from "../loadImage";
 import GameStateMachine from "./CardboardScene/GameStateMachine";
 import { AudioManager } from "../audio";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -19,6 +20,9 @@ export class CardBoardScene implements Scene {
   private playerField: Field;
   private opponentField: Field;
   private playerSelectedCard: CardInstance | null = null;
+
+  private playerLifePoints: number = 1000;
+  private opponentlifePoints: number = 1000;
 
   private stateMachine: GameStateMachine = new GameStateMachine();
 
@@ -180,6 +184,10 @@ export class CardBoardScene implements Scene {
     this.opponentStack.render(context);
     this.opponentField.render(context, input);
     this.opponentHand.render(context);
+
+    context.font = "bold 16px serif";
+    context.fillText(`LIFEPOINTS: ${this.playerLifePoints}`, CANVAS_WIDTH - 240, CANVAS_HEIGHT - 50);
+    context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
   }
 
   onCardClicked(field: Field, card: CardInstance | null = null) {
