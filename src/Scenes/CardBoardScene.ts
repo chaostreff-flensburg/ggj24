@@ -35,6 +35,7 @@ export class CardBoardScene implements Scene {
   private sadCardBack: HTMLImageElement | undefined;
   private buttonImage: HTMLImageElement | undefined;
   private buttonImageHover: HTMLImageElement | undefined;
+  private cardImages: { [key: string]: HTMLImageElement } = {};
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -81,6 +82,13 @@ export class CardBoardScene implements Scene {
         .then(response => response.json())
         .then((cards: Array<Card>) => {
           this.cards = cards
+
+          const assetLoad = cards.map((card) => {
+            return loadImage("cards/" + card.image)
+              .then(image => this.cardImages[card.slug] = image)
+          });
+
+          return Promise.all(assetLoad);
         })
     ];
 
@@ -90,15 +98,19 @@ export class CardBoardScene implements Scene {
         this.playerField.cardBackground = this.cardBackground!;
         this.playerField.cardHover = this.cardHover!;
         this.playerField.cardAtk = this.cardAtk!;
+        this.playerField.cardImages = this.cardImages;
         this.playerHand.cardBackground = this.cardBackground!;
         this.playerHand.cardHover = this.cardHover!;
+        this.playerHand.cardImages = this.cardImages;
         this.playerStack.cardBack = this.goodCardBack!;
 
         this.opponentField.cardBackground = this.cardBackground!;
         this.opponentField.cardHover = this.cardHover!;
         this.opponentField.cardAtk = this.cardAtk!;
+        this.opponentField.cardImages = this.cardImages;
         this.opponentHand.cardBackground = this.cardBackground!;
         this.opponentHand.cardHover = this.cardHover!;
+        this.opponentHand.cardImages = this.cardImages;
         this.opponentStack.cardBack = this.sadCardBack!;
 
         this.prepareDeck();
