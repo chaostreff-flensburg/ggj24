@@ -1,5 +1,6 @@
 // Menu for the point and click game
 import { Input } from "../Input";
+import { Scene } from "./IScene";
 
 type PointOfInterest = {
   x1: number;
@@ -14,7 +15,7 @@ export class PaKMenu implements Scene {
   private imageLoadcomplete = false;
 
   private pointofinterest: Array<PointOfInterest> = [];
-  private action: string = "";
+  action: string = "";
   private actionimage: HTMLImageElement | null = null;
   private inventory: string[] = [];
   private debug: boolean = false;
@@ -121,7 +122,7 @@ export class PaKMenu implements Scene {
   // render scene
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
-      context.drawImage(this.image, 0, 650);
+      context.drawImage(this.image!, 0, 650);
       if (
         this.action !== "" && this.actionimage != null &&
         this.actionimage.src !== ""

@@ -3,6 +3,7 @@ import { InputManager } from "./Input";
 import { CardBoardScene } from "./Scenes/CardBoardScene";
 import { SceneManager } from "./Scenes/SceneManager";
 import { AudioManager } from "./audio";
+import { PointAndClick } from "./Scenes/PointAndClick";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;
@@ -24,7 +25,7 @@ class DrawingApp {
     this.audioManager = new AudioManager()
     this.audioManager.init()
 
-    this.scene = new CardBoardScene(this.audioManager);
+    this.scene = new PointAndClick();
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
   }

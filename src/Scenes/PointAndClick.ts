@@ -17,14 +17,16 @@ export class PointAndClick implements Scene {
   private imageLoadcomplete = false;
   private menu: PaKMenu = new PaKMenu();
 
-  private pointofinterest: Array<PointOfInterest> = [];
-  private moveable: Array<PointOfInterest> = [];
+  private pointofinterest: Map<string, Array<PointOfInterest>> = new Map();
+  private moveable: Map<string, Array<PointOfInterest>> = new Map();
   private action: string | undefined;
-  private imagescroll: number = 0;
+  private imagescroll: string = "0";
   private debug: boolean = false;
   private charimage = new Image();
-  private charx: number = 0;
-  private chary: number = 0;
+  private charX: number = 0;
+  private charY: number = 0;
+  private charTargetX: number = 0;
+  private charTargetY: number = 0;
 
   // load scene image and points of interest
   load(): void {
@@ -37,7 +39,7 @@ export class PointAndClick implements Scene {
     this.charimage.src = "scene/char1.png";
 
     // 4 points of interest
-    this.pointofinterest = {
+    this.pointofinterest = new Map(Object.entries({
       0: [
         {
           x1: 580,
@@ -73,8 +75,9 @@ export class PointAndClick implements Scene {
           action: "talk",
         },
       ],
-    };
-    this.moveable = {
+    }));
+
+    this.moveable = new Map(Object.entries({
       0: [
         {
           x1: 100,
@@ -118,16 +121,27 @@ export class PointAndClick implements Scene {
           action: "moveup",
         }
       ],
-    };
+    }));
+
     this.menu.load();
-  }
+  };
+
   // update scene
   update(input: Input): void {
+    // animation
+    if (this.charX !== this.charTargetX && this.charY !== this.charTargetY) {
+      const distanceX = this.charTargetX - this.charX;
+      const distanceY = this.charTargetY - this.charY;
+
+      const speed = 15;
+      this.charX += distanceX / speed;
+      this.charY += distanceY / speed;
+    }
+
+    // interaction
     /* console.log('update', input) */
-    if (
-      input.clicked === true
-    ) {
-      this.pointofinterest[this.imagescroll].forEach(
+    if (input.clicked === true) {
+      this.pointofinterest.get(this.imagescroll)?.forEach(
         (
           point: PointOfInterest,
         ) => {
@@ -155,7 +169,7 @@ export class PointAndClick implements Scene {
           }
         },
       );
-      this.moveable[this.imagescroll].forEach(
+      this.moveable.get(this.imagescroll)?.forEach(
         (
           point: PointOfInterest,
         ) => {
@@ -166,14 +180,14 @@ export class PointAndClick implements Scene {
             // move image scroll
             if (point.action === "movedown") {
               console.log("movedown");
-              this.imagescroll -= 1;
+              this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
             }
             if (point.action === "moveup") {
               console.log("moveup");
-              this.imagescroll += 1;
+              this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
             }
-            this.charx = input.x - 50;
-            this.chary = input.y - 100;
+            this.charTargetX = input.x - 50;
+            this.charTargetY = input.y - 100;
           }
         },
       );
@@ -185,15 +199,15 @@ export class PointAndClick implements Scene {
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
       // draw char image
-      context.drawImage(this.image!, -1280 * this.imagescroll, 0);
-      context.drawImage(this.charimage, this.charx, this.chary, 100, 100);
+      context.drawImage(this.image!, -1280 * parseInt(this.imagescroll), 0);
+      context.drawImage(this.charimage, this.charX, this.charY, 100, 100);
       this.menu.render(context, input);
       if (this.debug) { // for debugging
-        this.pointofinterest[this.imagescroll].forEach((poi) => {
+        this.pointofinterest.get(this.imagescroll)?.forEach((poi) => {
           context.strokeStyle = "black";
           context.strokeRect(poi.x1, poi.y1, poi.x2 - poi.x1, poi.y2 - poi.y1);
         });
-        this.moveable[this.imagescroll].forEach((poi) => {
+        this.moveable.get(this.imagescroll)?.forEach((poi) => {
           context.strokeStyle = "red";
           context.strokeRect(poi.x1, poi.y1, poi.x2 - poi.x1, poi.y2 - poi.y1);
         });
