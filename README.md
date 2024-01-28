@@ -12,7 +12,7 @@ The Ghost of Sadness has suppressed joyous laughter in this colorful world, and 
 
 "Ghost of Sadness Attacks" is not just a game – it's a journey that will touch your soul. Are you ready to conquer sadness and bring back laughter? Play now and experience how the Sad Clown becomes a hero!
 
-![Point and Click Preview screenshot](https://github.com/chaostreff-flensburg/ggj24/blob/master/docs/pak_preview.png?raw=true)
+![Point and Click Preview screenshot](https://github.com/chaostreff-flensburg/ggj24/blob/master/docs/pak_preview.PNG?raw=true)
 ![card game screenshot](https://github.com/chaostreff-flensburg/ggj24/blob/master/docs/cardgame.png?raw=true)
 
 
