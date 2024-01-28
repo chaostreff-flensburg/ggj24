@@ -1,10 +1,9 @@
 import { Input } from '../../Input';
-import { CardBoardScene } from '../CardBoardScene';
 import { CardInstance } from './CardInstance';
 import { CARD_WIDTH, CARD_HEIGHT, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, INTER_CARD_PADDING, CANVAS_HEIGHT } from './Constants';
 
 export class Field {
-  isOpponent: Boolean;
+  private isOpponent: Boolean;
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
@@ -15,7 +14,6 @@ export class Field {
   cardBackground: HTMLImageElement | undefined;
   cardHover: HTMLImageElement | undefined;
   cardAtk: HTMLImageElement | undefined;
-  opponentField: Field | undefined;
 
   onClick: ((card: CardInstance) => Boolean) | undefined;
 
@@ -102,11 +100,11 @@ export class Field {
 
   update(input: Input) {
     // position
-    this.cards.forEach((instance, index) => {
+    this.cards.forEach(instance => {
       instance?.animateInstance();
     });
 
-    this.cards.forEach((instance, index) => {
+    this.cards.forEach(instance => {
       if (instance == null) {
         return;
       }
@@ -147,7 +145,7 @@ export class Field {
       this.updateCardTargetPosition();
     }
 
-    this.cards.forEach((instance, index) => {
+    this.cards.forEach(instance => {
       if (this.cardBackground == undefined || instance == null) {
         return;
       }

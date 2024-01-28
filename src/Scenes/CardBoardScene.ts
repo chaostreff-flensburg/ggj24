@@ -46,11 +46,8 @@ export class CardBoardScene implements Scene {
     this.playerStack = new Stack();
 
     this.opponentField = new Field(true);
-    this.opponentField.opponentField = this.playerField;
     this.opponentHand = new Hand(true);
     this.opponentStack = new Stack(true);
-
-    this.playerField.opponentField = this.opponentField;
   }
 
   load(): void {
