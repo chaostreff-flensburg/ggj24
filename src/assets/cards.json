@@ -3,6 +3,7 @@
     "title": "Dragon Knight",
     "description": "A fierce dragon warrior ready for battle.",
     "slug": "dragon-knight",
+    "image": "0185cf84-71cd-4b8d-98b2-056931010105.png",
     "attack": 85,
     "defense": 70
   },
@@ -10,6 +11,7 @@
     "title": "Mystic Sorceress",
     "description": "A powerful sorceress skilled in mystical arts.",
     "slug": "mystic-sorceress",
+    "image": "08b776c3-9a46-4824-9cc6-7607252ef08c.png",
     "attack": 70,
     "defense": 75
   },
@@ -17,6 +19,7 @@
     "title": "Thunder Beast",
     "description": "A mythical beast with the power of thunder.",
     "slug": "thunder-beast",
+    "image": "09484b7c-13a8-46f4-ad66-e81ea8fcf95f.png",
     "attack": 90,
     "defense": 65
   },
@@ -24,6 +27,7 @@
     "title": "Swift Archer",
     "description": "An agile archer with unparalleled accuracy.",
     "slug": "swift-archer",
+    "image": "1737dc47-aea5-4913-b1e1-4fe189c49ee8.png",
     "attack": 80,
     "defense": 60
   },
@@ -31,6 +35,7 @@
     "title": "Ice Guardian",
     "description": "A guardian with the ability to control ice and frost.",
     "slug": "ice-guardian",
+    "image": "1c63bac9-0a9b-4cbb-b4a5-5c9030292068.png",
     "attack": 75,
     "defense": 80
   },
@@ -38,6 +43,7 @@
     "title": "Fiery Phoenix",
     "description": "A majestic phoenix with the power of fire.",
     "slug": "fiery-phoenix",
+    "image": "26c3bf46-470f-494c-b332-d11a28bf3676.png",
     "attack": 95,
     "defense": 55
   },
@@ -45,6 +51,7 @@
     "title": "Shadow Assassin",
     "description": "A stealthy assassin skilled in the art of shadows.",
     "slug": "shadow-assassin",
+    "image": "3bf205ff-6160-4558-9590-02ad063db0fc.png",
     "attack": 85,
     "defense": 65
   },
@@ -52,6 +59,7 @@
     "title": "Earth Golem",
     "description": "A massive golem with control over earth elements.",
     "slug": "earth-golem",
+    "image": "405f2466-b7cb-4065-be35-dcda08bcc533.png",
     "attack": 80,
     "defense": 90
   },
@@ -59,6 +67,7 @@
     "title": "Aquatic Serpent",
     "description": "A serpentine creature with control over water.",
     "slug": "aquatic-serpent",
+    "image": "447a58ba-7460-48af-93c4-036774551fec.png",
     "attack": 70,
     "defense": 75
   },
@@ -66,6 +75,7 @@
     "title": "Wind Spirit",
     "description": "A spirit with the power to control the winds.",
     "slug": "wind-spirit",
+    "image": "47943b71-6d0b-4445-9302-2f35760aeebc.png",
     "attack": 75,
     "defense": 70
   },
@@ -73,6 +83,7 @@
     "title": "Golden Paladin",
     "description": "A noble paladin adorned in golden armor.",
     "slug": "golden-paladin",
+    "image": "4bcc506f-ec31-4416-993a-3abc8406e635.png",
     "attack": 90,
     "defense": 80
   },
@@ -80,6 +91,7 @@
     "title": "Lunar Priestess",
     "description": "A priestess with the ability to harness the power of the moon.",
     "slug": "lunar-priestess",
+    "image": "50554e22-2baf-43d6-b6cf-1e2ac43a0199.png",
     "attack": 75,
     "defense": 85
   },
@@ -87,6 +99,7 @@
     "title": "Crimson Warlock",
     "description": "A warlock with dark powers and a crimson aura.",
     "slug": "crimson-warlock",
+    "image": "518050ca-c3d2-43b9-935f-3f678564b0c1.png",
     "attack": 85,
     "defense": 60
   },
@@ -94,6 +107,7 @@
     "title": "Steel Samurai",
     "description": "A skilled samurai with a blade of steel.",
     "slug": "steel-samurai",
+    "image": "58eb1782-6173-477d-8a89-191b4b4b4bc3.png",
     "attack": 95,
     "defense": 75
   },
@@ -101,6 +115,7 @@
     "title": "Celestial Fairy",
     "description": "A fairy with celestial powers and a kind heart.",
     "slug": "celestial-fairy",
+    "image": "5e6d71a6-4765-468a-8e71-00b92e1335d8.png",
     "attack": 70,
     "defense": 80
   },
@@ -108,6 +123,7 @@
     "title": "Demonic Imp",
     "description": "A mischievous imp with dark and demonic abilities.",
     "slug": "demonic-imp",
+    "image": "6044058a-f586-4049-92f6-e75d10c81842.png",
     "attack": 80,
     "defense": 55
   },
@@ -115,6 +131,7 @@
     "title": "Solar Knight",
     "description": "A knight empowered by the radiant energy of the sun.",
     "slug": "solar-knight",
+    "image": "61f42809-c3d1-4236-a874-f1413aff09c2.png",
     "attack": 90,
     "defense": 85
   },
@@ -122,6 +139,7 @@
     "title": "Jade Enchantress",
     "description": "An enchantress with powers linked to the jade gem.",
     "slug": "jade-enchantress",
+    "image": "6513e29e-09fe-4f91-ab77-c4d32854efed.png",
     "attack": 75,
     "defense": 70
   },
@@ -129,6 +147,7 @@
     "title": "Inferno Dragon",
     "description": "A dragon with the uncontrollable power of inferno.",
     "slug": "inferno-dragon",
+    "image": "675b5cfc-c2cc-4484-889d-9767afc6172d.png",
     "attack": 100,
     "defense": 50
   },
@@ -136,7 +155,120 @@
     "title": "Nature Guardian",
     "description": "A guardian of nature with control over flora and fauna.",
     "slug": "nature-guardian",
+    "image": "68106be1-e4d8-4ad4-9cfe-db6ba4894272.png",
     "attack": 85,
+    "defense": 80
+  },
+  {
+    "title": "Dark Magician",
+    "description": "A magician with dark powers and a mysterious past.",
+    "slug": "dark-magician",
+    "image": "72617fb7-74a9-44f8-aaef-4270cfd569fa.png",
+    "attack": 80,
+    "defense": 65
+  },
+  {
+    "title": "Ancient Sphinx",
+    "description": "An ancient sphinx with the power of the gods.",
+    "slug": "ancient-sphinx",
+    "image": "748295d1-7da8-4900-b8dd-5e0a2e52bc89.png",
+    "attack": 90,
+    "defense": 85
+  },
+  {
+    "title": "Dark Elf",
+    "description": "A dark elf with a dark past and a dark future.",
+    "slug": "dark-elf",
+    "image": "7f662ff6-8e09-421b-a215-61aa891b8864.png",
+    "attack": 85,
+    "defense": 70
+  },
+  {
+    "title": "Ancient Dragon",
+    "description": "An ancient dragon with the power of the ancients.",
+    "slug": "ancient-dragon",
+    "image": "811db805-010e-4cac-ab9a-675bb92d02c9.png",
+    "attack": 95,
+    "defense": 80
+  },
+  {
+    "title": "Dark Knight",
+    "description": "A knight with a dark past and a dark future.",
+    "slug": "dark-knight",
+    "image": "8ea3de3f-97c8-49e2-9c91-342c3c333501.png",
+    "attack": 90,
+    "defense": 75
+  },
+  {
+    "title": "Ancient Wizard",
+    "description": "An ancient wizard with the power of the ancients.",
+    "slug": "ancient-wizard",
+    "image": "9026cc04-83d4-492e-a6e7-f6bf146d035b.png",
+    "attack": 85,
+    "defense": 80
+  },
+  {
+    "title": "Dark Lord",
+    "description": "A dark lord with a dark past and a dark future.",
+    "slug": "dark-lord",
+    "image": "91b9df34-f61c-4e2e-a945-41e9bf1d3148.png",
+    "attack": 95,
+    "defense": 70
+  },
+  {
+    "title": "Ancient Warrior",
+    "description": "An ancient warrior with the power of the ancients.",
+    "slug": "ancient-warrior",
+    "image": "a7d52a0d-ab85-47a8-8b6f-3da240818142.png",
+    "attack": 90,
+    "defense": 85
+  },
+  {
+    "title": "Dark Mage",
+    "description": "A mage with a dark past and a dark future.",
+    "slug": "dark-mage",
+    "image": "b709314c-afb8-47c8-b373-5274f3bb8937.png",
+    "attack": 85,
+    "defense": 75
+  },
+  {
+    "title": "Ancient Knight",
+    "description": "An ancient knight with the power of the ancients.",
+    "slug": "ancient-knight",
+    "image": "cbb29838-3dd2-4c06-9f1b-4480d61c77a1.png",
+    "attack": 95,
+    "defense": 80
+  },
+  {
+    "title": "Dark Sorcerer",
+    "description": "A sorcerer with a dark past and a dark future.",
+    "slug": "dark-sorcerer",
+    "image": "e046135b-4feb-417d-9e09-0f6f3e525a3a.png",
+    "attack": 90,
+    "defense": 70
+  },
+  {
+    "title": "Ancient Paladin",
+    "description": "An ancient paladin with the power of the ancients.",
+    "slug": "ancient-paladin",
+    "image": "e597f029-98cb-49f7-9cbb-34c70c460464.png",
+    "attack": 95,
+    "defense": 85
+  },
+  {
+    "title": "Dark Warrior",
+    "description": "A warrior with a dark past and a dark future.",
+    "slug": "dark-warrior",
+    "image": "f3026184-0aaa-48ae-bb69-2f0ca3bc3884.png",
+    "attack": 90,
+    "defense": 75
+  },
+  {
+    "title": "Ancient Sorcerer",
+    "description": "An ancient sorcerer with the power of the ancients.",
+    "slug": "ancient-sorcerer",
+    "image": "f64ba632-ddd7-4da8-b413-8baf723be0ed.png",
+    "attack": 95,
     "defense": 80
   }
 ]

@@ -14,6 +14,7 @@ export class Field {
   cardBackground: HTMLImageElement | undefined;
   cardHover: HTMLImageElement | undefined;
   cardAtk: HTMLImageElement | undefined;
+  cardImages: { [key: string]: HTMLImageElement } = {};
 
   onClick: ((card: CardInstance) => Boolean) | undefined;
 
@@ -84,7 +85,7 @@ export class Field {
 
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const nextPositionY = (this.isOpponent) ? CANVAS_HEIGHT / 3 : CANVAS_HEIGHT / 3 * 2;
+      const nextPositionY = (this.isOpponent) ? CANVAS_HEIGHT / 4 * 1.05 : CANVAS_HEIGHT / 4 * 2.5;
       if (instance.isHovered) {
         instance.target.y = nextPositionY + this.hoverYOffset;
       } else {
@@ -118,7 +119,6 @@ export class Field {
         instance.isHovered = true;
 
         if (input.clicked) {
-
           if (this.onClick && this.onClick(instance)) {
             if (this.selectedCard === instance) {
               this.selectedCard = null;
@@ -158,7 +158,13 @@ export class Field {
       }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      // image
+      if (this.cardImages[instance.card.slug] === undefined) {
+        context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      } else {
+        context.drawImage(this.cardImages[instance.card.slug], 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      }
+
       if (instance.isHovered) {
         context.drawImage(this.cardHover!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
@@ -168,14 +174,13 @@ export class Field {
       }
 
       // text
+      context.font = "bold 9px sans-serif";
       context.fillStyle = "black";
       context.textAlign = "center";
       context.fillText(instance.card.title, CARD_WIDTH / 2, CARD_HEIGHT / 10);
 
-      // attack
-      context.fillText("ATK:"+instance.attack.toString(), CARD_WIDTH / 2.6, CARD_HEIGHT / 1.095);
-      // defense
-      context.fillText("DEF:"+instance.defense.toString(), CARD_WIDTH / 1.7, CARD_HEIGHT / 1.095);
+      context.font = "bold 14px sans-serif";
+      context.fillText(instance.attack.toString() + " / " + instance.defense.toString(), CARD_WIDTH / 2, CARD_HEIGHT / 1.095);
 
       context.restore();
     });

@@ -34,8 +34,19 @@ export class CardBoardScene implements Scene {
   private goodCardBack: HTMLImageElement | undefined;
   private sadCardBack: HTMLImageElement | undefined;
   private buttonImage: HTMLImageElement | undefined;
+  private buttonImageHover: HTMLImageElement | undefined;
+  private cardImages: { [key: string]: HTMLImageElement } = {};
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
+
+  private playerButtonPosition: Point = {
+    x: CANVAS_WIDTH - 90,
+    y: CANVAS_HEIGHT / 1.68
+  }
+  private opponentButtonPosition: Point = {
+    x: CANVAS_WIDTH - 240,
+    y: CANVAS_HEIGHT / 2.5
+  }
 
   private audioManager: AudioManager;
 
@@ -65,10 +76,19 @@ export class CardBoardScene implements Scene {
         .then(image => this.sadCardBack = image),
       loadImage("button.png")
         .then(image => this.buttonImage = image),
+      loadImage("button_hover.png")
+        .then(image => this.buttonImageHover = image),
       fetch("cards.json")
         .then(response => response.json())
         .then((cards: Array<Card>) => {
           this.cards = cards
+
+          const assetLoad = cards.map((card) => {
+            return loadImage("cards/" + card.image)
+              .then(image => this.cardImages[card.slug] = image)
+          });
+
+          return Promise.all(assetLoad);
         })
     ];
 
@@ -78,15 +98,19 @@ export class CardBoardScene implements Scene {
         this.playerField.cardBackground = this.cardBackground!;
         this.playerField.cardHover = this.cardHover!;
         this.playerField.cardAtk = this.cardAtk!;
+        this.playerField.cardImages = this.cardImages;
         this.playerHand.cardBackground = this.cardBackground!;
         this.playerHand.cardHover = this.cardHover!;
+        this.playerHand.cardImages = this.cardImages;
         this.playerStack.cardBack = this.goodCardBack!;
 
         this.opponentField.cardBackground = this.cardBackground!;
         this.opponentField.cardHover = this.cardHover!;
         this.opponentField.cardAtk = this.cardAtk!;
+        this.opponentField.cardImages = this.cardImages;
         this.opponentHand.cardBackground = this.cardBackground!;
         this.opponentHand.cardHover = this.cardHover!;
+        this.opponentHand.cardImages = this.cardImages;
         this.opponentStack.cardBack = this.sadCardBack!;
 
         this.prepareDeck();
@@ -255,6 +279,20 @@ export class CardBoardScene implements Scene {
     }
   }
 
+  private checkClickEndTurn(input: Input): void {
+    if (!input.clicked) {
+      return;
+    }
+
+    if (input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
+      console.log('END TURN');
+    }
+
+    if (input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
+      console.log('END TURN');
+    }
+  }
+
   resolveBattle(card1: CardInstance, card2: CardInstance): Point {
     card2.defense -= card1.attack;
     card1.defense -= card2.attack;
@@ -340,6 +378,8 @@ export class CardBoardScene implements Scene {
     this.opponentStack.update(input);
     this.opponentHand.update(input);
     this.opponentField.update(input);
+
+    this.checkClickEndTurn(input);
   }
 
   // render scene
@@ -347,8 +387,6 @@ export class CardBoardScene implements Scene {
     if (!this.loadComplete) {
       return;
     }
-
-    context.font = "bold 8px sans-serif";
 
     this.screenSize.width = context.canvas.width;
     this.screenSize.height = context.canvas.height;
@@ -366,16 +404,28 @@ export class CardBoardScene implements Scene {
     context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
 
     // player button
-    context.drawImage(this.buttonImage!, 0,0, 300, 100, CANVAS_WIDTH - 240, CANVAS_HEIGHT/1.9, 150, 50);
-    context.fillText(`End Turn`, CANVAS_WIDTH - 240 + 150/4, CANVAS_HEIGHT/1.9 + 50/1.6);
+    context.save();
+    context.translate(this.playerButtonPosition.x, this.playerButtonPosition.y);
+    context.translate(-150, -50);
+    if (input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
+      context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
+    } else {
+      context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+    }
+    context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
+    context.restore();
 
     // opponent button
     context.save();
-    context.translate(CANVAS_WIDTH - 240, CANVAS_HEIGHT/2.5);
+    context.translate(this.opponentButtonPosition.x, this.opponentButtonPosition.y);
     context.rotate(Math.PI);
     context.translate(-150, -50);
-    context.drawImage(this.buttonImage!, 0,0, 300, 100, 0, 0, 150, 50);
-    context.fillText(`End Turn`, 150/4, 50/1.6);
+    if (input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
+      context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
+    } else {
+      context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+    }
+    context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
     context.restore();
   }
 }
