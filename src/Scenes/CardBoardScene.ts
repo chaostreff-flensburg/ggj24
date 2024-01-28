@@ -53,7 +53,7 @@ export class CardBoardScene implements Scene {
 
   load(): void {
     const assetLoad = [
-      loadImage("card_background.png")
+      loadImage("sketch.png")
         .then(image => this.cardBackground = image),
       loadImage("good_card_back.png")
         .then(image => this.goodCardBack = image),
@@ -328,7 +328,7 @@ export class CardBoardScene implements Scene {
       return;
     }
 
-    context.font = "bold 8px serif";
+    context.font = "bold 8px sans-serif";
 
     this.screenSize.width = context.canvas.width;
     this.screenSize.height = context.canvas.height;

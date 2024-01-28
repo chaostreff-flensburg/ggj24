@@ -175,9 +175,9 @@ export class Field {
       context.fillText(instance.card.title, CARD_WIDTH / 2, CARD_HEIGHT / 10);
 
       // attack
-      context.fillText(instance.attack.toString(), CARD_WIDTH / 4.5, CARD_HEIGHT / 1.28);
+      context.fillText("ATK:"+instance.attack.toString(), CARD_WIDTH / 2.6, CARD_HEIGHT / 1.095);
       // defense
-      context.fillText(instance.defense.toString(), CARD_WIDTH / 1.3, CARD_HEIGHT / 1.28);
+      context.fillText("DEF:"+instance.defense.toString(), CARD_WIDTH / 1.7, CARD_HEIGHT / 1.095);
 
       context.restore();
     });
