@@ -63,27 +63,31 @@ class DrawingApp {
       })
   }
 
-  update() {
-    this.gameContext.sceneManager.update(this.gameContext.inputManager.input)
+  update(delta:number) {
+    this.gameContext.sceneManager.update(this.gameContext.inputManager.input, delta)
     this.gameContext.inputManager.update();
   }
 
   render() {
     this.context
       .clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //this.scene.render(this.context)
     this.gameContext.sceneManager.render(this.context, this.gameContext.inputManager.input)
   }
 
   start() {
-    const loop = () => {
-      app.update();
+    let lastTime = 0;
+
+    const loop = (time: DOMHighResTimeStamp) => {
+      const delta = (time - lastTime) / 1000;
+      lastTime = time;
+
+      app.update(delta);
       app.render();
 
       window.requestAnimationFrame(loop);
     }
 
-    loop();
+    loop(lastTime);
   }
 }
 
