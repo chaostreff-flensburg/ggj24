@@ -13,6 +13,8 @@ export class Field {
   private hoverYOffset: number = 0;
 
   cardBackground: HTMLImageElement | undefined;
+  cardHover: HTMLImageElement | undefined;
+  cardAtk: HTMLImageElement | undefined;
   opponentField: Field | undefined;
 
   onClick: ((card: CardInstance) => Boolean) | undefined;
@@ -158,16 +160,14 @@ export class Field {
       }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
-      if (instance == this.selectedCard) {
-        context.fillStyle = "red";
-        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      if (instance.isHovered) {
+        context.drawImage(this.cardHover!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
 
-      if (instance.isHovered) {
-        context.fillStyle = "yellow";
-        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+      if (instance == this.selectedCard) {
+        context.drawImage(this.cardAtk!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
 
       // text
       context.fillStyle = "black";

@@ -29,6 +29,8 @@ export class CardBoardScene implements Scene {
   private loadComplete: Boolean = false;
 
   private cardBackground: HTMLImageElement | undefined;
+  private cardHover: HTMLImageElement | undefined;
+  private cardAtk: HTMLImageElement | undefined;
   private goodCardBack: HTMLImageElement | undefined;
   private sadCardBack: HTMLImageElement | undefined;
 
@@ -55,6 +57,10 @@ export class CardBoardScene implements Scene {
     const assetLoad = [
       loadImage("sketch.png")
         .then(image => this.cardBackground = image),
+      loadImage("sketch_hover.png")
+        .then(image => this.cardHover = image),
+      loadImage("sketch_atk.png")
+        .then(image => this.cardAtk = image),
       loadImage("good_card_back.png")
         .then(image => this.goodCardBack = image),
       loadImage("sad_card_back.png")
@@ -70,10 +76,15 @@ export class CardBoardScene implements Scene {
       .then(() => {
         this.loadComplete = true;
         this.playerField.cardBackground = this.cardBackground!;
+        this.playerField.cardHover = this.cardHover!;
+        this.playerField.cardAtk = this.cardAtk!;
         this.playerHand.cardBackground = this.cardBackground!;
+        this.playerHand.cardHover = this.cardHover!;
         this.playerStack.cardBack = this.goodCardBack!;
 
         this.opponentField.cardBackground = this.cardBackground!;
+        this.opponentField.cardHover = this.cardHover!;
+        this.opponentField.cardAtk = this.cardAtk!;
         this.opponentHand.cardBackground = this.cardBackground!;
         this.opponentStack.cardBack = this.sadCardBack!;
 
@@ -349,7 +360,7 @@ export class CardBoardScene implements Scene {
     this.opponentField.render(context, input);
     this.opponentHand.render(context);
 
-    context.font = "bold 16px serif";
+    context.font = "bold 16px sans-serif";
     context.fillText(`LIFEPOINTS: ${this.playerLifePoints}`, CANVAS_WIDTH - 240, CANVAS_HEIGHT - 50);
     context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
   }
