@@ -60,6 +60,18 @@
     "slug": "cant-do-1"
   },
   {
+    "fileName": "cant_do_x.mp3",
+    "slug": "cant-do-x"
+  },
+  {
+    "fileName": "cant_do_max.mp3",
+    "slug": "cant-do-max"
+  },
+  {
+    "fileName": "stand_there_1.mp3",
+    "slug": "stand-there-1"
+  },
+  {
     "fileName": "quit_1.mp3",
     "slug": "quit-1"
   },

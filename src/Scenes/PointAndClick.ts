@@ -2,15 +2,15 @@ import { Scene } from "./IScene";
 import { Input } from "../Input";
 import { PaKMenu } from "./PaKMenu";
 import { AudioManager } from "../audio";
+import { SceneManager } from "./SceneManager";
+import AssetManager from "../AssetManager";
 
 type PointOfInterest = {
   x1: number;
   x2: number;
   y1: number;
   y2: number;
-  action?: string;
-  actions?: Array<{ action: string; audio: string }>;
-  audio?: string
+  actions?: Array<{ action: string; audio: string, deck?: string }>;
 };
 
 export class PointAndClick implements Scene {
@@ -28,10 +28,16 @@ export class PointAndClick implements Scene {
   private charY: number = 480;
   private charTargetX: number = 75;
   private charTargetY: number = 480;
+  private cant_do_cnt: number = 0;
+  private last_action: string = "";
 
   private audioManager: AudioManager;
+  private sceneManager: SceneManager;
+  private assetManager: AssetManager | undefined;
 
-  constructor(audioManager: AudioManager) {
+  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager) {
+    this.audioManager = audioManager;
+    this.sceneManager = scenemanager;
     this.audioManager = audioManager;
   }
 
@@ -53,7 +59,7 @@ export class PointAndClick implements Scene {
           x2: 660,
           y1: 400,
           y2: 550,
-          actions: [{ action: "open", audio: "cant-do-1" }, {
+          actions: [{
             action: "look",
             audio: "door-closed-1",
           }],
@@ -63,10 +69,20 @@ export class PointAndClick implements Scene {
           x2: 300,
           y1: 430,
           y2: 550,
-          actions: [{ action: "open", audio: "cant-do-1" }, {
+          actions: [{
             action: "look",
             audio: "door-closed-1",
           }],
+        },
+        {
+          x1: 1230,
+          x2: 1280,
+          y1: 550,
+          y2: 600,
+          actions: [{
+            action: "look",
+            audio: "stand-there-1",
+          }, { action: "talk", audio: "ready-1", deck: "deck1" }],
         },
       ],
       1: [
@@ -75,7 +91,7 @@ export class PointAndClick implements Scene {
           x2: 965,
           y1: 330,
           y2: 450,
-          actions: [{ action: "open", audio: "cant-do-1" }, {
+          actions: [{
             action: "look",
             audio: "door-closed-1",
           }],
@@ -104,7 +120,6 @@ export class PointAndClick implements Scene {
           y2: 600,
           action: "moveup",
           fight: true,
-          deck: "deck1",
         },
       ],
       1: [
@@ -148,6 +163,7 @@ export class PointAndClick implements Scene {
 
     // interaction
     /* console.log('update', input) */
+    let playedSound = false;
     if (input.clicked === true) {
       this.pointofinterest.get(this.imagescroll)?.forEach(
         (
@@ -158,53 +174,80 @@ export class PointAndClick implements Scene {
             input.y < point.y2
           ) {
             if (this.menu.action !== "") {
-              point.actions?.forEach((action) => {
-                //console.log("this.menu.action", this.menu.action);
-                //console.log("point.action", action);
-                if (this.menu.action === action.action) {
-                  // do something
-                  console.log("do something");
+              let matchingActions = point.actions?.filter((action) => this.menu.action === action.action);
+
+              if (matchingActions && matchingActions.length > 0) {
+                matchingActions.forEach((action) => {
                   if (action.audio) {
-                    console.log("play audio", action.audio)
                     this.audioManager.playSound(action.audio);
+                    playedSound = true;
+                    if(action.deck) {
+                      this.sceneManager.startFight(action.deck);
+                    }
                   }
-                } else {
-                  // cant do that
-                  console.log("cant do that");
+                });
+              } else {
+                // cant do that
+                if (this.cant_do_cnt < 5) {
+                  this.audioManager.playSound("cant-do-1");
+                  if (this.last_action !== this.menu.action) {
+                    this.last_action = this.menu.action;
+                    this.cant_do_cnt = 0;
+                  }
+                  else
+                    this.cant_do_cnt++;
                 }
-              });
+                else {
+                  if (this.last_action !== this.menu.action) {
+                    this.last_action = this.menu.action;
+                    this.cant_do_cnt = 0;
+                    this.audioManager.playSound("cant-do-1");
+                  }
+                  else {
+                    if (this.cant_do_cnt < 10) {
+                      this.audioManager.playSound("cant-do-x");
+                      this.cant_do_cnt++;
+                    }
+                    else
+                      this.audioManager.playSound("cant-do-max");
+                  }
+                }
+                playedSound = true;
+              }
               this.menu.action = ""; // reset action
             }
           }
         },
       );
-      this.moveable.get(this.imagescroll)?.forEach(
-        (
-          point: PointOfInterest,
-        ) => {
-          if (
-            input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
-            input.y < point.y2
-          ) {
-            // move image scroll
-            if (point.action === "movedown") {
-              console.log("movedown");
-              this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
-              this.charX = input.x - 50 + 1200;
-              this.charY = input.y - 100;
+      if (playedSound === false) {
+        this.moveable.get(this.imagescroll)?.forEach(
+          (
+            point: PointOfInterest,
+          ) => {
+            if (
+              input.x > point.x1 && input.y > point.y1 && input.x < point.x2 &&
+              input.y < point.y2
+            ) {
+              // move image scroll
+              if (point.action === "movedown") {
+                console.log("movedown");
+                this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
+                this.charX = input.x - 50 + 1200;
+                this.charY = input.y - 100;
+              }
+              if (point.action === "moveup") {
+                console.log("moveup");
+                this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
+                this.charX = input.x - 50 - 1200;
+                this.charY = input.y - 100;
+              }
+              this.charTargetX = input.x - 50;
+              this.charTargetY = input.y - 100;
+              console.log(this.charX, this.charY, this.charTargetX, this.charTargetY)
             }
-            if (point.action === "moveup") {
-              console.log("moveup");
-              this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
-              this.charX = input.x - 50 - 1200;
-              this.charY = input.y - 100;
-            }
-            this.charTargetX = input.x - 50;
-            this.charTargetY = input.y - 100;
-            console.log(this.charX, this.charY, this.charTargetX, this.charTargetY)
-          }
-        },
-      );
+          },
+        );
+      }
     }
     this.menu.update(input);
   }

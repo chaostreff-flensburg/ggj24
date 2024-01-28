@@ -39,6 +39,10 @@ export class SceneManager {
     return this.lastScene
   }
 
+  startFight(deck: string) {
+    // TODO
+  }
+
   // TODO pass width and height to resize function of scenes (if implemented)
   resize(w: number, h: number) {
     this.width = w
