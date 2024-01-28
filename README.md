@@ -2,7 +2,7 @@
 
 GlobalGameJam 2024
 
-![sketch](https://github.com/chaostreff-flensburg/ggj24/blob/master/docs/sketch.png?raw=true)
+![sketch](https://github.com/chaostreff-flensburg/ggj24/blob/master/docs/sketch.jpg?raw=true)
 
 ## Description
 
