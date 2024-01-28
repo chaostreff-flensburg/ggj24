@@ -1,10 +1,7 @@
 import { Input } from "../../Input";
 import { CardInstance } from "./CardInstance";
-import { Hand } from "./Hand";
+import { CARD_IMAGE_HEIGHT, CARD_IMAGE_WIDTH } from "./Constants";
 import { Point } from "./Point";
-
-const CARD_IMAGE_WIDTH = 520;
-const CARD_IMAGE_HEIGHT = 680;
 
 const CARD_WIDTH = 300 / 2;
 const CARD_HEIGHT = 380 / 2;
@@ -17,6 +14,7 @@ export class Stack {
   private deck: Array<CardInstance> = [];
 
   cardBack: HTMLImageElement | undefined;
+  cardBackground: HTMLImageElement | undefined;
 
   position: Point = {
     x: (CANVAS_WIDTH - CARD_WIDTH - 30),
@@ -107,19 +105,20 @@ export class Stack {
     this.deck.forEach((_, index) => {
       context.save();
       if (index === this.deck.length - 1) {
-        context.translate(this.topCardPosition.x + index / 2, this.topCardPosition.y + index / 2);
+        context.translate(this.topCardPosition.x + index / 4, this.topCardPosition.y + index / 4);
       } else {
-        context.translate(this.position.x + index / 2, this.position.y + index / 2);
+        context.translate(this.position.x + index / 4, this.position.y + index / 4);
       }
 
       // rotate by 180 degrees if opponent
       if (this.isOpponent) {
         context.rotate(Math.PI);
       }
+      context.rotate(Math.PI / 180 * (index%2 - 0.5) * 2);
 
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
-      context.drawImage(this.cardBack!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       context.restore();
     })
   }
