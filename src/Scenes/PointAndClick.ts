@@ -25,8 +25,10 @@ export class PointAndClick implements Scene {
   private moveable: Map<string, Array<PointOfInterest>> = new Map();
   private action: string | undefined;
   private imagescroll: string = "0";
-  public debug: boolean = true;
+  public debug: boolean = false;
   private charimage = new Image();
+  private char1image = new Image();
+  private char2image = new Image();
   private charX: number = 75;
   private charY: number = 480;
   private charTargetX: number = 75;
@@ -63,6 +65,8 @@ export class PointAndClick implements Scene {
       this.imageLoadcomplete = true;
     };
     this.charimage.src = "scene/char1.png";
+    this.char1image.src = "scene/char2.png";
+    this.char2image.src = "scene/char3.png";
 
     // 4 points of interest
     this.pointofinterest = new Map(Object.entries({
@@ -90,7 +94,7 @@ export class PointAndClick implements Scene {
         {
           x1: 1230,
           x2: 1280,
-          y1: 550,
+          y1: 480,
           y2: 600,
           actions: [{
             action: "look",
@@ -112,7 +116,7 @@ export class PointAndClick implements Scene {
         {
           x1: 1230,
           x2: 1280,
-          y1: 550,
+          y1: 480,
           y2: 600,
           actions: [{
             action: "look",
@@ -208,7 +212,7 @@ export class PointAndClick implements Scene {
                     playedSound = true;
                     if(action.action === "talk" && action.audio === "ready-1" && action.deck)
                     {
-                      this.sceneManager.startFight(this.gameContext, action.deck, this.imagescroll, this.charX, this.charY);
+                      //this.sceneManager.startFight(this.gameContext, action.deck, this.imagescroll, this.charX, this.charY);
                       this.moveable.get(this.imagescroll)?.filter((poi) => poi.action === "moveup").forEach((poi) => {
                         poi.fight = false;
                       });
@@ -287,6 +291,14 @@ export class PointAndClick implements Scene {
     if (this.imageLoadcomplete) {
       // draw char image
       context.drawImage(this.image!, -1280 * parseInt(this.imagescroll), 0);
+      if(this.imagescroll === "0")
+      {
+        context.drawImage(this.char1image!, 1200, 480, 90, 110);
+      }
+      if(this.imagescroll === "1")
+      {
+        context.drawImage(this.char2image!, 1215, 480, 60, 120);
+      }
       context.drawImage(this.charimage, this.charX, this.charY, 100, 120);
       this.menu.render(context, input);
       if (this.debug) { // for debugging
