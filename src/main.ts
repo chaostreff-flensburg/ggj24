@@ -4,31 +4,63 @@ import { CardBoardScene } from "./Scenes/CardBoardScene";
 import { SceneManager } from "./Scenes/SceneManager";
 import { AudioManager } from "./audio";
 import { PointAndClick } from "./Scenes/PointAndClick";
+import AssetManager from "./AssetManager";
+import { Card } from "./Scenes/CardboardScene/Card";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
 
   private sceneManager: SceneManager;
-  private scene: Scene;
 
   private inputManager: InputManager;
 
   private audioManager: AudioManager;
+
+  private assetManager: AssetManager;
 
   constructor() {
     this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
     this.context = this.canvas.getContext("2d")!;
 
     this.inputManager = new InputManager(this.canvas);
-
+    this.assetManager = new AssetManager();
     this.audioManager = new AudioManager()
     this.audioManager.init()
 
-    this.scene = new PointAndClick(this.audioManager);
-    this.scene.load();
-    this.scene.debug = true;
-    this.sceneManager = new SceneManager(this.scene)
+    this.sceneManager = new SceneManager(null)
+
+    this.loadAssets()
+  }
+
+  loadAssets() {
+    const assetLoad = [
+      this.assetManager.loadImages([
+        "sketch.png",
+        "sketch_hover.png",
+        "sketch_atk.png",
+        "good_card_back.png",
+        "sad_card_back.png",
+        "button.png",
+        "button_hover.png",
+      ]),
+      this.assetManager.loadData("cards.json")
+        .then(() => {
+          const cards = this.assetManager.data<Array<Card>>("cards.json");
+
+          const map: {[k: string]: string} = {};
+
+          cards.forEach(card => map[card.slug] = "cards/" + card.image);
+
+          return this.assetManager.loadImageMap(map);
+        }),
+    ];
+
+    Promise.all(assetLoad)
+      .then(() => {
+        this.sceneManager.pushScreen(new CardBoardScene(this.audioManager, this.sceneManager, this.assetManager));
+        this.sceneManager.getActiveScreen()?.load();
+      })
   }
 
   update() {
