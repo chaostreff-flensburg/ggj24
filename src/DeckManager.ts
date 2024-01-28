@@ -2,17 +2,15 @@ import { Card } from "./Scenes/CardboardScene/Card";
 import { CardInstance } from "./Scenes/CardboardScene/CardInstance";
 
 export default class DeckManager {
-  private cards: Array<Card>;
+  private cards: Array<Card> = [];
 
   private playerDeck: Array<CardInstance> = [];
 
   opponentDecks: Map<string, Array<CardInstance>> = new Map();
 
-  constructor(cards: Array<Card>) {
+  init(cards: Array<Card>): void {
     this.cards = cards;
-  }
 
-  init() {
     this.playerDeck = [];
     const opponentDeck: Array<CardInstance> = [];
 
@@ -23,7 +21,8 @@ export default class DeckManager {
       }
     });
 
-    this.opponentDecks.set('opponent', opponentDeck);
+    this.opponentDecks.set('deck1', opponentDeck);
+    this.opponentDecks.set('deck2', opponentDeck);
   }
 
   getFreshPlayerDeck(): Array<CardInstance> {

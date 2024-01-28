@@ -4,6 +4,7 @@ import { PaKMenu } from "./PaKMenu";
 import { AudioManager } from "../audio";
 import { SceneManager } from "./SceneManager";
 import AssetManager from "../AssetManager";
+import GameContext from "../GameContext";
 
 type PointOfInterest = {
   x1: number;
@@ -38,11 +39,15 @@ export class PointAndClick implements Scene {
   private sceneManager: SceneManager;
   private assetManager: AssetManager;
 
-  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager, imagescroll: string = "0", charX: number = 75, charY: number = 480) {
-    this.audioManager = audioManager;
-    this.sceneManager = scenemanager;
-    this.audioManager = audioManager;
-    this.assetManager = assetManager;
+  private gameContext: GameContext;
+
+  constructor(context: GameContext, imagescroll: string = "0", charX: number = 75, charY: number = 480) {
+    this.gameContext = context;
+
+    this.audioManager = context.audioManager;
+    this.sceneManager = context.sceneManager;
+    this.audioManager = context.audioManager;
+    this.assetManager = context.assetManager;
     this.imagescroll = imagescroll;
     this.charX = charX;
     this.charY = charY;

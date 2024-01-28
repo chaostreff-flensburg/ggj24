@@ -10,7 +10,7 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
 import { Point } from "./CardboardScene/Point";
 import { SceneManager } from "./SceneManager";
 import AssetManager from "../AssetManager";
-import DeckManager from "../DeckManager";
+import GameContext from "../GameContext";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -46,7 +46,7 @@ export class CardBoardScene implements Scene {
   private sceneManager: SceneManager;
   private assetManager: AssetManager;
 
-  constructor(audioManager: AudioManager, sceneManager: SceneManager, assetManager: AssetManager, deckManager: DeckManager, opponentKey:string = 'opponent') {
+  constructor({audioManager, sceneManager, assetManager, deckManager}: GameContext, opponentKey:string = 'opponent') {
     this.audioManager = audioManager;
     this.sceneManager = sceneManager;
     this.assetManager = assetManager;

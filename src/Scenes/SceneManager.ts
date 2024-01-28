@@ -1,4 +1,6 @@
+import GameContext from "../GameContext";
 import { Input } from "../Input";
+import { CardBoardScene } from "./CardBoardScene";
 import { Scene } from "./IScene"
 
 /**
@@ -39,8 +41,13 @@ export class SceneManager {
     return this.lastScene
   }
 
-  startFight(deck: string, imagescroll: string, charX: number, charY: number) {
-    // TODO
+  startFight(context: GameContext, deck: string, imageScroll: string, charX: number, charY: number) {
+    this.pushScreen(new CardBoardScene(context, deck));
+  }
+
+  returnToLastScene() {
+    this.activeScene = this.lastScene;
+    this.lastScene = null;
   }
 
   // TODO pass width and height to resize function of scenes (if implemented)

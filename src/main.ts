@@ -7,38 +7,34 @@ import { PointAndClick } from "./Scenes/PointAndClick";
 import AssetManager from "./AssetManager";
 import { Card } from "./Scenes/CardboardScene/Card";
 import DeckManager from "./DeckManager";
+import GameContext from "./GameContext";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
 
-  private sceneManager: SceneManager;
-
-  private inputManager: InputManager;
-
-  private audioManager: AudioManager;
-
-  private assetManager: AssetManager;
-
-  private deckManager: DeckManager|undefined;
+  private gameContext: GameContext;
 
   constructor() {
     this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
     this.context = this.canvas.getContext("2d")!;
 
-    this.inputManager = new InputManager(this.canvas);
-    this.assetManager = new AssetManager();
-    this.audioManager = new AudioManager()
-    this.audioManager.init()
+    this.gameContext = new GameContext(
+      new SceneManager(null),
+      new AudioManager(),
+      new AssetManager(),
+      new DeckManager(),
+      new InputManager(this.canvas)
+    );
 
-    this.sceneManager = new SceneManager(null)
+    this.gameContext.audioManager.init()
 
     this.loadAssets()
   }
 
   loadAssets() {
     const assetLoad = [
-      this.assetManager.loadImages([
+      this.gameContext.assetManager.loadImages([
         "sketch.png",
         "sketch_hover.png",
         "sketch_atk.png",
@@ -46,38 +42,37 @@ class DrawingApp {
         "button.png",
         "button_hover.png",
       ]),
-      this.assetManager.loadData("cards.json")
+      this.gameContext.assetManager.loadData("cards.json")
         .then(() => {
-          const cards = this.assetManager.data<Array<Card>>("cards.json");
+          const cards = this.gameContext.assetManager.data<Array<Card>>("cards.json");
 
-          this.deckManager = new DeckManager(cards);
-          this.deckManager.init();
+          this.gameContext.deckManager.init(cards);
 
           const map: {[k: string]: string} = {};
 
           cards.forEach(card => map[card.slug] = "cards/" + card.image);
 
-          return this.assetManager.loadImageMap(map, "cards");
+          return this.gameContext.assetManager.loadImageMap(map, "cards");
         }),
     ];
 
     Promise.all(assetLoad)
       .then(() => {
-        this.sceneManager.pushScreen(new CardBoardScene(this.audioManager, this.sceneManager, this.assetManager, this.deckManager!));
-        this.sceneManager.getActiveScreen()?.load();
+        this.gameContext.sceneManager.pushScreen(new CardBoardScene(this.gameContext, 'deck1'));
+        this.gameContext.sceneManager.getActiveScreen()?.load();
       })
   }
 
   update() {
-    this.sceneManager.update(this.inputManager.input)
-    this.inputManager.update();
+    this.gameContext.sceneManager.update(this.gameContext.inputManager.input)
+    this.gameContext.inputManager.update();
   }
 
   render() {
     this.context
       .clearRect(0, 0, this.canvas.width, this.canvas.height);
     //this.scene.render(this.context)
-    this.sceneManager.render(this.context, this.inputManager.input)
+    this.gameContext.sceneManager.render(this.context, this.gameContext.inputManager.input)
   }
 
   start() {
