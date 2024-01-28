@@ -179,15 +179,15 @@ export class PointAndClick implements Scene {
   };
 
   // update scene
-  update(input: Input): void {
+  update(input: Input, delta: number): void {
     // animation
     if (this.charX !== this.charTargetX && this.charY !== this.charTargetY) {
       const distanceX = this.charTargetX - this.charX;
       const distanceY = this.charTargetY - this.charY;
 
-      const speed = 15;
-      this.charX += distanceX / speed;
-      this.charY += distanceY / speed;
+      const speed = 3 * delta;
+      this.charX += distanceX * speed;
+      this.charY += distanceY * speed;
     }
 
     // interaction
