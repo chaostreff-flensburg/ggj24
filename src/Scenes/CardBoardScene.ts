@@ -1,6 +1,5 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
-import { Card } from "./CardboardScene/Card";
 import { CardInstance } from "./CardboardScene/CardInstance";
 import { Field } from "./CardboardScene/Field";
 import { Hand } from "./CardboardScene/Hand";
@@ -11,10 +10,10 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
 import { Point } from "./CardboardScene/Point";
 import { SceneManager } from "./SceneManager";
 import AssetManager from "../AssetManager";
+import DeckManager from "../DeckManager";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
-  private cards: Array<Card> = [];
   private playerStack: Stack;
   private opponentStack: Stack;
   private playerHand: Hand;
@@ -23,7 +22,7 @@ export class CardBoardScene implements Scene {
   private opponentField: Field;
 
   private playerLifePoints: number = 1000;
-  private opponentlifePoints: number = 1000;
+  private opponentLifePoints: number = 1000;
 
   private stateMachine: GameStateMachine = new GameStateMachine();
 
@@ -47,18 +46,18 @@ export class CardBoardScene implements Scene {
   private sceneManager: SceneManager;
   private assetManager: AssetManager;
 
-  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager) {
+  constructor(audioManager: AudioManager, sceneManager: SceneManager, assetManager: AssetManager, deckManager: DeckManager, opponentKey:string = 'opponent') {
     this.audioManager = audioManager;
-    this.sceneManager = scenemanager;
+    this.sceneManager = sceneManager;
     this.assetManager = assetManager;
 
     this.playerField = new Field();
     this.playerHand = new Hand();
-    this.playerStack = new Stack();
+    this.playerStack = new Stack(deckManager.getFreshPlayerDeck());
 
     this.opponentField = new Field(true);
     this.opponentHand = new Hand(true);
-    this.opponentStack = new Stack(true);
+    this.opponentStack = new Stack(deckManager.getFreshOpponentDeck(opponentKey), true);
   }
 
   load(): void {
@@ -88,13 +87,6 @@ export class CardBoardScene implements Scene {
   }
 
   private prepareDeck() {
-    this.assetManager.data<Array<Card>>('cards.json').forEach((card) => {
-      for (let i = 0; i < 2; i++) {
-        this.playerStack.putCardBackToTop(new CardInstance(card));
-        this.opponentStack.putCardBackToTop(new CardInstance(card));
-      }
-    });
-
     this.playerStack.shuffle();
     this.opponentStack.shuffle();
 
@@ -266,11 +258,11 @@ export class CardBoardScene implements Scene {
   }
 
   private reduceOpponentLifePoints(value: number): void {
-    this.opponentlifePoints = Math.max(this.opponentlifePoints - Math.abs(value), 0);
+    this.opponentLifePoints = Math.max(this.opponentLifePoints - Math.abs(value), 0);
   }
 
   private checkBattleOverLifePoints(): Boolean | null | undefined {
-    const opponent = this.opponentlifePoints <= 0;
+    const opponent = this.opponentLifePoints <= 0;
     const player = this.playerLifePoints <= 0;
 
     if (opponent && player) {
@@ -349,7 +341,7 @@ export class CardBoardScene implements Scene {
 
     context.font = "bold 16px sans-serif";
     context.fillText(`LIFEPOINTS: ${this.playerLifePoints}`, CANVAS_WIDTH - 240, CANVAS_HEIGHT - 50);
-    context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
+    context.fillText(`LIFEPOINTS: ${this.opponentLifePoints}`, CANVAS_WIDTH - 240, 50);
 
     // player button
     if (this.stateMachine.playerCanAct()) {

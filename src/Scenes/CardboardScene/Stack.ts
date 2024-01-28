@@ -26,8 +26,9 @@ export class Stack {
 
   public onClick: (() => void) | undefined;
 
-  constructor(isOpponent: Boolean = false) {
+  constructor(deck:Array<CardInstance>, isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
+    this.deck = deck;
 
     if (isOpponent) {
       this.position.y = CARD_HEIGHT - 10;

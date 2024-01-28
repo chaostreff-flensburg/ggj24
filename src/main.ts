@@ -6,6 +6,7 @@ import { AudioManager } from "./audio";
 import { PointAndClick } from "./Scenes/PointAndClick";
 import AssetManager from "./AssetManager";
 import { Card } from "./Scenes/CardboardScene/Card";
+import DeckManager from "./DeckManager";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;
@@ -18,6 +19,8 @@ class DrawingApp {
   private audioManager: AudioManager;
 
   private assetManager: AssetManager;
+
+  private deckManager: DeckManager|undefined;
 
   constructor() {
     this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -48,6 +51,9 @@ class DrawingApp {
         .then(() => {
           const cards = this.assetManager.data<Array<Card>>("cards.json");
 
+          this.deckManager = new DeckManager(cards);
+          this.deckManager.init();
+
           const map: {[k: string]: string} = {};
 
           cards.forEach(card => map[card.slug] = "cards/" + card.image);
@@ -58,7 +64,7 @@ class DrawingApp {
 
     Promise.all(assetLoad)
       .then(() => {
-        this.sceneManager.pushScreen(new CardBoardScene(this.audioManager, this.sceneManager, this.assetManager));
+        this.sceneManager.pushScreen(new CardBoardScene(this.audioManager, this.sceneManager, this.assetManager, this.deckManager!));
         this.sceneManager.getActiveScreen()?.load();
       })
   }
