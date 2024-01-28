@@ -121,6 +121,8 @@ export class CardBoardScene implements Scene {
         this.stateMachine.onTurnAdvance = () => {
           const result = this.checkBattleOverDeckSize();
 
+          this.audioManager.playSound("your-turn");
+
           this.handleGameEnd(result);
         }
       })

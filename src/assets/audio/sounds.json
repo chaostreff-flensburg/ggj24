@@ -22,5 +22,9 @@
   {
     "fileName": "win.ogg",
     "slug": "win"
+  },
+  {
+    "fileName": "your_turn.mp3",
+    "slug": "your-turn"
   }
 ]
