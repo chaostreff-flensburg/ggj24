@@ -15,7 +15,7 @@ export class Hand {
 
   cardBackground: HTMLImageElement | undefined;
   cardHover: HTMLImageElement | undefined;
-  cardImages: { [key: string]: HTMLImageElement } = {};
+  cardImages: Map<string, HTMLImageElement> = new Map();
 
   onClick: ((card:CardInstance) => void) | undefined;
 
@@ -136,10 +136,10 @@ export class Hand {
       }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
-      if (this.cardImages[instance.card.slug] === undefined) {
+      if (! this.cardImages.has(instance.card.slug)) {
         context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       } else {
-        context.drawImage(this.cardImages[instance.card.slug], 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+        context.drawImage(this.cardImages.get(instance.card.slug)!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
 
       if (instance.isHovered) {
