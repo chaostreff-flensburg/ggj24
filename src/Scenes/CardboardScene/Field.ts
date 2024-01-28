@@ -148,7 +148,7 @@ export class Field {
     }
 
     this.cards.forEach((instance, index) => {
-      if (this.cardBackground == undefined || instance == null) {
+      if (this.cardBackground == undefined || this.cardHover == undefined || this.cardAtk == undefined || instance == null) {
         return;
       }
 
