@@ -1,6 +1,4 @@
-import { Scene } from "./Scenes/IScene";
 import { InputManager } from "./Input";
-import { CardBoardScene } from "./Scenes/CardBoardScene";
 import { SceneManager } from "./Scenes/SceneManager";
 import { AudioManager } from "./audio";
 import { PointAndClick } from "./Scenes/PointAndClick";

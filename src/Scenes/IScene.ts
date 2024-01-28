@@ -1,4 +1,3 @@
-import GameContext from "../GameContext";
 import { Input } from "../Input";
 
 export interface Scene {
