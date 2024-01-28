@@ -85,7 +85,7 @@ export class Field {
 
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + INTER_CARD_PADDING);
-      const nextPositionY = (this.isOpponent) ? CANVAS_HEIGHT / 3 : CANVAS_HEIGHT / 3 * 2;
+      const nextPositionY = (this.isOpponent) ? CANVAS_HEIGHT / 4 * 1.05 : CANVAS_HEIGHT / 4 * 2.5;
       if (instance.isHovered) {
         instance.target.y = nextPositionY + this.hoverYOffset;
       } else {
@@ -174,14 +174,13 @@ export class Field {
       }
 
       // text
+      context.font = "bold 9px sans-serif";
       context.fillStyle = "black";
       context.textAlign = "center";
       context.fillText(instance.card.title, CARD_WIDTH / 2, CARD_HEIGHT / 10);
 
-      // attack
-      context.fillText("ATK:"+instance.attack.toString(), CARD_WIDTH / 2.6, CARD_HEIGHT / 1.095);
-      // defense
-      context.fillText("DEF:"+instance.defense.toString(), CARD_WIDTH / 1.7, CARD_HEIGHT / 1.095);
+      context.font = "bold 14px sans-serif";
+      context.fillText(instance.attack.toString() + " / " + instance.defense.toString(), CARD_WIDTH / 2, CARD_HEIGHT / 1.095);
 
       context.restore();
     });

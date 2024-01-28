@@ -388,8 +388,6 @@ export class CardBoardScene implements Scene {
       return;
     }
 
-    context.font = "bold 8px sans-serif";
-
     this.screenSize.width = context.canvas.width;
     this.screenSize.height = context.canvas.height;
 
