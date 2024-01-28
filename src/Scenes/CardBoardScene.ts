@@ -163,7 +163,7 @@ export class CardBoardScene implements Scene {
         this.playerField.endOfTurnUpdate();
       }
 
-      if (this.stateMachine.isPlayerTurn()) this.stateMachine.advanceState();
+      if (this.stateMachine.playerCanDraw()) this.stateMachine.advanceState();
     }
 
     this.opponentStack.onClick = () => {
@@ -193,7 +193,7 @@ export class CardBoardScene implements Scene {
         this.opponentField.endOfTurnUpdate();
       }
 
-      if (this.stateMachine.isOpponentTurn()) this.stateMachine.advanceState();
+      if (this.stateMachine.opponentCanDraw()) this.stateMachine.advanceState();
     }
   }
 
@@ -284,12 +284,12 @@ export class CardBoardScene implements Scene {
       return;
     }
 
-    if (input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
-      console.log('END TURN');
+    if (this.stateMachine.playerCanAct() && input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
+      this.stateMachine.advanceState();
     }
 
-    if (input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
-      console.log('END TURN');
+    if (this.stateMachine.opponentCanAct() && input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
+      this.stateMachine.advanceState();
     }
   }
 
@@ -404,28 +404,32 @@ export class CardBoardScene implements Scene {
     context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
 
     // player button
-    context.save();
-    context.translate(this.playerButtonPosition.x, this.playerButtonPosition.y);
-    context.translate(-150, -50);
-    if (input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
-      context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
-    } else {
-      context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+    if (this.stateMachine.playerCanAct()) {
+      context.save();
+      context.translate(this.playerButtonPosition.x, this.playerButtonPosition.y);
+      context.translate(-150, -50);
+      if (input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
+        context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
+      } else {
+        context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+      }
+      context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
+      context.restore();
     }
-    context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
-    context.restore();
 
-    // opponent button
-    context.save();
-    context.translate(this.opponentButtonPosition.x, this.opponentButtonPosition.y);
-    context.rotate(Math.PI);
-    context.translate(-150, -50);
-    if (input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
-      context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
-    } else {
-      context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+    if (this.stateMachine.opponentCanAct()) {
+      // opponent button
+      context.save();
+      context.translate(this.opponentButtonPosition.x, this.opponentButtonPosition.y);
+      context.rotate(Math.PI);
+      context.translate(-150, -50);
+      if (input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
+        context.drawImage(this.buttonImageHover!, 0, 0, 300, 100, 0, 0, 150, 50);
+      } else {
+        context.drawImage(this.buttonImage!, 0, 0, 300, 100, 0, 0, 150, 50);
+      }
+      context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
+      context.restore();
     }
-    context.fillText(`End Turn`, 150 / 4, 50 / 1.6);
-    context.restore();
   }
 }
