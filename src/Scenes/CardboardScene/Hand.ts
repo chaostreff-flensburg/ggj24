@@ -19,7 +19,7 @@ export class Hand {
 
   constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
-    this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
+    this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 3) : (CARD_HEIGHT / 3))
   }
 
   addCard(card: CardInstance): Boolean {
@@ -63,7 +63,7 @@ export class Hand {
     this.cards.forEach((instance, index) => {
       // if old position != new position with new index?
       const nextPositionX = 100 + index * (CARD_WIDTH + padding);
-      const nextPositionY = (this.isOpponent) ? (0 - CARD_HEIGHT / 10) : (this.screenSize.height - CARD_HEIGHT / 6);
+      const nextPositionY = (this.isOpponent) ? (0 + CARD_HEIGHT / 6) : (this.screenSize.height - CARD_HEIGHT / 6);
       if (instance.isHovered) {
         instance.target.y = nextPositionY + this.hoverYOffset;
       }
