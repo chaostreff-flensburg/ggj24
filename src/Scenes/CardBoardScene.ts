@@ -63,12 +63,10 @@ export class CardBoardScene implements Scene {
   load(): void {
     this.playerHand.cardBackground = this.opponentField.cardBackground = this.opponentHand.cardBackground = this.playerField.cardBackground = this.playerStack.cardBackground = this.opponentStack.cardBackground = this.assetManager.image("sketch.png");
     this.playerField.cardAtk = this.opponentField.cardAtk = this.assetManager.image("sketch_atk.png");
+    this.playerField.cardHourglass = this.opponentField.cardHourglass = this.assetManager.image("hourglass.png");
 
     this.playerHand.cardHover = this.playerField.cardHover = this.opponentField.cardHover = this.opponentHand.cardHover = this.assetManager.image("sketch_hover.png");
     this.playerHand.cardImages = this.playerField.cardImages = this.opponentHand.cardImages = this.opponentField.cardImages = this.assetManager.imageMap("cards");
-
-    this.playerStack.cardBack = this.assetManager.image("good_card_back.png");
-    this.opponentStack.cardBack = this.assetManager.image("sad_card_back.png");
 
     this.buttonImage = this.assetManager.image('button.png');
     this.buttonImageHover = this.assetManager.image('button_hover.png')

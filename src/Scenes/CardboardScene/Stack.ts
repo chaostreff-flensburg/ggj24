@@ -13,7 +13,6 @@ export class Stack {
   private isOpponent: Boolean;
   private deck: Array<CardInstance> = [];
 
-  cardBack: HTMLImageElement | undefined;
   cardBackground: HTMLImageElement | undefined;
 
   position: Point = {
@@ -99,7 +98,7 @@ export class Stack {
   }
 
   render(context: CanvasRenderingContext2D) {
-    if (!this.cardBack) {
+    if (!this.cardBackground) {
       return;
     }
 

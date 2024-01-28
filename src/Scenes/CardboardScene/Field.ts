@@ -15,6 +15,7 @@ export class Field {
   cardHover: HTMLImageElement | undefined;
   cardAtk: HTMLImageElement | undefined;
   cardImages: Map<string, HTMLImageElement> = new Map();
+  cardHourglass: HTMLImageElement | undefined;
 
   onClick: ((card: CardInstance) => Boolean) | undefined;
 
@@ -171,6 +172,10 @@ export class Field {
 
       if (instance == this.selectedCard) {
         context.drawImage(this.cardAtk!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      }
+
+      if (instance.attackedThisRound || instance.turnsOnField == 0) {
+        context.drawImage(this.cardHourglass!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
 
       // text
