@@ -1,4 +1,3 @@
-import { DemoScene } from "./Scenes/DemoScene";
 import { Scene } from "./Scenes/IScene";
 import { InputManager } from "./Input";
 import { CardBoardScene } from "./Scenes/CardBoardScene";
@@ -28,8 +27,6 @@ class DrawingApp {
     this.scene = new CardBoardScene(this.audioManager);
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
-
-
   }
 
   update() {
