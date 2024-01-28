@@ -42,6 +42,6 @@ export class CardInstance {
   }
 
   isHover(cursor: Point): boolean {
-    return (cursor.x > this.position.x - CARD_WIDTH / 2 && cursor.x < this.position.x + CARD_WIDTH / 2 && cursor.y > this.position.y - CARD_HEIGHT / 2 && cursor.y < this.position.y + CARD_HEIGHT / 2)
+    return (cursor.x > this.position.x - CARD_WIDTH / 2 && cursor.x < this.position.x + CARD_WIDTH / 2 && cursor.y > this.position.y - CARD_HEIGHT / 2 - (this.isHovered?10:0) && cursor.y < this.position.y + CARD_HEIGHT / 2 + (this.isHovered?10:0))
   }
 }
