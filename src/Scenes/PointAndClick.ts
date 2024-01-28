@@ -9,8 +9,8 @@ type PointOfInterest = {
   y1: number;
   y2: number;
   action?: string;
-  actions?: Array<{ action: string; text: string }>;
-  text?: string;
+  actions?: Array<{ action: string; audio: string }>;
+  audio?: string
 };
 
 export class PointAndClick implements Scene {
@@ -24,10 +24,10 @@ export class PointAndClick implements Scene {
   private imagescroll: string = "0";
   public debug: boolean = false;
   private charimage = new Image();
-  private charX: number = 0;
-  private charY: number = 0;
-  private charTargetX: number = 0;
-  private charTargetY: number = 0;
+  private charX: number = 75;
+  private charY: number = 480;
+  private charTargetX: number = 75;
+  private charTargetY: number = 480;
 
   private audioManager: AudioManager;
 
@@ -50,36 +50,35 @@ export class PointAndClick implements Scene {
       0: [
         {
           x1: 580,
-          x2: 800,
+          x2: 660,
           y1: 400,
           y2: 550,
-          actions: [{ action: "open", text: "Es scheint verlossen zu sein" }, {
+          actions: [{ action: "open", audio: "cant-do-1" }, {
             action: "look",
-            text: "Eine Garage Tür, die sich nicht öffnen lässt",
+            audio: "door-closed-1",
+          }],
+        },
+        {
+          x1: 250,
+          x2: 300,
+          y1: 430,
+          y2: 550,
+          actions: [{ action: "open", audio: "cant-do-1" }, {
+            action: "look",
+            audio: "door-closed-1",
           }],
         },
       ],
       1: [
         {
-          x1: 0,
-          x2: 100,
-          y1: 0,
-          y2: 100,
-          action: "open",
-        },
-        {
-          x1: 100,
-          x2: 200,
-          y1: 0,
-          y2: 100,
-          action: "use",
-        },
-        {
-          x1: 0,
-          x2: 100,
-          y1: 100,
-          y2: 200,
-          action: "talk",
+          x1: 900,
+          x2: 965,
+          y1: 330,
+          y2: 450,
+          actions: [{ action: "open", audio: "cant-do-1" }, {
+            action: "look",
+            audio: "door-closed-1",
+          }],
         },
       ],
     }));
@@ -104,6 +103,8 @@ export class PointAndClick implements Scene {
           y1: 550,
           y2: 600,
           action: "moveup",
+          fight: true,
+          deck: "deck1",
         },
       ],
       1: [
@@ -163,8 +164,9 @@ export class PointAndClick implements Scene {
                 if (this.menu.action === action.action) {
                   // do something
                   console.log("do something");
-                  if (action.text) {
-                    alert(action.text);
+                  if (action.audio) {
+                    console.log("play audio", action.audio)
+                    this.audioManager.playSound(action.audio);
                   }
                 } else {
                   // cant do that
@@ -199,6 +201,7 @@ export class PointAndClick implements Scene {
             }
             this.charTargetX = input.x - 50;
             this.charTargetY = input.y - 100;
+            console.log(this.charX, this.charY, this.charTargetX, this.charTargetY)
           }
         },
       );
@@ -215,7 +218,7 @@ export class PointAndClick implements Scene {
       this.menu.render(context, input);
       if (this.debug) { // for debugging
         this.pointofinterest.get(this.imagescroll)?.forEach((poi) => {
-          context.strokeStyle = "black";
+          context.strokeStyle = "green";
           context.strokeRect(poi.x1, poi.y1, poi.x2 - poi.x1, poi.y2 - poi.y1);
         });
         this.moveable.get(this.imagescroll)?.forEach((poi) => {

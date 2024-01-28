@@ -22,5 +22,49 @@
   {
     "fileName": "win.ogg",
     "slug": "win"
+  },
+  {
+    "fileName": "dont_move_1.mp3",
+    "slug": "dont-move-1"
+  },
+  {
+    "fileName": "dont_move_2.mp3",
+    "slug": "dont-move-2"
+  },
+  {
+    "fileName": "dont_move_3.mp3",
+    "slug": "dont-move-3"
+  },
+  {
+    "fileName": "dont_move_4.mp3",
+    "slug": "dont-move-4"
+  },
+  {
+    "fileName": "alone_1.mp3",
+    "slug": "alone-1"
+  },
+  {
+    "fileName": "boom_1.mp3",
+    "slug": "boom-1"
+  },
+  {
+    "fileName": "easy_1.mp3",
+    "slug": "easy-1"
+  },
+  {
+    "fileName": "ready_1.mp3",
+    "slug": "ready-1"
+  },
+  {
+    "fileName": "cant_do_1.mp3",
+    "slug": "cant-do-1"
+  },
+  {
+    "fileName": "quit_1.mp3",
+    "slug": "quit-1"
+  },
+  {
+    "fileName": "door_closed_1.mp3",
+    "slug": "door-closed-1"
   }
 ]
