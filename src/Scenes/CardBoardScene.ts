@@ -33,6 +33,7 @@ export class CardBoardScene implements Scene {
   private cardAtk: HTMLImageElement | undefined;
   private goodCardBack: HTMLImageElement | undefined;
   private sadCardBack: HTMLImageElement | undefined;
+  private buttonImage: HTMLImageElement | undefined;
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -62,6 +63,8 @@ export class CardBoardScene implements Scene {
         .then(image => this.goodCardBack = image),
       loadImage("sad_card_back.png")
         .then(image => this.sadCardBack = image),
+      loadImage("button.png")
+        .then(image => this.buttonImage = image),
       fetch("cards.json")
         .then(response => response.json())
         .then((cards: Array<Card>) => {
@@ -361,5 +364,18 @@ export class CardBoardScene implements Scene {
     context.font = "bold 16px sans-serif";
     context.fillText(`LIFEPOINTS: ${this.playerLifePoints}`, CANVAS_WIDTH - 240, CANVAS_HEIGHT - 50);
     context.fillText(`LIFEPOINTS: ${this.opponentlifePoints}`, CANVAS_WIDTH - 240, 50);
+
+    // player button
+    context.drawImage(this.buttonImage!, 0,0, 300, 100, CANVAS_WIDTH - 240, CANVAS_HEIGHT/1.9, 150, 50);
+    context.fillText(`End Turn`, CANVAS_WIDTH - 240 + 150/4, CANVAS_HEIGHT/1.9 + 50/1.6);
+
+    // opponent button
+    context.save();
+    context.translate(CANVAS_WIDTH - 240, CANVAS_HEIGHT/2.5);
+    context.rotate(Math.PI);
+    context.translate(-150, -50);
+    context.drawImage(this.buttonImage!, 0,0, 300, 100, 0, 0, 150, 50);
+    context.fillText(`End Turn`, 150/4, 50/1.6);
+    context.restore();
   }
 }
