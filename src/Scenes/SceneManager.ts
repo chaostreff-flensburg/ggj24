@@ -39,7 +39,7 @@ export class SceneManager {
     return this.lastScene
   }
 
-  startFight(deck: string) {
+  startFight(deck: string, imagescroll: string, charX: number, charY: number) {
     // TODO
   }
 

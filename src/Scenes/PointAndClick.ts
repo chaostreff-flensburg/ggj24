@@ -10,7 +10,10 @@ type PointOfInterest = {
   x2: number;
   y1: number;
   y2: number;
-  actions?: Array<{ action: string; audio: string, deck?: string }>;
+  actions?: Array<{ action: string; audio: string }>;
+  action?: string;
+  fight?: boolean;
+  deck?: string;
 };
 
 export class PointAndClick implements Scene {
@@ -33,12 +36,18 @@ export class PointAndClick implements Scene {
 
   private audioManager: AudioManager;
   private sceneManager: SceneManager;
-  private assetManager: AssetManager | undefined;
+  private assetManager: AssetManager;
 
-  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager) {
+  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager, imagescroll: string = "0", charX: number = 75, charY: number = 480) {
     this.audioManager = audioManager;
     this.sceneManager = scenemanager;
     this.audioManager = audioManager;
+    this.assetManager = assetManager;
+    this.imagescroll = imagescroll;
+    this.charX = charX;
+    this.charY = charY;
+    this.charTargetX = charX;
+    this.charTargetY = charY;
   }
 
   // load scene image and points of interest
@@ -82,7 +91,7 @@ export class PointAndClick implements Scene {
           actions: [{
             action: "look",
             audio: "stand-there-1",
-          }, { action: "talk", audio: "ready-1", deck: "deck1" }],
+          }, { action: "talk", audio: "ready-1"}],
         },
       ],
       1: [
@@ -120,6 +129,7 @@ export class PointAndClick implements Scene {
           y2: 600,
           action: "moveup",
           fight: true,
+          deck: "deck1"
         },
       ],
       1: [
@@ -135,6 +145,7 @@ export class PointAndClick implements Scene {
           y1: 550,
           y2: 600,
           action: "movedown",
+          fight: false,
         },
         {
           x1: 1230,
@@ -142,6 +153,8 @@ export class PointAndClick implements Scene {
           y1: 550,
           y2: 600,
           action: "moveup",
+          fight: true,
+          deck: "deck2"
         }
       ],
     }));
@@ -181,9 +194,6 @@ export class PointAndClick implements Scene {
                   if (action.audio) {
                     this.audioManager.playSound(action.audio);
                     playedSound = true;
-                    if(action.deck) {
-                      this.sceneManager.startFight(action.deck);
-                    }
                   }
                 });
               } else {
@@ -229,17 +239,29 @@ export class PointAndClick implements Scene {
               input.y < point.y2
             ) {
               // move image scroll
-              if (point.action === "movedown") {
+              if (point.action === "movedown" && point.fight !== true) {
                 console.log("movedown");
                 this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
                 this.charX = input.x - 50 + 1200;
                 this.charY = input.y - 100;
               }
-              if (point.action === "moveup") {
+              else
+              {
+                // start fight
+                if (point.fight === true && point.deck)
+                  this.sceneManager.startFight(point.deck, this.imagescroll, this.charX, this.charY);
+              }
+              if (point.action === "moveup" && point.fight !== true) {
                 console.log("moveup");
                 this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
                 this.charX = input.x - 50 - 1200;
                 this.charY = input.y - 100;
+              }
+              else
+              {
+                // start fight
+                if (point.fight === true && point.deck)
+                  this.sceneManager.startFight(point.deck, this.imagescroll, this.charX, this.charY);
               }
               this.charTargetX = input.x - 50;
               this.charTargetY = input.y - 100;
