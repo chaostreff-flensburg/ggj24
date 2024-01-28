@@ -254,7 +254,7 @@ export class PointAndClick implements Scene {
               {
                 // start fight
                 if (point.fight === true && point.deck)
-                  this.sceneManager.startFight(point.deck, this.imagescroll, this.charX, this.charY);
+                  this.sceneManager.startFight(this.gameContext, point.deck, this.imagescroll, this.charX, this.charY);
               }
               if (point.action === "moveup" && point.fight !== true) {
                 console.log("moveup");
@@ -266,7 +266,7 @@ export class PointAndClick implements Scene {
               {
                 // start fight
                 if (point.fight === true && point.deck)
-                  this.sceneManager.startFight(point.deck, this.imagescroll, this.charX, this.charY);
+                  this.sceneManager.startFight(this.gameContext, point.deck, this.imagescroll, this.charX, this.charY);
               }
               this.charTargetX = input.x - 50;
               this.charTargetY = input.y - 100;
