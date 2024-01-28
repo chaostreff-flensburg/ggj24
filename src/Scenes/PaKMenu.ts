@@ -18,7 +18,7 @@ export class PaKMenu implements Scene {
   action: string = "";
   private actionimage: HTMLImageElement | null = null;
   private inventory: string[] = [];
-  private debug: boolean = false;
+  public debug: boolean = false;
 
   load(): void {
     // load scene image

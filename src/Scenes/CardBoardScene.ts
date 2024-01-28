@@ -27,6 +27,7 @@ export class CardBoardScene implements Scene {
   private stateMachine: GameStateMachine = new GameStateMachine();
 
   private loadComplete: Boolean = false;
+  public debug: boolean = false;
 
   private cardBackground: HTMLImageElement | undefined;
   private cardHover: HTMLImageElement | undefined;

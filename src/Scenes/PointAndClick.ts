@@ -1,6 +1,7 @@
 import { Scene } from "./IScene";
 import { Input } from "../Input";
 import { PaKMenu } from "./PaKMenu";
+import { AudioManager } from "../audio";
 
 type PointOfInterest = {
   x1: number;
@@ -21,12 +22,18 @@ export class PointAndClick implements Scene {
   private moveable: Map<string, Array<PointOfInterest>> = new Map();
   private action: string | undefined;
   private imagescroll: string = "0";
-  private debug: boolean = false;
+  public debug: boolean = false;
   private charimage = new Image();
   private charX: number = 0;
   private charY: number = 0;
   private charTargetX: number = 0;
   private charTargetY: number = 0;
+
+  private audioManager: AudioManager;
+
+  constructor(audioManager: AudioManager) {
+    this.audioManager = audioManager;
+  }
 
   // load scene image and points of interest
   load(): void {
@@ -181,10 +188,14 @@ export class PointAndClick implements Scene {
             if (point.action === "movedown") {
               console.log("movedown");
               this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
+              this.charX = input.x - 50 + 1200;
+              this.charY = input.y - 100;
             }
             if (point.action === "moveup") {
               console.log("moveup");
               this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
+              this.charX = input.x - 50 - 1200;
+              this.charY = input.y - 100;
             }
             this.charTargetX = input.x - 50;
             this.charTargetY = input.y - 100;
