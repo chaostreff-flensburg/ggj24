@@ -212,7 +212,7 @@ export class PointAndClick implements Scene {
                     playedSound = true;
                     if(action.action === "talk" && action.audio === "ready-1" && action.deck)
                     {
-                      //this.sceneManager.startFight(this.gameContext, action.deck, this.imagescroll, this.charX, this.charY);
+                      this.sceneManager.startFight(this.gameContext, action.deck, this.imagescroll, this.charX, this.charY);
                       this.moveable.get(this.imagescroll)?.filter((poi) => poi.action === "moveup").forEach((poi) => {
                         poi.fight = false;
                       });
