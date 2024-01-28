@@ -305,6 +305,7 @@ export class CardBoardScene implements Scene {
 
     if (result) {
       console.log('PLAYER WON');
+      this.sceneManager.returnToLastScene();
       return;
     }
 
