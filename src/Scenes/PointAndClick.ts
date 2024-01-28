@@ -22,6 +22,9 @@ export class PointAndClick implements Scene {
   private action: string | undefined;
   private imagescroll: number = 0;
   private debug: boolean = false;
+  private charimage = new Image();
+  private charx: number = 0;
+  private chary: number = 0;
 
   // load scene image and points of interest
   load(): void {
@@ -31,6 +34,8 @@ export class PointAndClick implements Scene {
     this.image.onload = () => {
       this.imageLoadcomplete = true;
     };
+    this.charimage.src = "scene/char1.png";
+
     // 4 points of interest
     this.pointofinterest = {
       0: [
@@ -167,6 +172,8 @@ export class PointAndClick implements Scene {
               console.log("moveup");
               this.imagescroll += 1;
             }
+            this.charx = input.x - 50;
+            this.chary = input.y - 100;
           }
         },
       );
@@ -177,7 +184,9 @@ export class PointAndClick implements Scene {
   // render scene
   render(context: CanvasRenderingContext2D, input: Input): void {
     if (this.imageLoadcomplete) {
+      // draw char image
       context.drawImage(this.image!, -1280 * this.imagescroll, 0);
+      context.drawImage(this.charimage, this.charx, this.chary, 100, 100);
       this.menu.render(context, input);
       if (this.debug) { // for debugging
         this.pointofinterest[this.imagescroll].forEach((poi) => {
