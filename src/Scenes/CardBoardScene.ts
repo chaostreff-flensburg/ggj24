@@ -121,10 +121,6 @@ export class CardBoardScene implements Scene {
         this.handleGameEnd(res);
       }
 
-      if (this.stateMachine.playerCanAct()) {
-        this.playerField.endOfTurnUpdate();
-      }
-
       if (this.stateMachine.playerCanDraw()) this.stateMachine.advanceState();
     }
 
@@ -149,10 +145,6 @@ export class CardBoardScene implements Scene {
         this.reduceOpponentLifePoints(this.playerField.selectedCard.attack);
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
-      }
-
-      if (this.stateMachine.opponentCanAct()) {
-        this.opponentField.endOfTurnUpdate();
       }
 
       if (this.stateMachine.opponentCanDraw()) this.stateMachine.advanceState();
@@ -248,10 +240,12 @@ export class CardBoardScene implements Scene {
 
     if (this.stateMachine.playerCanAct() && input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
       this.stateMachine.advanceState();
+      this.opponentField.endOfTurnUpdate();
     }
 
     if (this.stateMachine.opponentCanAct() && input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
       this.stateMachine.advanceState();
+      this.playerField.endOfTurnUpdate();
     }
   }
 
