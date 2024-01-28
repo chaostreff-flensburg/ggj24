@@ -118,7 +118,7 @@ export class CardBoardScene implements Scene {
         && this.playerField.isEmpty()
       ) {
         this.opponentField.selectedCard.attackedThisRound = true;
-        this.playerLifePoints -= this.opponentField.selectedCard.attack;
+        this.reducePlayerLifePoints(this.opponentField.selectedCard.attack);
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
       }
@@ -148,7 +148,7 @@ export class CardBoardScene implements Scene {
         && this.opponentField.isEmpty()
       ) {
         this.playerField.selectedCard.attackedThisRound = true;
-        this.opponentlifePoints -= this.playerField.selectedCard.attack;
+        this.reduceOpponentLifePoints(this.playerField.selectedCard.attack);
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
       }
@@ -206,8 +206,8 @@ export class CardBoardScene implements Scene {
           this.playerField.removeCard(card)
         }
 
-        this.opponentlifePoints += passOn.x;
-        this.playerLifePoints += passOn.y;
+        this.reduceOpponentLifePoints(passOn.x);
+        this.reducePlayerLifePoints(passOn.y);
 
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
@@ -232,8 +232,8 @@ export class CardBoardScene implements Scene {
           this.opponentField.removeCard(card)
         }
 
-        this.playerLifePoints += passOn.x;
-        this.opponentlifePoints += passOn.y;
+        this.reducePlayerLifePoints(passOn.x);
+        this.reduceOpponentLifePoints(passOn.y);
 
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
@@ -253,6 +253,14 @@ export class CardBoardScene implements Scene {
       x: Math.min(card1.defense, 0),
       y: Math.min(card2.defense, 0),
     };
+  }
+
+  private reducePlayerLifePoints(value: number): void {
+    this.playerLifePoints = Math.max(this.playerLifePoints - Math.abs(value), 0);
+  }
+
+  private reduceOpponentLifePoints(value: number): void {
+    this.opponentlifePoints = Math.max(this.opponentlifePoints - Math.abs(value), 0);
   }
 
   private checkBattleOverLifePoints(): Boolean | null | undefined {
