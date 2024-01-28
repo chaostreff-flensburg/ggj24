@@ -145,8 +145,8 @@ export class Field {
       this.updateCardTargetPosition();
     }
 
-    this.cards.forEach(instance => {
-      if (this.cardBackground == undefined || instance == null) {
+    this.cards.forEach((instance, index) => {
+      if (this.cardBackground == undefined || this.cardHover == undefined || this.cardAtk == undefined || instance == null) {
         return;
       }
 

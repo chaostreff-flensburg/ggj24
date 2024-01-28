@@ -123,7 +123,7 @@ export class Hand {
     }
 
     this.cards.forEach((instance) => {
-      if (this.cardBackground == undefined || instance == null) {
+      if (this.cardBackground == undefined || this.cardHover == undefined || instance == null) {
         return;
       }
 
