@@ -80,6 +80,12 @@ export class CardBoardScene implements Scene {
         this.prepareDeck();
         this.prepareHands();
         this.prepareFields();
+
+        this.stateMachine.onTurnAdvance = () => {
+          const result = this.checkBattleOverDeckSize();
+
+          this.handleGameEnd(result);
+        }
       })
   }
 
@@ -108,11 +114,13 @@ export class CardBoardScene implements Scene {
 
       if (
         this.stateMachine.opponentCanAct()
-          && this.opponentField.selectedCard?.canAttack()
-          && this.playerField.isEmpty()
+        && this.opponentField.selectedCard?.canAttack()
+        && this.playerField.isEmpty()
       ) {
         this.opponentField.selectedCard.attackedThisRound = true;
         this.playerLifePoints -= this.opponentField.selectedCard.attack;
+        const res = this.checkBattleOverLifePoints();
+        this.handleGameEnd(res);
       }
 
       if (this.stateMachine.playerCanAct()) {
@@ -136,11 +144,13 @@ export class CardBoardScene implements Scene {
 
       if (
         this.stateMachine.playerCanAct()
-          && this.playerField.selectedCard?.canAttack()
-          && this.opponentField.isEmpty()
+        && this.playerField.selectedCard?.canAttack()
+        && this.opponentField.isEmpty()
       ) {
         this.playerField.selectedCard.attackedThisRound = true;
         this.opponentlifePoints -= this.playerField.selectedCard.attack;
+        const res = this.checkBattleOverLifePoints();
+        this.handleGameEnd(res);
       }
 
       if (this.stateMachine.opponentCanAct()) {
@@ -198,6 +208,9 @@ export class CardBoardScene implements Scene {
 
         this.opponentlifePoints += passOn.x;
         this.playerLifePoints += passOn.y;
+
+        const res = this.checkBattleOverLifePoints();
+        this.handleGameEnd(res);
       }
 
       return false;
@@ -221,6 +234,9 @@ export class CardBoardScene implements Scene {
 
         this.playerLifePoints += passOn.x;
         this.opponentlifePoints += passOn.y;
+
+        const res = this.checkBattleOverLifePoints();
+        this.handleGameEnd(res);
       }
 
       return false;
@@ -237,6 +253,58 @@ export class CardBoardScene implements Scene {
       x: Math.min(card1.defense, 0),
       y: Math.min(card2.defense, 0),
     };
+  }
+
+  private checkBattleOverLifePoints(): Boolean | null | undefined {
+    const opponent = this.opponentlifePoints <= 0;
+    const player = this.playerLifePoints <= 0;
+
+    if (opponent && player) {
+      return null;
+    }
+
+    if (opponent) {
+      return true;
+    }
+
+    if (player) {
+      return false
+    }
+  }
+
+  private checkBattleOverDeckSize(): Boolean | null | undefined {
+    const opponent = this.opponentStack.isEmpty();
+    const player = this.playerStack.isEmpty();
+
+    if (opponent && player) {
+      return null;
+    }
+
+    if (opponent) {
+      return true;
+    }
+
+    if (player) {
+      return false
+    }
+  }
+
+  private handleGameEnd(result: Boolean | null | undefined): void {
+    if (result === undefined) {
+      return;
+    }
+
+    if (result === null) {
+      console.log('TIE');
+      return;
+    }
+
+    if (result) {
+      console.log('PLAYER WON');
+      return;
+    }
+
+    console.log('OPPONENT WON');
   }
 
   // update scene

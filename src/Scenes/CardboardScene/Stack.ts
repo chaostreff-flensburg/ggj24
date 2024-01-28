@@ -43,8 +43,12 @@ export class Stack {
     this.deck.sort(() => Math.random() - 0.5);
   }
 
+  isEmpty(): Boolean {
+    return this.deck.length === 0;
+  }
+
   draw(): CardInstance | undefined {
-    if (this.deck.length === 0) {
+    if (this.isEmpty()) {
       return;
     }
 

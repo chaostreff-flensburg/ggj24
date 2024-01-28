@@ -8,6 +8,8 @@ export enum GameState {
 export default class GameStateMachine {
   currentState: GameState = GameState.PLAYER_TURN_START;
 
+  onTurnAdvance: (() => void) | undefined;
+
   advanceState(): GameState {
     switch (this.currentState) {
       case GameState.PLAYER_TURN_START:
@@ -24,6 +26,7 @@ export default class GameStateMachine {
 
       case GameState.OPPONENT_TURN_MAIN:
         this.currentState = GameState.PLAYER_TURN_START;
+        if (this.onTurnAdvance) this.onTurnAdvance();
         break;
     }
 
