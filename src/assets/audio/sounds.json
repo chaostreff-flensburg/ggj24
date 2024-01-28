@@ -66,5 +66,9 @@
   {
     "fileName": "door_closed_1.mp3",
     "slug": "door-closed-1"
+  },
+  {
+    "fileName": "your_turn.mp3",
+    "slug": "your-turn"
   }
 ]
