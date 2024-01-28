@@ -86,6 +86,7 @@ export class CardBoardScene implements Scene {
         this.opponentField.cardHover = this.cardHover!;
         this.opponentField.cardAtk = this.cardAtk!;
         this.opponentHand.cardBackground = this.cardBackground!;
+        this.opponentHand.cardHover = this.cardHover!;
         this.opponentStack.cardBack = this.sadCardBack!;
 
         this.prepareDeck();
