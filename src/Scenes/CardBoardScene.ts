@@ -10,6 +10,8 @@ import GameStateMachine from "./CardboardScene/GameStateMachine";
 import { AudioManager } from "../audio";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
 import { Point } from "./CardboardScene/Point";
+import { SceneManager } from "./SceneManager";
+import AssetManager from "../AssetManager";
 
 // CardBoardScene is a class that represents the game scene
 export class CardBoardScene implements Scene {
@@ -50,9 +52,13 @@ export class CardBoardScene implements Scene {
   }
 
   private audioManager: AudioManager;
+  private sceneManager: SceneManager;
+  private assetManager: AssetManager;
 
-  constructor(audioManager: AudioManager) {
-    this.audioManager = audioManager
+  constructor(audioManager: AudioManager, scenemanager: SceneManager, assetManager: AssetManager) {
+    this.audioManager = audioManager;
+    this.sceneManager = scenemanager;
+    this.assetManager = assetManager;
 
     this.playerField = new Field();
     this.playerHand = new Hand();
