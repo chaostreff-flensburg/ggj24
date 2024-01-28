@@ -25,7 +25,7 @@ class DrawingApp {
     this.audioManager = new AudioManager()
     this.audioManager.init()
 
-    this.scene = new PointAndClick();
+    this.scene = new CardBoardScene(this.audioManager);
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
   }
