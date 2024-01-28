@@ -52,7 +52,7 @@ class DrawingApp {
 
           cards.forEach(card => map[card.slug] = "cards/" + card.image);
 
-          return this.assetManager.loadImageMap(map);
+          return this.assetManager.loadImageMap(map, "cards");
         }),
     ];
 

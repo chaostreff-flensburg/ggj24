@@ -5,7 +5,6 @@ import { CardInstance } from "./CardboardScene/CardInstance";
 import { Field } from "./CardboardScene/Field";
 import { Hand } from "./CardboardScene/Hand";
 import { Stack } from "./CardboardScene/Stack";
-import loadImage from "../loadImage";
 import GameStateMachine from "./CardboardScene/GameStateMachine";
 import { AudioManager } from "../audio";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./CardboardScene/Constants";
@@ -28,17 +27,10 @@ export class CardBoardScene implements Scene {
 
   private stateMachine: GameStateMachine = new GameStateMachine();
 
-  private loadComplete: Boolean = false;
   public debug: boolean = false;
 
-  private cardBackground: HTMLImageElement | undefined;
-  private cardHover: HTMLImageElement | undefined;
-  private cardAtk: HTMLImageElement | undefined;
-  private goodCardBack: HTMLImageElement | undefined;
-  private sadCardBack: HTMLImageElement | undefined;
   private buttonImage: HTMLImageElement | undefined;
   private buttonImageHover: HTMLImageElement | undefined;
-  private cardImages: { [key: string]: HTMLImageElement } = {};
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
 
@@ -70,72 +62,33 @@ export class CardBoardScene implements Scene {
   }
 
   load(): void {
-    const assetLoad = [
-      loadImage("sketch.png")
-        .then(image => this.cardBackground = image),
-      loadImage("sketch_hover.png")
-        .then(image => this.cardHover = image),
-      loadImage("sketch_atk.png")
-        .then(image => this.cardAtk = image),
-      loadImage("good_card_back.png")
-        .then(image => this.goodCardBack = image),
-      loadImage("sad_card_back.png")
-        .then(image => this.sadCardBack = image),
-      loadImage("button.png")
-        .then(image => this.buttonImage = image),
-      loadImage("button_hover.png")
-        .then(image => this.buttonImageHover = image),
-      fetch("cards.json")
-        .then(response => response.json())
-        .then((cards: Array<Card>) => {
-          this.cards = cards
+    this.playerHand.cardBackground = this.opponentField.cardBackground = this.opponentHand.cardBackground = this.playerField.cardBackground = this.assetManager.image("sketch.png");
+    this.playerField.cardAtk = this.opponentField.cardAtk = this.assetManager.image("sketch_atk.png");
 
-          const assetLoad = cards.map((card) => {
-            return loadImage("cards/" + card.image)
-              .then(image => this.cardImages[card.slug] = image)
-          });
+    this.playerHand.cardHover = this.playerField.cardHover = this.opponentField.cardHover = this.opponentHand.cardHover = this.assetManager.image("sketch_hover.png");
+    this.playerHand.cardImages = this.playerField.cardImages = this.opponentHand.cardImages = this.opponentField.cardImages = this.assetManager.imageMap("cards");
 
-          return Promise.all(assetLoad);
-        })
-    ];
+    this.playerStack.cardBack = this.assetManager.image("good_card_back.png");
+    this.opponentStack.cardBack = this.assetManager.image("sad_card_back.png");
 
-    Promise.all(assetLoad)
-      .then(() => {
-        this.loadComplete = true;
-        this.playerField.cardBackground = this.cardBackground!;
-        this.playerField.cardHover = this.cardHover!;
-        this.playerField.cardAtk = this.cardAtk!;
-        this.playerField.cardImages = this.cardImages;
-        this.playerHand.cardBackground = this.cardBackground!;
-        this.playerHand.cardHover = this.cardHover!;
-        this.playerHand.cardImages = this.cardImages;
-        this.playerStack.cardBack = this.goodCardBack!;
+    this.buttonImage = this.assetManager.image('button.png');
+    this.buttonImageHover = this.assetManager.image('button_hover.png')
 
-        this.opponentField.cardBackground = this.cardBackground!;
-        this.opponentField.cardHover = this.cardHover!;
-        this.opponentField.cardAtk = this.cardAtk!;
-        this.opponentField.cardImages = this.cardImages;
-        this.opponentHand.cardBackground = this.cardBackground!;
-        this.opponentHand.cardHover = this.cardHover!;
-        this.opponentHand.cardImages = this.cardImages;
-        this.opponentStack.cardBack = this.sadCardBack!;
+    this.prepareDeck();
+    this.prepareHands();
+    this.prepareFields();
 
-        this.prepareDeck();
-        this.prepareHands();
-        this.prepareFields();
+    this.stateMachine.onTurnAdvance = () => {
+      const result = this.checkBattleOverDeckSize();
 
-        this.stateMachine.onTurnAdvance = () => {
-          const result = this.checkBattleOverDeckSize();
+      this.audioManager.playSound("your-turn");
 
-          this.audioManager.playSound("your-turn");
-
-          this.handleGameEnd(result);
-        }
-      })
+      this.handleGameEnd(result);
+    }
   }
 
   private prepareDeck() {
-    this.cards.forEach((card) => {
+    this.assetManager.data<Array<Card>>('cards.json').forEach((card) => {
       for (let i = 0; i < 2; i++) {
         this.playerStack.putCardBackToTop(new CardInstance(card));
         this.opponentStack.putCardBackToTop(new CardInstance(card));
@@ -168,10 +121,6 @@ export class CardBoardScene implements Scene {
         this.handleGameEnd(res);
       }
 
-      if (this.stateMachine.playerCanAct()) {
-        this.playerField.endOfTurnUpdate();
-      }
-
       if (this.stateMachine.playerCanDraw()) this.stateMachine.advanceState();
     }
 
@@ -196,10 +145,6 @@ export class CardBoardScene implements Scene {
         this.reduceOpponentLifePoints(this.playerField.selectedCard.attack);
         const res = this.checkBattleOverLifePoints();
         this.handleGameEnd(res);
-      }
-
-      if (this.stateMachine.opponentCanAct()) {
-        this.opponentField.endOfTurnUpdate();
       }
 
       if (this.stateMachine.opponentCanDraw()) this.stateMachine.advanceState();
@@ -295,10 +240,12 @@ export class CardBoardScene implements Scene {
 
     if (this.stateMachine.playerCanAct() && input.x > this.playerButtonPosition.x - 150 && input.x < this.playerButtonPosition.x && input.y > this.playerButtonPosition.y - 50 && input.y < this.playerButtonPosition.y) {
       this.stateMachine.advanceState();
+      this.opponentField.endOfTurnUpdate();
     }
 
     if (this.stateMachine.opponentCanAct() && input.x > this.opponentButtonPosition.x && input.x < this.opponentButtonPosition.x + 150 && input.y > this.opponentButtonPosition.y && input.y < this.opponentButtonPosition.y + 50) {
       this.stateMachine.advanceState();
+      this.playerField.endOfTurnUpdate();
     }
   }
 
@@ -376,10 +323,6 @@ export class CardBoardScene implements Scene {
 
   // update scene
   update(input: Input): void {
-    if (!this.loadComplete) {
-      return;
-    }
-
     this.playerStack.update(input);
     this.playerHand.update(input);
     this.playerField.update(input);
@@ -393,10 +336,6 @@ export class CardBoardScene implements Scene {
 
   // render scene
   render(context: CanvasRenderingContext2D, input: Input): void {
-    if (!this.loadComplete) {
-      return;
-    }
-
     this.screenSize.width = context.canvas.width;
     this.screenSize.height = context.canvas.height;
 
