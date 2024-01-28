@@ -28,7 +28,7 @@ export class CardInstance {
       && !this.attackedThisRound;
   }
 
-  animateInstance(): void {
+  animateInstance(delta: number): void {
     if (this.target.x == this.position.x && this.target.y == this.position.y) {
       return
     }
@@ -36,9 +36,8 @@ export class CardInstance {
     const distanceX = this.target.x - this.position.x;
     const distanceY = this.target.y - this.position.y;
 
-    const speed = 10;
-    this.position.x += distanceX / speed;
-    this.position.y += distanceY / speed;
+    this.position.x += distanceX * 5 * delta;
+    this.position.y += distanceY * 5 * delta;
   }
 
   isHover(cursor: Point): boolean {

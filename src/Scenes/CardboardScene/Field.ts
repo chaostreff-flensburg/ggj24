@@ -100,10 +100,10 @@ export class Field {
     });
   }
 
-  update(input: Input) {
+  update(input: Input, delta: number) {
     // position
     this.cards.forEach(instance => {
-      instance?.animateInstance();
+      instance?.animateInstance(delta);
     });
 
     this.cards.forEach(instance => {

@@ -313,14 +313,14 @@ export class CardBoardScene implements Scene {
   }
 
   // update scene
-  update(input: Input): void {
+  update(input: Input, delta: number): void {
     this.playerStack.update(input);
-    this.playerHand.update(input);
-    this.playerField.update(input);
+    this.playerHand.update(input, delta);
+    this.playerField.update(input, delta);
 
     this.opponentStack.update(input);
-    this.opponentHand.update(input);
-    this.opponentField.update(input);
+    this.opponentHand.update(input, delta);
+    this.opponentField.update(input, delta);
 
     this.checkClickEndTurn(input);
   }

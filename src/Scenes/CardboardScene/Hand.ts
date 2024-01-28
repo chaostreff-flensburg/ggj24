@@ -77,10 +77,10 @@ export class Hand {
     });
   }
 
-  update(input: Input) {
+  update(input: Input, delta: number) {
     // position
-    this.cards.forEach((instance, index) => {
-      instance?.animateInstance();
+    this.cards.forEach(instance => {
+      instance?.animateInstance(delta);
     });
 
     // hover
