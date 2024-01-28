@@ -43,6 +43,7 @@ export class SceneManager {
 
   startFight(context: GameContext, deck: string, imageScroll: string, charX: number, charY: number) {
     this.pushScreen(new CardBoardScene(context, deck));
+    this.activeScene?.load();
   }
 
   returnToLastScene() {

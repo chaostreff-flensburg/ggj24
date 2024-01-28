@@ -11,10 +11,9 @@ type PointOfInterest = {
   x2: number;
   y1: number;
   y2: number;
-  actions?: Array<{ action: string; audio: string }>;
+  actions?: Array<{ action: string; audio?: string, deck?: string }>;
   action?: string;
   fight?: boolean;
-  deck?: string;
 };
 
 export class PointAndClick implements Scene {
@@ -26,7 +25,7 @@ export class PointAndClick implements Scene {
   private moveable: Map<string, Array<PointOfInterest>> = new Map();
   private action: string | undefined;
   private imagescroll: string = "0";
-  public debug: boolean = false;
+  public debug: boolean = true;
   private charimage = new Image();
   private charX: number = 75;
   private charY: number = 480;
@@ -96,7 +95,7 @@ export class PointAndClick implements Scene {
           actions: [{
             action: "look",
             audio: "stand-there-1",
-          }, { action: "talk", audio: "ready-1"}],
+          }, { action: "talk", audio: "ready-1", deck: "deck1" }],
         },
       ],
       1: [
@@ -109,6 +108,16 @@ export class PointAndClick implements Scene {
             action: "look",
             audio: "door-closed-1",
           }],
+        },
+        {
+          x1: 1230,
+          x2: 1280,
+          y1: 550,
+          y2: 600,
+          actions: [{
+            action: "look",
+            audio: "stand-there-1",
+          }, { action: "talk", audio: "ready-1", deck: "deck2" }],
         },
       ],
     }));
@@ -134,7 +143,6 @@ export class PointAndClick implements Scene {
           y2: 600,
           action: "moveup",
           fight: true,
-          deck: "deck1"
         },
       ],
       1: [
@@ -159,7 +167,6 @@ export class PointAndClick implements Scene {
           y2: 600,
           action: "moveup",
           fight: true,
-          deck: "deck2"
         }
       ],
     }));
@@ -199,6 +206,14 @@ export class PointAndClick implements Scene {
                   if (action.audio) {
                     this.audioManager.playSound(action.audio);
                     playedSound = true;
+                    if(action.action === "talk" && action.audio === "ready-1" && action.deck)
+                    {
+                      this.sceneManager.startFight(this.gameContext, action.deck, this.imagescroll, this.charX, this.charY);
+                      this.moveable.get(this.imagescroll)?.filter((poi) => poi.action === "moveup").forEach((poi) => {
+                        poi.fight = false;
+                      });
+                      action.audio = "dont-talk-1";
+                    }
                   }
                 });
               } else {
@@ -247,30 +262,18 @@ export class PointAndClick implements Scene {
               if (point.action === "movedown" && point.fight !== true) {
                 console.log("movedown");
                 this.imagescroll = (parseInt(this.imagescroll) - 1).toString();
-                this.charX = input.x - 50 + 1200;
-                this.charY = input.y - 100;
+                this.charX = input.x - 48 + 1200;
+                this.charY = input.y - 115;
               }
               else
-              {
-                // start fight
-                if (point.fight === true && point.deck)
-                  this.sceneManager.startFight(this.gameContext, point.deck, this.imagescroll, this.charX, this.charY);
-              }
               if (point.action === "moveup" && point.fight !== true) {
                 console.log("moveup");
                 this.imagescroll = (parseInt(this.imagescroll) + 1).toString();
-                this.charX = input.x - 50 - 1200;
-                this.charY = input.y - 100;
+                this.charX = input.x - 48 - 1200;
+                this.charY = input.y - 115;
               }
-              else
-              {
-                // start fight
-                if (point.fight === true && point.deck)
-                  this.sceneManager.startFight(this.gameContext, point.deck, this.imagescroll, this.charX, this.charY);
-              }
-              this.charTargetX = input.x - 50;
-              this.charTargetY = input.y - 100;
-              console.log(this.charX, this.charY, this.charTargetX, this.charTargetY)
+              this.charTargetX = input.x - 48;
+              this.charTargetY = input.y - 115;
             }
           },
         );
@@ -284,7 +287,7 @@ export class PointAndClick implements Scene {
     if (this.imageLoadcomplete) {
       // draw char image
       context.drawImage(this.image!, -1280 * parseInt(this.imagescroll), 0);
-      context.drawImage(this.charimage, this.charX, this.charY, 100, 100);
+      context.drawImage(this.charimage, this.charX, this.charY, 100, 120);
       this.menu.render(context, input);
       if (this.debug) { // for debugging
         this.pointofinterest.get(this.imagescroll)?.forEach((poi) => {

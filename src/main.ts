@@ -58,7 +58,7 @@ class DrawingApp {
 
     Promise.all(assetLoad)
       .then(() => {
-        this.gameContext.sceneManager.pushScreen(new CardBoardScene(this.gameContext, 'deck1'));
+        this.gameContext.sceneManager.pushScreen(new PointAndClick(this.gameContext));
         this.gameContext.sceneManager.getActiveScreen()?.load();
       })
   }
