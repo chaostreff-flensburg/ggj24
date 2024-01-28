@@ -63,9 +63,9 @@ export class SceneManager {
     }
   }
 
-  update(input: Input) {
+  update(input: Input, delta: number) {
     if (this.activeScene) {
-      this.activeScene.update(input)
+      this.activeScene.update(input, delta)
     }
   }
 
