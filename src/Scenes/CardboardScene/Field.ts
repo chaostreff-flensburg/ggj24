@@ -1,23 +1,23 @@
 import { Input } from '../../Input';
-import { CardBoardScene } from '../CardBoardScene';
 import { CardInstance } from './CardInstance';
 import { CARD_WIDTH, CARD_HEIGHT, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, INTER_CARD_PADDING, CANVAS_HEIGHT } from './Constants';
 
 export class Field {
-  isOpponent: Boolean;
+  private isOpponent: Boolean;
   private cards: Array<CardInstance | null> = [null, null, null, null, null];
 
   private screenSize: { width: number, height: number } = { width: 0, height: 0 };
-  private selectedCard: CardInstance | null = null;
+  selectedCard: CardInstance | null = null;
 
   private hoverYOffset: number = 0;
 
   cardBackground: HTMLImageElement | undefined;
-  opponentField: Field | undefined;
-  private scene: CardBoardScene;
+  cardHover: HTMLImageElement | undefined;
+  cardAtk: HTMLImageElement | undefined;
 
-  constructor(scene: CardBoardScene, isOpponent: Boolean = false) {
-    this.scene = scene;
+  onClick: ((card: CardInstance) => Boolean) | undefined;
+
+  constructor(isOpponent: Boolean = false) {
     this.isOpponent = isOpponent;
 
     this.hoverYOffset = ((this.isOpponent) ? (-CARD_HEIGHT / 4) : (CARD_HEIGHT / 4))
@@ -25,8 +25,6 @@ export class Field {
 
   addCard(card: CardInstance): Boolean {
     let result = false;
-
-    card.isHovered = false;
 
     this.cards.every((item, index, list) => {
       if (item == null) {
@@ -41,48 +39,18 @@ export class Field {
     })
 
     console.log(result);
-    this.updateCardTargetPosition();
+
+    if (result) {
+      card.isHovered = false;
+      this.updateCardTargetPosition()
+    };
 
     return result;
   }
 
-  attack(source: CardInstance, target: CardInstance): boolean {
-    console.log("attack", source, target)
-
-    // is instance on field?
-    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
-      return false;
-    }
-
-    if (this.opponentField?.attacked(source, target)) {
-      return this.attacked(target, source);
-    }
-
-    return false;
-  }
-
-  // attacked called only from OpponentField!!!!
-  attacked(source: CardInstance, target: CardInstance): boolean {
-    console.log("attacked", source, target)
-    // is instance on field?
-    if (this.cards.filter((item) => { return item?.id == source.id }).length == 0) {
-      return false;
-    }
-
-    target.defense -= source.attack;
-
-    // check if dead
-    if (target.defense <= 0) {
-      this.removeCard(target);
-    }
-
-    return true;
-  }
-
-  private removeCard(instance: CardInstance): void {
-    this.cards = this.cards.filter((item) => {
-      return item?.id != instance.id;
-    });
+  removeCard(instance: CardInstance): void {
+    const index = this.cards.findIndex(item => item?.id == instance.id);
+    this.cards[index] = null;
 
     if (this.selectedCard?.id == instance.id) {
       this.selectedCard = null;
@@ -91,9 +59,20 @@ export class Field {
     this.updateCardTargetPosition();
   }
 
-  isFreeSlot(): Boolean {
-    return this.cards.some((item) => {
-      return item == null;
+  hasFreeSlot(): Boolean {
+    return this.cards.some(item => !item);
+  }
+
+  isEmpty(): Boolean {
+    return this.cards.every(item => item == null);
+  }
+
+  endOfTurnUpdate() {
+    this.cards.forEach((card:CardInstance|null) => {
+      if (card == null) return;
+
+      card.attackedThisRound = false;
+      card.turnsOnField++;
     });
   }
 
@@ -121,11 +100,11 @@ export class Field {
 
   update(input: Input) {
     // position
-    this.cards.forEach((instance, index) => {
+    this.cards.forEach(instance => {
       instance?.animateInstance();
     });
 
-    this.cards.forEach((instance, index) => {
+    this.cards.forEach(instance => {
       if (instance == null) {
         return;
       }
@@ -139,13 +118,14 @@ export class Field {
         instance.isHovered = true;
 
         if (input.clicked) {
-          if (this.selectedCard === instance) {
-            this.selectedCard = null;
-          } else {
-            this.selectedCard = instance;
-          }
 
-          this.scene.onCardClicked(this, this.selectedCard);
+          if (this.onClick && this.onClick(instance)) {
+            if (this.selectedCard === instance) {
+              this.selectedCard = null;
+            } else {
+              this.selectedCard = instance;
+            }
+          }
         }
       } else {
         if (instance.isHovered) {
@@ -166,7 +146,7 @@ export class Field {
     }
 
     this.cards.forEach((instance, index) => {
-      if (this.cardBackground == undefined || instance == null) {
+      if (this.cardBackground == undefined || this.cardHover == undefined || this.cardAtk == undefined || instance == null) {
         return;
       }
 
@@ -178,16 +158,14 @@ export class Field {
       }
       context.translate(-CARD_WIDTH / 2, -CARD_HEIGHT / 2);
 
-      if (instance == this.selectedCard) {
-        context.fillStyle = "red";
-        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
+      if (instance.isHovered) {
+        context.drawImage(this.cardHover!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
 
-      if (instance.isHovered) {
-        context.fillStyle = "yellow";
-        context.fillRect(-5, -5, CARD_WIDTH + 10, CARD_HEIGHT + 10);
+      if (instance == this.selectedCard) {
+        context.drawImage(this.cardAtk!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
       }
-      context.drawImage(this.cardBackground!, 0, 0, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, 0, 0, CARD_WIDTH, CARD_HEIGHT);
 
       // text
       context.fillStyle = "black";
@@ -195,9 +173,9 @@ export class Field {
       context.fillText(instance.card.title, CARD_WIDTH / 2, CARD_HEIGHT / 10);
 
       // attack
-      context.fillText(instance.attack.toString(), CARD_WIDTH / 4.5, CARD_HEIGHT / 1.28);
+      context.fillText("ATK:"+instance.attack.toString(), CARD_WIDTH / 2.6, CARD_HEIGHT / 1.095);
       // defense
-      context.fillText(instance.defense.toString(), CARD_WIDTH / 1.3, CARD_HEIGHT / 1.28);
+      context.fillText("DEF:"+instance.defense.toString(), CARD_WIDTH / 1.7, CARD_HEIGHT / 1.095);
 
       context.restore();
     });

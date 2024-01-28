@@ -3,6 +3,7 @@ import { Scene } from "./Scenes/IScene";
 import { InputManager } from "./Input";
 import { CardBoardScene } from "./Scenes/CardBoardScene";
 import { SceneManager } from "./Scenes/SceneManager";
+import { AudioManager } from "./audio";
 
 class DrawingApp {
   private canvas: HTMLCanvasElement;
@@ -13,19 +14,25 @@ class DrawingApp {
 
   private inputManager: InputManager;
 
+  private audioManager: AudioManager;
+
   constructor() {
     this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
     this.context = this.canvas.getContext("2d")!;
 
     this.inputManager = new InputManager(this.canvas);
 
-    this.scene = new CardBoardScene();
+    this.audioManager = new AudioManager()
+    this.audioManager.init()
+
+    this.scene = new CardBoardScene(this.audioManager);
     this.scene.load();
     this.sceneManager = new SceneManager(this.scene)
+
+
   }
 
   update() {
-    //this.scene.update(this.inputManager.input);
     this.sceneManager.update(this.inputManager.input)
     this.inputManager.update();
   }
