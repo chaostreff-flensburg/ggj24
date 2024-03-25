@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   typescript:
-    specifier: ^5.3.3
-    version: 5.3.3
+    specifier: ^5.4.3
+    version: 5.4.3
 
 devDependencies:
   esbuild:
@@ -18,7 +18,7 @@ devDependencies:
     version: 2.1.1(esbuild@0.20.2)
   esbuild-plugin-tsc:
     specifier: ^0.4.0
-    version: 0.4.0(typescript@5.3.3)
+    version: 0.4.0(typescript@5.4.3)
 
 packages:
 
@@ -335,13 +335,13 @@ packages:
       globby: 11.1.0
     dev: true
 
-  /esbuild-plugin-tsc@0.4.0(typescript@5.3.3):
+  /esbuild-plugin-tsc@0.4.0(typescript@5.4.3):
     resolution: {integrity: sha512-q9gWIovt1nkwchMLc2zhyksaiHOv3kDK4b0AUol8lkMCRhJ1zavgfb2fad6BKp7FT9rh/OHmEBXVjczLoi/0yw==}
     peerDependencies:
       typescript: ^4.0.0 || ^5.0.0
     dependencies:
       strip-comments: 2.0.1
-      typescript: 5.3.3
+      typescript: 5.4.3
     dev: true
 
   /esbuild@0.20.2:
@@ -555,8 +555,8 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /typescript@5.3.3:
-    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+  /typescript@5.4.3:
+    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
