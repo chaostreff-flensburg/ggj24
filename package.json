@@ -19,7 +19,7 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "esbuild": "^0.21.2",
+    "esbuild": "^0.21.5",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-tsc": "^0.4.0"
   }
